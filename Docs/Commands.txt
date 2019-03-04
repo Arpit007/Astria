@@ -1,0 +1,39 @@
+yo hyperledger-composer
+
+Deploy App
+    composer archive create -t dir -n ../
+    composer network install -a test-bna@0.0.1.bna -c PeerAdmin@hlfv1
+    composer network start -c PeerAdmin@hlfv1 -n test-bna -V 0.0.1 -A admin -S adminpw
+
+Import for Network Administrator
+    composer card import -f ./admin\@test-bna.card
+
+
+Upgrade App
+    Change Version Number
+    composer archive create -t dir -n ../
+    composer network install -a test-bna@0.0.2.bna -c PeerAdmin@hlfv1
+    composer network upgrade -c PeerAdmin@hlfv1 -n test-bna -V 0.0.2
+
+Update
+	composer network update -a airlinev1@0.0.1.bna -c admin@airlinev1
+
+List of Cards
+    composer card list
+
+Archive to target folder
+	composer archive create -a dist/airlinev1.bna --sourceType dir --sourceName .
+
+Network Ping
+    composer network ping -c admin@test-bna
+
+Restart REST Server
+    composer-rest-server -c admin@test-bna -n always -u true -d Test
+
+Create Participant: 63
+
+org.hyperledger.composer.syetem.NetworkAdmin
+
+const NetworkCardStoreManager = require('composer-common').NetworkCardStoreManager;
+var walletType = { type : 'composer-wallet-filesystem' }
+const cardStore = NetworkCardStoreManager.getCardStore(walletType);
