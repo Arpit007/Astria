@@ -1,0 +1,41 @@
+namespace org.astria.participant
+
+/**** Participant Details ****/
+concept CommonDetails {
+  o String email regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+}
+
+concept AdminDetails extends CommonDetails {
+}
+
+concept ManagerDetails extends CommonDetails {
+}
+
+concept VoterDetails {
+  o Boolean canVote default = true
+}
+
+abstract participant AstriaUser identified by userId {
+  o String userId
+}
+
+/**** Participants ****/
+participant AstriaAdmin extends AstriaUser {
+  o AdminDetails details optional
+}
+
+participant AstriaManager extends AstriaUser {
+  o ManagerDetails details optional
+}
+
+participant AstriaVoter extends AstriaUser {
+  o VoterDetails details
+}
+
+/**
+  Generation of UserId
+  A combination of Cryptic User Id & Election Id
+  userId = [Cryptic User Id]-[Election Id]
+
+  Todo: Either Remove details object if empty or remove the optional tag of respective participants.
+**/
