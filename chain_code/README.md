@@ -1,3 +1,3 @@
-# chain_code
+# Astria Chain Code
 
-Astria
+Run package.sh to create BNA of the chain code.
