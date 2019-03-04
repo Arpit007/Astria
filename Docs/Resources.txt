@@ -1,0 +1,55 @@
+composer-client
+composer-admin
+
+https://github.com/hyperledger/fabric-sdk-node
+https://fabric-sdk-node.github.io/release-1.4/index.html
+https://openblockchain.readthedocs.io/en/latest/Setup/NodeSDK-setup/
+https://hackernoon.com/setting-up-restful-api-server-for-hyperledger-fabric-with-nodejs-sdk-a4642edaf98e
+
+https://medium.com/coinmonks/introduction-to-zero-knowledge-proof-the-protocol-of-next-generation-blockchain-305b2fc7f8e5
+https://developer.ibm.com/tutorials/cl-blockchain-private-confidential-transactions-hyperledger-fabric-zero-knowledge-proof/
+
+composer-client used to submit transactions to a business network or to perform Create, Read, Update, Delete operations on assets and participants
+composer-admin used to manage business networks (install, start, upgrade)
+
+
+Deploying
+    https://hyperledger.github.io/composer/v0.19/tutorials/developer-tutorial
+
+Update and Querying
+    https://hyperledger.github.io/composer/v0.19/tutorials/queries
+    https://hyperledger.github.io/composer/v0.19/business-network/upgrading-bna
+
+Servers
+    https://hyperledger.github.io/composer/v0.19/tutorials/deploy-to-fabric-single-org
+    https://hyperledger.github.io/composer/v0.19/tutorials/deploy-to-fabric-multi-org
+    https://hyperledger.github.io/composer/v0.19/reference/rest-server
+
+OAUth and Card Storage
+    https://hyperledger.github.io/composer/v0.19/tutorials/google_oauth2_rest
+    https://hyperledger.github.io/composer/v0.19/business-network/cloud-wallets
+    https://hyperledger.github.io/composer/v0.19/integrating/enabling-multiuser
+
+Read!!!!!!!
+    https://hyperledger.github.io/composer/v0.19/tutorials/acl-trading
+
+acl
+    https://hyperledger.github.io/composer/v0.19/business-network/programmatic-access-control
+    //Who can see transactions
+    https://hyperledger.github.io/composer/v0.19/business-network/historian
+    https://hyperledger.github.io/composer/v0.19/reference/acl_language
+
+participants
+    https://hyperledger.github.io/composer/v0.19/managing/participant-add
+
+transactions
+    https://hyperledger.github.io/composer/v0.19/reference/js_scripts
+
+example
+    https://github.com/hyperledger/composer-sample-networks/blob/master/packages/bond-network/test/Bond.js
+
+api
+    https://hyperledger.github.io/composer/v0.19/api/api-doc-index
+
+namespace
+    https://hyperledger.github.io/composer/v0.19/systemns/systemns-index
