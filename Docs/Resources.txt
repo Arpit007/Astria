@@ -53,3 +53,6 @@ api
 
 namespace
     https://hyperledger.github.io/composer/v0.19/systemns/systemns-index
+
+test
+	https://github.com/AreejEssa/Hyperledger-Composer-Voting-App/blob/master/voting/test/logic.js
