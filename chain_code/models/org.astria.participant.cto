@@ -12,7 +12,6 @@ concept ManagerDetails extends CommonDetails {
 }
 
 concept VoterDetails {
-  o Boolean canVote default = true
 }
 
 abstract participant AstriaUser identified by userId {
