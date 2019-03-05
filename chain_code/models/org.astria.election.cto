@@ -8,3 +8,8 @@ asset Election identified by electionId {
   o DateTime endTime
   --> Party[] candidates
 }
+
+transaction createElection {
+  o String electionId
+  o String userId
+}

@@ -2,6 +2,12 @@ namespace org.astria.vote
 
 asset Vote identified by voteId {
   o String voteId
+  o String userId
   o Boolean hasVoted default = false
   o String candidate
+}
+
+transaction castVote {
+  o String voteId
+  o String userId
 }

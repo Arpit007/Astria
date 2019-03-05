@@ -31,6 +31,16 @@ participant AstriaVoter extends AstriaUser {
   o VoterDetails details optional
 }
 
+transaction createManager {
+  o String adminId
+  o String managerId
+}
+
+transaction createVoter {
+  o String managerId
+  o String voterId
+}
+
 /**
   Todo: Either Remove details object if empty or remove the optional tag of respective participants.
 **/
