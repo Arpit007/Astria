@@ -13,3 +13,21 @@ rule NetworkAdminSystem {
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
 }
+
+rule historianManagerAccess{
+  description: "Allow Managers to only create transactions"
+  participant(p): "org.astria.participant.AstriaManager"
+  operation: CREATE
+  resource(r): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+}
+
+rule historianVoterAccess{
+  description: "Allow Voters to only read their transactions"
+  participant(p): "org.astria.participant.AstriaManager"
+  operation: READ
+  resource(r): "org.hyperledger.composer.system.HistorianRecord"
+  condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
+  action: ALLOW
+}
