@@ -1,15 +1,19 @@
 namespace org.astria.election
-import org.astria.party.Party
+import org.astria.candidate.Candidate
+import org.astria.participant.AstriaAdmin
 
 asset Election identified by electionId {
   o String electionId
   o String electionName
   o DateTime startDate
-  o DateTime endTime
-  --> Party[] candidates
+  o DateTime endDate
+  --> Candidate[] candidates
+  --> AstriaAdmin admin
 }
 
 transaction createElection {
-  o String electionId
-  o String userId
+  -->  AstriaAdmin admin
+  o String electionName
+  o DateTime startDate
+  o DateTime endDate
 }

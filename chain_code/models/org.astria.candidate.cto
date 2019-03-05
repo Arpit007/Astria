@@ -1,0 +1,14 @@
+namespace org.astria.candidate
+import org.astria.participant.AstriaAdmin
+
+asset Candidate identified by candidateId {
+  o String candidateId
+  o String candidateName
+  o String logoURI
+}
+
+transaction createCandidate {
+  --> AstriaAdmin admin
+  o String candidateName
+  o String logoURI
+}

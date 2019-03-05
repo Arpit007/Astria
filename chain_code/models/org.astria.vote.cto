@@ -1,13 +1,15 @@
 namespace org.astria.vote
+import org.astria.participant.AstriaVoter
+import org.astria.candidate.Candidate
 
 asset Vote identified by voteId {
   o String voteId
   o String userId
   o Boolean hasVoted default = false
-  o String candidate
+  --> Candidate candidate
 }
 
 transaction castVote {
-  o String voteId
-  o String userId
+  --> AstriaVoter voter
+  --> Candidate candidate
 }
