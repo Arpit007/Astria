@@ -6,6 +6,8 @@ concept CommonDetails {
 }
 
 concept AdminDetails extends CommonDetails {
+  o String voteKey optional
+  o String idKey optional
 }
 
 concept ManagerDetails extends CommonDetails {
@@ -20,7 +22,7 @@ abstract participant AstriaUser identified by userId {
 
 /**** Participants ****/
 participant AstriaAdmin extends AstriaUser {
-  o AdminDetails details optional
+  o AdminDetails details
 }
 
 participant AstriaManager extends AstriaUser {
