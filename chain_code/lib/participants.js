@@ -1,17 +1,11 @@
 'use strict';
 
 /**
- * Todo: Check if Participant already exists
- * */
-
-/**
  * Create Manager
  * @param {org.astria.participant.CreateManager} managerData The manager to be created.
  * @transaction
  * */
 async function createManager(managerData) {
-	const electionNamespace = 'org.astria.election';
-	const electionResId = 'Election';
 	const namespace = 'org.astria.participant';
 	const resourceId = 'AstriaManager';
 	
@@ -51,6 +45,7 @@ async function createVoter(voterData) {
 	
 	return voterRegistry.add(voter);
 }
+
 
 function generateId(resourceId, time) {
 	return sha256(`${resourceId}-${time}`);

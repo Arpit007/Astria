@@ -9,6 +9,8 @@
  * @transaction
  * */
 async function createElection(electionData) {
+	const participantNamespace = 'org.astria.participant';
+	const adminResId = 'AstriaAdmin';
 	const namespace = 'org.astria.election';
 	const resourceId = 'Election';
 	
@@ -18,13 +20,19 @@ async function createElection(electionData) {
 	const factory = getFactory();
 	
 	const electionId = generateID(resourceId, adminId);
+	
+	let result = await query('ElectionById', { electionId });
+	if (result.length > 0) {
+		throw new Error("Can't create multiple elections with same account");
+	}
+	
 	const election = factory.newResource(namespace, resourceId, electionId);
 	
 	election.electionName = electionName;
 	election.startDate = startDate;
 	election.endDate = endDate;
 	election.candidates = [];
-	election.admin = factory.newRelationship('org.astria.participant', 'AstriaAdmin', adminId);
+	election.admin = factory.newRelationship(participantNamespace, adminResId, adminId);
 	
 	return electionRegistry.add(election);
 }
