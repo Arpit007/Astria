@@ -9,22 +9,25 @@
  * @transaction
  * */
 async function createCandidate(candidateData) {
+	const electionResPath = 'org.astria.election.Election';
 	const namespace = 'org.astria.candidate';
 	const resourceId = 'Candidate';
+	
+	const { candidateName, logoURI, electionId } = candidateData;
 	
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const candidateId = generateId('Candidate');
+	const candidateId = generateId(resourceId, electionId, candidateName);
 	const candidate = factory.newResource(namespace, resourceId, candidateId);
 	
-	candidate.candidateName = candidateData.candidateName;
-	candidate.logoURI = candidateData.logoURI;
+	candidate.candidateName = candidateName;
+	candidate.logoURI = logoURI;
 	
 	await candidateRegistry.add(candidate);
 	
-	const electionRegistry = await getAssetRegistry('org.astria.election.Election');
-	const election = await electionRegistry.get(candidateData.electionId);
+	const electionRegistry = await getAssetRegistry(electionResPath);
+	const election = await electionRegistry.get(electionId);
 	
 	election.candidates.push(candidate);
 	
@@ -32,9 +35,6 @@ async function createCandidate(candidateData) {
 }
 
 
-function generateId(role) {
-	/*
-	* Todo: Fix
-	* */
-	return `${role}${new Date().getTime()}`;
+function generateId(resourceId, electionId, candidateName) {
+	return `${resourceId}-${electionId}-${candidateName}`;
 }
