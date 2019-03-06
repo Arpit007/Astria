@@ -7,8 +7,8 @@ asset Candidate identified by candidateId {
   o String logoURI
 }
 
-transaction createCandidate {
-  --> AstriaAdmin admin
+transaction CreateCandidate {
+  o String adminId
   o String candidateName
   o String logoURI
 }

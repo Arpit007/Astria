@@ -11,9 +11,13 @@ asset Election identified by electionId {
   --> AstriaAdmin admin
 }
 
-transaction createElection {
-  -->  AstriaAdmin admin
+transaction CreateElection {
+  o String adminId
   o String electionName
   o DateTime startDate
   o DateTime endDate
 }
+
+/**
+Todo: Create Transaction to add candidates
+ */

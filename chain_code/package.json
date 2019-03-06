@@ -3,7 +3,7 @@
     "composer": "^0.20.7"
   },
   "name": "chain_code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Astria",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/chain_code.bna",

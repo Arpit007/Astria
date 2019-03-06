@@ -14,6 +14,47 @@ rule NetworkAdminSystem {
     action: ALLOW
 }
 
+rule AstiaAdminSystem {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.hyperledger.composer.system.**"
+    action: ALLOW
+}
+
+rule AstiaAdminTrElection {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.astria.election.CreateElection"
+    action: ALLOW
+}
+
+rule AstiaAdminElection {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.astria.election.Election"
+    action: ALLOW
+}
+
+rule AstiaAdminTrManager {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.astria.participant.CreateManager"
+    action: ALLOW
+}
+
+rule AstiaAdminManager {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.astria.participant.AstriaManager"
+    action: ALLOW
+}
+
+
 rule historianManagerAccess{
   description: "Allow Managers to only create transactions"
   participant(p): "org.astria.participant.AstriaManager"

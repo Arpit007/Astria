@@ -9,7 +9,7 @@ asset Vote identified by voteId {
   --> Candidate candidate
 }
 
-transaction castVote {
-  --> AstriaVoter voter
-  --> Candidate candidate
+transaction CastVote {
+  o String voterId
+  o Candidate candidateId
 }
