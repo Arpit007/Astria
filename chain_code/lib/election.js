@@ -4,10 +4,6 @@
 'use strict';
 
 /**
- * Todo: Check if one Election already exists
- * */
-
-/**
  * Create Election
  * @param {org.astria.election.CreateElection} electionData The election to be created.
  * @transaction
@@ -21,7 +17,7 @@ async function createElection(electionData) {
 	const electionRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const electionId = `${resourceId}-${adminId}-1`;
+	const electionId = generateID(resourceId, adminId);
 	const election = factory.newResource(namespace, resourceId, electionId);
 	
 	election.electionName = electionName;
@@ -31,4 +27,8 @@ async function createElection(electionData) {
 	election.admin = factory.newRelationship('org.astria.participant', 'AstriaAdmin', adminId);
 	
 	return electionRegistry.add(election);
+}
+
+function generateID(resourceId, adminId) {
+	return `${resourceId}-${adminId}-1`;
 }
