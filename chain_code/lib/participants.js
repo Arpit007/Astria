@@ -1,28 +1,5 @@
 'use strict';
 
-/*async function Vote(vote) {
-	
-	// Don't allow a used ballot to be processed
-	if (vote.ballot.used == true) {
-		throw 'Ballot already used';
-	} else if (vote.ballot.owner.hasVoted) {
-		throw 'Voter alreay voted';
-	} else {
-		vote.ballot.owner.hasVoted = true;
-		vote.ballot.owner.Choice = vote.newOwner.party.PartyName + vote.newOwner.firstName;
-		const ParticipantRegistry = await getParticipantRegistry('test.Voter');
-		await ParticipantRegistry.update(vote.ballot.owner);
-		// Set new owner of vote
-		vote.ballot.owner = vote.newOwner;
-		// Mark ballot as used
-		vote.ballot.used = true;
-		// Get the asset registry for the asset.
-		const assetRegistry = await getAssetRegistry('test.Ballot');
-		// Update the asset in the asset registry.
-		await assetRegistry.update(vote.ballot);
-	}
-}*/
-
 /**
  * Todo: Check if Participant already exists
  * */
@@ -46,6 +23,28 @@ async function createManager(managerData) {
 	
 	return managerRegistry.add(manager);
 }
+
+
+/**
+ * Create Voter
+ * @param {org.astria.participant.CreateVoter} voterData The voter to be created.
+ * @transaction
+ * */
+async function createVoter(voterData) {
+	const namespace = 'org.astria.participant';
+	const resourceId = 'AstriaVoter';
+	
+	const voterRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
+	const factory = getFactory();
+	
+	const voterId = generateId('Voter');
+	const voter = factory.newResource(namespace, resourceId, voterId);
+	
+	voter.election = factory.newRelationship('org.astria.election', 'Election', voterData.electionId);
+	
+	return voterRegistry.add(voter);
+}
+
 
 function generateId(role) {
 	/*

@@ -11,4 +11,5 @@ transaction CreateCandidate {
   o String adminId
   o String candidateName
   o String logoURI
+  o String electionId
 }

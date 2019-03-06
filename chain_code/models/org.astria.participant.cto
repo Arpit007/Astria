@@ -28,6 +28,5 @@ transaction CreateManager {
 }
 
 transaction CreateVoter {
-  o String managerId
   o String electionId
 }

@@ -16,7 +16,7 @@ rule NetworkAdminSystem {
 
 rule AstiaAdminSystem {
     description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
+    participant: "org.astria.participant.*"
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
@@ -35,6 +35,22 @@ rule AstiaAdminElection {
     participant: "org.astria.participant.AstriaAdmin"
     operation: ALL
     resource: "org.astria.election.Election"
+    action: ALLOW
+}
+
+rule AstriaManagerTrVoter {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaManager"
+    operation: ALL
+    resource: "org.astria.participant.CreateVoter"
+    action: ALLOW
+}
+
+rule AstriaManagerVoter {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaManager"
+    operation: ALL
+    resource: "org.astria.participant.AstriaVoter"
     action: ALLOW
 }
 
