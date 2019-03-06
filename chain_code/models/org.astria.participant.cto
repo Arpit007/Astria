@@ -1,13 +1,10 @@
 namespace org.astria.participant
 import org.astria.election.Election
 
-/**** Participant Details ****/
-
 abstract participant AstriaUser identified by userId {
   o String userId
 }
 
-/**** Participants ****/
 participant AstriaAdmin extends AstriaUser {
   o String voteKey optional
   o String idKey optional
@@ -22,11 +19,11 @@ participant AstriaVoter extends AstriaUser {
   --> Election election
 }
 
-
 transaction CreateManager {
   o String electionId
 }
 
 transaction CreateVoter {
   o String electionId
+  o String voterId
 }

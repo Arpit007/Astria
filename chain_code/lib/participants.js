@@ -10,16 +10,20 @@
  * @transaction
  * */
 async function createManager(managerData) {
+	const electionNamespace = 'org.astria.election';
+	const electionResId = 'Election';
 	const namespace = 'org.astria.participant';
 	const resourceId = 'AstriaManager';
+	
+	const { electionId } = managerData;
 	
 	const managerRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const managerId = generateId('Manager');
+	const managerId = generateId(resourceId, new Date().getTime());
 	const manager = factory.newResource(namespace, resourceId, managerId);
-
-	manager.election = factory.newRelationship('org.astria.election', 'Election', managerData.electionId);
+	
+	manager.election = factory.newRelationship(electionNamespace, electionResId, electionId);
 	
 	return managerRegistry.add(manager);
 }
@@ -31,23 +35,23 @@ async function createManager(managerData) {
  * @transaction
  * */
 async function createVoter(voterData) {
+	const electionNamespace = 'org.astria.election';
+	const electionResId = 'Election';
 	const namespace = 'org.astria.participant';
 	const resourceId = 'AstriaVoter';
+	
+	const { electionId, voterId } = voterData;
 	
 	const voterRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const voterId = generateId('Voter');
 	const voter = factory.newResource(namespace, resourceId, voterId);
 	
-	voter.election = factory.newRelationship('org.astria.election', 'Election', voterData.electionId);
+	voter.election = factory.newRelationship(electionNamespace, electionResId, electionId);
 	
 	return voterRegistry.add(voter);
 }
 
-function generateId(role) {
-	/*
-	* Todo: Fix
-	* */
-	return `${role}${new Date().getTime()}`;
+function generateId(resourceId, time) {
+	return `${resourceId}-${time}`;
 }
