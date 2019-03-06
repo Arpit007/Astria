@@ -14,7 +14,7 @@ async function createManager(managerData) {
 	const managerRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const managerId = generateParticipantId(resourceId, new Date().getTime());
+	const managerId = generateManagerId(resourceId, new Date().getTime());
 	const manager = factory.newResource(namespace, resourceId, managerId);
 	
 	manager.election = factory.newRelationship(electionNamespace, electionResId, electionId);
@@ -36,6 +36,11 @@ async function createVoter(voterData) {
 	
 	const { electionId, voterId } = voterData;
 	
+	let result = await query('VoterById', { userId : voterId });
+	if (result.length > 0) {
+		throw new Error('Voter Already Exists');
+	}
+	
 	const voterRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
@@ -47,6 +52,6 @@ async function createVoter(voterData) {
 }
 
 
-function generateParticipantId(resourceId, time) {
+function generateManagerId(resourceId, time) {
 	return sha256(`${resourceId}-${time}`);
 }

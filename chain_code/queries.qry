@@ -43,6 +43,7 @@ query AllManagers {
       WHERE (candidateId == _$candidateId)
  }
 
+//used
  query VoterById {
    description: "Returns voter of given Id in the registry"
    statement:
