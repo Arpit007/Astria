@@ -45,7 +45,6 @@ async function createVoter(voterData) {
 	return voterRegistry.add(voter);
 }
 
-
 function generateId(role) {
 	/*
 	* Todo: Fix

@@ -38,6 +38,14 @@ rule AstiaAdminElection {
     action: ALLOW
 }
 
+rule AstiaAdminCandidate {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: ALL
+    resource: "org.astria.candidate.*"
+    action: ALLOW
+}
+
 rule AstriaManagerTrVoter {
     description: "Grant business network administrators full access to system resources"
     participant: "org.astria.participant.AstriaManager"
