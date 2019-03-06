@@ -36,5 +36,5 @@ async function createCandidate(candidateData) {
 
 
 function generateId(resourceId, electionId, candidateName) {
-	return `${resourceId}-${electionId}-${candidateName}`;
+	return sha256(`${resourceId}-${electionId}-${candidateName}`);
 }

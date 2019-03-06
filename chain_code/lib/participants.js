@@ -53,5 +53,5 @@ async function createVoter(voterData) {
 }
 
 function generateId(resourceId, time) {
-	return `${resourceId}-${time}`;
+	return sha256(`${resourceId}-${time}`);
 }
