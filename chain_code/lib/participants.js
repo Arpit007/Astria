@@ -14,7 +14,7 @@ async function createManager(managerData) {
 	const managerRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const managerId = generateId(resourceId, new Date().getTime());
+	const managerId = generateParticipantId(resourceId, new Date().getTime());
 	const manager = factory.newResource(namespace, resourceId, managerId);
 	
 	manager.election = factory.newRelationship(electionNamespace, electionResId, electionId);
@@ -47,6 +47,6 @@ async function createVoter(voterData) {
 }
 
 
-function generateId(resourceId, time) {
+function generateParticipantId(resourceId, time) {
 	return sha256(`${resourceId}-${time}`);
 }

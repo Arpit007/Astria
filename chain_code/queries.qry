@@ -35,6 +35,14 @@ query AllManagers {
       SELECT  org.astria.candidate.Candidate
  }
 
+//used
+ query CandidateById {
+   description: "Returns candidate of given ID in the registry"
+   statement:
+      SELECT  org.astria.candidate.Candidate
+      WHERE (candidateId == _$candidateId)
+ }
+
  query VoterById {
    description: "Returns voter of given Id in the registry"
    statement:
@@ -42,6 +50,7 @@ query AllManagers {
     WHERE (userId == _$userId)
  }
 
+//used
  query ElectionById {
    description: "Returns election of given ID in the registry"
    statement:

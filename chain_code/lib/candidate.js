@@ -18,7 +18,14 @@ async function createCandidate(candidateData) {
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const candidateId = generateId(resourceId, electionId, candidateName);
+	const candidateId = generateCandidateId(resourceId, electionId, candidateName);
+	console.log(candidateId);
+	
+	let result = await query('CandidateById', {candidateId});
+	if (result.length > 0){
+		throw new Error("Candidate Already Exists");
+	}
+	
 	const candidate = factory.newResource(namespace, resourceId, candidateId);
 	
 	candidate.candidateName = candidateName;
@@ -35,6 +42,6 @@ async function createCandidate(candidateData) {
 }
 
 
-function generateId(resourceId, electionId, candidateName) {
+function generateCandidateId(resourceId, electionId, candidateName) {
 	return sha256(`${resourceId}-${electionId}-${candidateName}`);
 }

@@ -19,7 +19,7 @@ async function createElection(electionData) {
 	const electionRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const electionId = generateID(resourceId, adminId);
+	const electionId = generateElectionID(resourceId, adminId);
 	
 	let result = await query('ElectionById', { electionId });
 	if (result.length > 0) {
@@ -37,6 +37,6 @@ async function createElection(electionData) {
 	return electionRegistry.add(election);
 }
 
-function generateID(resourceId, adminId) {
+function generateElectionID(resourceId, adminId) {
 	return sha256(`${resourceId}-${adminId}`);
 }
