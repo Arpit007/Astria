@@ -50,15 +50,7 @@ rule AstriaManagerTrVoter {
     description: "Grant business network administrators full access to system resources"
     participant: "org.astria.participant.AstriaManager"
     operation: ALL
-    resource: "org.astria.participant.CreateVoter"
-    action: ALLOW
-}
-
-rule AstriaManagerVoter {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaManager"
-    operation: ALL
-    resource: "org.astria.participant.AstriaVoter"
+    resource: "org.astria.participant.*"
     action: ALLOW
 }
 
@@ -67,6 +59,34 @@ rule AstiaAdminTrManager {
     participant: "org.astria.participant.AstriaAdmin"
     operation: ALL
     resource: "org.astria.participant.CreateManager"
+    action: ALLOW
+}
+
+
+
+rule AstiaVoterManager {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaManager"
+    operation: ALL
+    resource: "org.astria.participant.AstriaVoter"
+    action: ALLOW
+}
+
+
+rule AstiaTrVoterManager {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaManager"
+    operation: ALL
+    resource: "org.astria.participant.CreateVoter"
+    action: ALLOW
+}
+
+
+rule AstiVoteManager {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaManager"
+    operation: ALL
+    resource: "org.astria.vote.Vote"
     action: ALLOW
 }
 

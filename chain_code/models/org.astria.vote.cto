@@ -4,12 +4,12 @@ import org.astria.candidate.Candidate
 
 asset Vote identified by voteId {
   o String voteId
-  o String userId
+  o String voterId
+  o String candidateId optional
   o Boolean hasVoted default = false
-  --> Candidate candidate
 }
 
 transaction CastVote {
   o String voterId
-  o Candidate candidateId
+  o String candidateId
 }

@@ -1,10 +1,3 @@
-
-query AllVoters {
-   description: "Returns all voters in the registry"
-   statement:
-      SELECT  org.astria.participant.AstriaVoter
- }
-
 query AllManagers {
    description: "Returns all mangers in the registry"
    statement:
@@ -22,6 +15,13 @@ query AllManagers {
    statement:
       SELECT  org.astria.vote.Vote
  }
+
+  query VoteById {
+    description: "Returns vote of given ID in the registry"
+    statement:
+       SELECT  org.astria.vote.Vote
+       WHERE (voteId == _$voteId)
+  }
 
  query AllElections {
    description: "Returns all elections in the registry"
