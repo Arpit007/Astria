@@ -22,6 +22,22 @@ rule AstiaAdminSystem {
     action: ALLOW
 }
 
+rule AstiaVoter {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaVoter"
+    operation: READ, UPDATE
+    resource: "org.astria.vote.Vote"
+    action: ALLOW
+}
+
+rule AstiaTrVoter {
+    description: "Grant business network administrators full access to system resources"
+    participant: "org.astria.participant.AstriaVoter"
+    operation: CREATE
+    resource: "org.astria.vote.CastVote"
+    action: ALLOW
+}
+
 rule AstiaAdminTrElection {
     description: "Grant business network administrators full access to system resources"
     participant: "org.astria.participant.AstriaAdmin"

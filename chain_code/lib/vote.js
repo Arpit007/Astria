@@ -5,25 +5,25 @@
 
 /**
  * Cast Vote
- * @param {org.astria.vote.castVote} voteData The vote to be casted.
+ * @param {org.astria.vote.CastVote} voteData The vote to be casted.
  * @transaction
  * */
-
 async function castVote(voteData) {
 	const namespace = 'org.astria.vote';
 	const resourceId = 'Vote';
-	
-	const { voteId, candidateId, electionId } = voteData;
-	
-	const voteRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
-	const factory = getFactory();
-	
-	let result = await query('VoteById', {voteId});
-	if (result.length > 0){
+
+	const { voterId, candidateId } = voteData;
+
+	let result = await query('VoteByVoterId', {voterId});
+	const vote = result[0];
+
+	if(vote.hasVoted){
 		throw new Error('Already Voted');
 	}
-}
 
-function generateVoteId(voterId, electionId) {
-	return sha256(`${electionId}-${voterId}`)
+	vote.candidateId = candidateId;
+	vote.hasVoted = true;
+
+	const voteRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
+	return voteRegistry.update(vote);
 }
