@@ -16,16 +16,13 @@ async function createCandidate(candidateData) {
 	const { candidateName, logoURI } = candidateData;
 	
 	const currentParticipant = getCurrentParticipant();
-	let eResult = await query('ElectionByAdminId', { adminId : currentParticipant.getIdentifier() });
 	
-	if (eResult.length <=0){
-		throw new Error("Invalid Election");
-	}
-	
-	const election = eResult[0];
+	const electionId = currentParticipant.electionId;
+	const electionRegistry = await getAssetRegistry(electionResPath);
+	const election = await electionRegistry.get(electionId);
 	
 	if (new Date().getTime() >= election.startDate.getTime()) {
-		throw new Error("Can't create candidate after election has begun");
+		throw new Error("Can't add Candidate now.");
 	}
 	
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
@@ -44,9 +41,6 @@ async function createCandidate(candidateData) {
 	candidate.logoURI = logoURI;
 	
 	await candidateRegistry.add(candidate);
-	
-	const electionRegistry = await getAssetRegistry(electionResPath);
-	
 	election.candidates.push(candidate);
 	
 	return electionRegistry.update(election);

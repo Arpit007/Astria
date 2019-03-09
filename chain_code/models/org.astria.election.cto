@@ -11,8 +11,7 @@ asset Election identified by electionId {
   --> Candidate[] candidates
 }
 
-transaction CreateElection {
-  o String electionName
+transaction UpdateElection {
   o DateTime startDate
   o DateTime endDate
 }

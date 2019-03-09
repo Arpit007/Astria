@@ -9,18 +9,15 @@
  * @transaction
  * */
 async function castVote(voteData) {
-	const namespace = 'org.astria.vote';
-	const resourceId = 'Vote';
+	const voteResPath = 'org.astria.vote.Vote';
 	const electionResPath = 'org.astria.election.Election';
 	
 	const currentParticipant = getCurrentParticipant();
 	const electionId = currentParticipant.electionId;
+	const voterId = currentParticipant.getIdentifier();
+	
 	const electionRegistry = await getAssetRegistry(electionResPath);
 	const election = await electionRegistry.get(electionId);
-	
-	if (!election) {
-		throw new Error("Invalid Election");
-	}
 	
 	const today = new Date().getTime();
 	const startDate = election.startDate.getTime();
@@ -30,7 +27,7 @@ async function castVote(voteData) {
 		throw new Error("Can't cast vote now");
 	}
 
-	const { voterId, candidateId } = voteData;
+	const { candidateId } = voteData;
 
 	let result = await query('VoteByVoterId', {voterId});
 	const vote = result[0];
@@ -42,6 +39,6 @@ async function castVote(voteData) {
 	vote.candidateId = candidateId;
 	vote.hasVoted = true;
 
-	const voteRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
+	const voteRegistry = await getAssetRegistry(voteResPath);
 	return voteRegistry.update(vote);
 }
