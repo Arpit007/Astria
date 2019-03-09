@@ -55,17 +55,19 @@ rule NetworkAdminCanCreateElection {
 
 rule AstriaParticipantsCanViewElection {
     description: "Allow AstriaManagers to view Election"
-    participant: "org.astria.participant.*"
+    participant(p): "org.astria.participant.*"
     operation: READ
-    resource: "org.astria.election.Election"
+    resource(o): "org.astria.election.Election"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
 rule AstriaAdminCanCreateCandidate {
     description: "Allow AstriaAdmin to create new candidates"
-    participant: "org.astria.participant.AstriaAdmin"
+    participant(p): "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource: "org.astria.candidate.Candidate"
+    resource(o): "org.astria.candidate.Candidate"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
@@ -79,9 +81,10 @@ rule AstriaAdminCanCreateCandidateTransaction {
 
 rule AstriaAdminCanCreateManager {
     description: "Allow AstriaAdmin to create new AstriaManagers"
-    participant: "org.astria.participant.AstriaAdmin"
+    participant(p): "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource: "org.astria.participant.AstriaManager"
+    resource(o): "org.astria.participant.AstriaManager"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
@@ -98,7 +101,7 @@ rule AstriaAdminCanUpdateElection {
     participant(p): "org.astria.participant.AstriaAdmin"
     operation: READ, UPDATE
     resource(o): "org.astria.election.Election"
-    condition: (p.electionId == o.electionId && p.userId == o.adminId)
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
@@ -112,25 +115,28 @@ rule AstriaAdminCanUpdateElectionTransaction {
 
 rule AstriaAdminCanUpdateVotes {
     description: "Allow AstriaAdmin to decrypt votes after election"
-    participant: "org.astria.participant.AstriaAdmin"
+    participant(p): "org.astria.participant.AstriaAdmin"
     operation: READ, UPDATE
-    resource: "org.astria.vote.Vote"
+    resource(o): "org.astria.vote.Vote"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
 rule AstriaAdminCanCreateResult {
     description: "Allow AstriaAdmin to create Result"
-    participant: "org.astria.participant.AstriaAdmin"
+    participant(p): "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource: "org.astria.result.Result"
+    resource(o): "org.astria.result.Result"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
 rule AstriaManagerCanCreateVoter {
     description: "Allow AstriaManagers to create a new Voter"
-    participant: "org.astria.participant.AstriaManager"
+    participant(p): "org.astria.participant.AstriaManager"
     operation: CREATE, READ
-    resource: "org.astria.participant.AstriaVoter"
+    resource(o): "org.astria.participant.AstriaVoter"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
@@ -155,7 +161,7 @@ rule AstriaVoterCanVote {
     participant(p): "org.astria.participant.AstriaVoter"
     operation: READ, UPDATE
     resource(o): "org.astria.vote.Vote"
-    condition: (o.voterId == p.userId)
+    condition: (o.voterId == p.userId && o.electionId == p.electionId)
     action: ALLOW
 }
 
@@ -167,18 +173,11 @@ rule AstriaVoterCanCreateVoteTransaction {
     action: ALLOW
 }
 
-rule AstriaVoterCanReadElection {
-    description: "Allow AstriaVoter to read Election"
-    participant: "org.astria.participant.AstriaVoter"
-    operation: READ
-    resource: "org.astria.election.Election"
-    action: ALLOW
-}
-
 rule AstriaVoterCanReadCandidate {
     description: "Allow AstriaVoter to read Candidate"
-    participant: "org.astria.participant.AstriaVoter"
+    participant(p): "org.astria.participant.AstriaVoter"
     operation: READ
-    resource: "org.astria.candidate.Candidate"
+    resource(o): "org.astria.candidate.Candidate"
+    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
