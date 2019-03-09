@@ -28,7 +28,7 @@ async function createCandidate(candidateData) {
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const candidateId = generateCandidateId(resourceId, election.electionId, candidateName);
+	const candidateId = generateId(resourceId, election.electionId, candidateName);
 	
 	let result = await query('CandidateById', { candidateId });
 	if (result.length > 0) {
@@ -47,6 +47,6 @@ async function createCandidate(candidateData) {
 }
 
 
-function generateCandidateId(resourceId, electionId, candidateName) {
-	return sha256(`${resourceId}-${electionId}-${candidateName}`);
+function generateId(upperId, middleId, lowerId) {
+	return sha256(`${upperId}-${middleId}-${lowerId}`);
 }

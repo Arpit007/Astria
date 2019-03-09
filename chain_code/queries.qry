@@ -1,7 +1,8 @@
-query AllManagers {
-   description: "Returns all mangers in the registry"
+query AllManagersOfElection {
+   description: "Returns all mangers of an Election in the registry"
    statement:
       SELECT  org.astria.participant.AstriaManager
+      WHERE (electionId == _$electionId)
  }
 
  query AllAdmin {
@@ -10,13 +11,13 @@ query AllManagers {
       SELECT  org.astria.participant.AstriaAdmin
  }
 
- query AllVotes {
-   description: "Returns all votes in the registry"
+ query AllVotesOfElection {
+   description: "Returns all votes of an Election in the registry"
    statement:
       SELECT  org.astria.vote.Vote
+      WHERE (electionId == _$electionId)
  }
 
-//used
   query VoteByVoterId {
     description: "Returns vote of given Voter's ID in the registry"
     statement:
@@ -30,13 +31,6 @@ query AllManagers {
       SELECT  org.astria.election.Election
  }
 
- query AllCandidates {
-   description: "Returns all candidates in the registry"
-   statement:
-      SELECT  org.astria.candidate.Candidate
- }
-
-//used
  query CandidateById {
    description: "Returns candidate of given ID in the registry"
    statement:
@@ -44,7 +38,6 @@ query AllManagers {
       WHERE (candidateId == _$candidateId)
  }
 
-//used
  query VoterById {
    description: "Returns voter of given Id in the registry"
    statement:
@@ -52,7 +45,6 @@ query AllManagers {
     WHERE (userId == _$userId)
  }
 
-//used
  query ElectionById {
    description: "Returns election of given ID in the registry"
    statement:
@@ -60,7 +52,6 @@ query AllManagers {
       WHERE (electionId == _$electionId)
  }
 
-//used
  query ElectionByAdminId {
    description: "Returns election created by an AstriaAdmin"
    statement:

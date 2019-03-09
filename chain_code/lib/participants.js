@@ -24,10 +24,10 @@ async function createAdmin(adminData) {
 	const adminRegistry = await getParticipantRegistry(`${adminNamespace}.${adminResourceId}`);
 	const factory = getFactory();
 	
-	const adminId = generateId(adminResourceId, new Date().getTime());
+	const adminId = generateId(adminResourceId, email, new Date().getTime());
 	const admin = factory.newResource(adminNamespace, adminResourceId, adminId);
 	
-	const electionId = generateId(electionResourceId, adminId);
+	const electionId = generateId(electionResourceId, adminId, new Date().getTime());
 	
 	admin.voteKey = voteKey;
 	admin.idKey = idKey;
@@ -74,10 +74,10 @@ async function createManager(managerData) {
 	const managerRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const managerId = generateId(resourceId, new Date().getTime());
+	const managerId = generateId(resourceId, electionId, new Date().getTime());
 	const manager = factory.newResource(namespace, resourceId, managerId);
 	
-	manager.electionId = election.electionId;
+	manager.electionId = electionId;
 	manager.email = email;
 	
 	return managerRegistry.add(manager);
@@ -121,15 +121,16 @@ async function createVoter(voterData) {
 	
 	const voteRegistry = await getAssetRegistry(`${voteNamespace}.${voteResourceId}`);
 	
-	const voteId = generateId(voterId, electionId);
+	const voteId = generateId(resourceId, voterId, electionId);
 	const vote = factory.newResource(voteNamespace, voteResourceId, voteId);
 	vote.voterId = voterId;
+	vote.electionId = electionId;
 	
 	await voterRegistry.add(voter);
 	return voteRegistry.add(vote);
 }
 
 
-function generateId(upperId, lowerId) {
-	return sha256(`${upperId}-${lowerId}`);
+function generateId(upperId, middleId, lowerId) {
+	return sha256(`${upperId}-${middleId}-${lowerId}`);
 }
