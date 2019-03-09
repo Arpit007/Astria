@@ -118,6 +118,14 @@ rule AstriaAdminCanUpdateVotes {
     action: ALLOW
 }
 
+rule AstriaAdminCanCreateResult {
+    description: "Allow AstriaAdmin to create Result"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.result.Result"
+    action: ALLOW
+}
+
 rule AstriaManagerCanCreateVoter {
     description: "Allow AstriaManagers to create a new Voter"
     participant: "org.astria.participant.AstriaManager"

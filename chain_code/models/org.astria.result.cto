@@ -1,0 +1,12 @@
+namespace org.astria.result
+
+concept CandidateResult {
+  o String candidateId
+  o Integer voteCount
+}
+
+asset Result identified by resultId {
+  o String resultId
+  o String electionId
+  o CandidateResult[] results
+}
