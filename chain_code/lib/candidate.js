@@ -13,16 +13,28 @@ async function createCandidate(candidateData) {
 	const namespace = 'org.astria.candidate';
 	const resourceId = 'Candidate';
 	
-	const { candidateName, logoURI, electionId } = candidateData;
+	const { candidateName, logoURI } = candidateData;
+	
+	const currentParticipant = getCurrentParticipant();
+	let eResult = await query('ElectionByAdminId', { adminId : currentParticipant.getIdentifier() });
+	
+	if (eResult.length <=0){
+		throw new Error("Invalid Election");
+	}
+	
+	const election = eResult[0];
+	
+	if (new Date().getTime() >= election.startDate.getTime()) {
+		throw new Error("Can't create candidate after election has begun");
+	}
 	
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 	
-	const candidateId = generateCandidateId(resourceId, electionId, candidateName);
-	console.log(candidateId);
+	const candidateId = generateCandidateId(resourceId, election.electionId, candidateName);
 	
-	let result = await query('CandidateById', {candidateId});
-	if (result.length > 0){
+	let result = await query('CandidateById', { candidateId });
+	if (result.length > 0) {
 		throw new Error("Candidate Already Exists");
 	}
 	
@@ -34,7 +46,6 @@ async function createCandidate(candidateData) {
 	await candidateRegistry.add(candidate);
 	
 	const electionRegistry = await getAssetRegistry(electionResPath);
-	const election = await electionRegistry.get(electionId);
 	
 	election.candidates.push(candidate);
 	

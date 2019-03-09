@@ -1,3 +1,5 @@
+/**System Permissions**/
+
 rule NetworkAdminUser {
     description: "Grant business network administrators full access to user resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
@@ -14,121 +16,130 @@ rule NetworkAdminSystem {
     action: ALLOW
 }
 
-rule AstiaAdminSystem {
-    description: "Grant business network administrators full access to system resources"
+rule AstriaAdminSystem {
+    description: "Grant AstriaAdmin full access to system resources"
     participant: "org.astria.participant.*"
     operation: ALL
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
 }
 
-rule AstiaVoter {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaVoter"
-    operation: READ, UPDATE
-    resource: "org.astria.vote.Vote"
-    action: ALLOW
-}
+/**Historian Permissions**/
 
-rule AstiaTrVoter {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaVoter"
-    operation: CREATE
-    resource: "org.astria.vote.CastVote"
-    action: ALLOW
-}
-
-rule AstiaAdminTrElection {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: ALL
-    resource: "org.astria.election.CreateElection"
-    action: ALLOW
-}
-
-rule AstiaAdminElection {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: ALL
-    resource: "org.astria.election.Election"
-    action: ALLOW
-}
-
-rule AstiaAdminCandidate {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: ALL
-    resource: "org.astria.candidate.*"
-    action: ALLOW
-}
-
-rule AstriaManagerTrVoter {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaManager"
-    operation: ALL
-    resource: "org.astria.participant.*"
-    action: ALLOW
-}
-
-rule AstiaAdminTrManager {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: ALL
-    resource: "org.astria.participant.CreateManager"
-    action: ALLOW
-}
-
-
-
-rule AstiaVoterManager {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaManager"
-    operation: ALL
-    resource: "org.astria.participant.AstriaVoter"
-    action: ALLOW
-}
-
-
-rule AstiaTrVoterManager {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaManager"
-    operation: ALL
-    resource: "org.astria.participant.CreateVoter"
-    action: ALLOW
-}
-
-
-rule AstiVoteManager {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaManager"
-    operation: ALL
-    resource: "org.astria.vote.Vote"
-    action: ALLOW
-}
-
-rule AstiaAdminManager {
-    description: "Grant business network administrators full access to system resources"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: ALL
-    resource: "org.astria.participant.AstriaManager"
-    action: ALLOW
-}
-
-
-rule historianManagerAccess{
-  description: "Allow Managers to only create transactions"
-  participant(p): "org.astria.participant.AstriaManager"
-  operation: CREATE
-  resource(r): "org.hyperledger.composer.system.HistorianRecord"
-  condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
-  action: ALLOW
-}
-
-rule historianVoterAccess{
-  description: "Allow Voters to only read their transactions"
-  participant(p): "org.astria.participant.AstriaManager"
+rule historianAstriaVoterAccess{
+  description: "Allow AstriaVoters to only read their transactions"
+  participant(p): "org.astria.participant.AstriaVoter"
   operation: READ
   resource(r): "org.hyperledger.composer.system.HistorianRecord"
   condition: (r.participantInvoking.getIdentifier() == p.getIdentifier())
   action: ALLOW
+}
+
+/**Astria Permissions**/
+
+rule AstriaAdminCanCreateCandidate {
+    description: "Allow AstriaAdmin to create new candidates"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.candidate.Candidate"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateCandidateTransaction {
+    description: "Allow AstriaAdmin to create CreateCandidate transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE
+    resource: "org.astria.candidate.CreateCandidate"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateManager {
+    description: "Allow AstriaAdmin to create new AstriaManagers"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.participant.AstriaManager"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateManagerTransaction {
+    description: "Allow AstriaAdmin to create a new CreateManager transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE
+    resource: "org.astria.participant.CreateManager"
+    action: ALLOW
+}
+
+rule AstriaAdminCreateElection {
+    description: "Allow AstriaAdmin to create a new Election"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ, UPDATE
+    resource: "org.astria.election.Election"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateElectionTransaction {
+    description: "Allow AstriaAdmin to create a new CreateElection transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE
+    resource: "org.astria.election.CreateElection"
+    action: ALLOW
+}
+
+rule AstriaManagerCanCreateVoter {
+    description: "Allow AstriaManagers to create a new Voter"
+    participant: "org.astria.participant.AstriaManager"
+    operation: CREATE, READ
+    resource: "org.astria.participant.AstriaVoter"
+    action: ALLOW
+}
+
+rule AstriaManagerCanCreateVoterTransaction {
+    description: "Allow AstriaManagers to create a new AstriaVoter"
+    participant: "org.astria.participant.AstriaManager"
+    operation: CREATE
+    resource: "org.astria.participant.CreateVoter"
+    action: ALLOW
+}
+
+rule AstriaManagerCanCreateVote {
+    description: "Allow AstriaManagers to create a new Vote for an AstriaVoter"
+    participant: "org.astria.participant.AstriaManager"
+    operation: CREATE
+    resource: "org.astria.vote.Vote"
+    action: ALLOW
+}
+
+rule AstriaParticipantsCanViewElection {
+    description: "Allow AstriaManagers to view Election"
+    participant: "org.astria.participant.*"
+    operation: READ
+    resource: "org.astria.election.Election"
+    action: ALLOW
+}
+
+rule AstriaVoterCanVote {
+    description: "Allow AstriaVoter to cast a Vote"
+    participant(p): "org.astria.participant.AstriaVoter"
+    operation: READ, UPDATE
+    resource(o): "org.astria.vote.Vote"
+    transaction(tx): "org.astria.vote.CastVote"
+    condition: (tx.voterId == o.voterId && o.voterId == p.getIdentifier())
+    action: ALLOW
+}
+
+rule AstriaVoterCanCreateVoteTransaction {
+    description: "Allow AstriaVoter to create a CastVote transaction"
+    participant(p): "org.astria.participant.AstriaVoter"
+    operation: CREATE
+    resource(tx): "org.astria.vote.CastVote"
+    condition: (tx.voterId == p.getIdentifier())
+    action: ALLOW
+}
+
+rule AstriaVoterCanReadElection {
+    description: "Allow AstriaVoter to read Election"
+    participant: "org.astria.participant.AstriaVoter"
+    operation: READ
+    resource: "org.astria.election.Election"
+    action: ALLOW
 }

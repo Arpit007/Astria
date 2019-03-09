@@ -7,17 +7,12 @@ asset Election identified by electionId {
   o String electionName
   o DateTime startDate
   o DateTime endDate
+  o String adminId
   --> Candidate[] candidates
-  --> AstriaAdmin admin
 }
 
 transaction CreateElection {
-  o String adminId
   o String electionName
   o DateTime startDate
   o DateTime endDate
 }
-
-/**
-Todo: Create Transaction to add candidates
- */

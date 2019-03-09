@@ -9,12 +9,20 @@
  * @transaction
  * */
 async function createElection(electionData) {
-	const participantNamespace = 'org.astria.participant';
-	const adminResId = 'AstriaAdmin';
 	const namespace = 'org.astria.election';
 	const resourceId = 'Election';
 	
-	const { adminId, electionName, startDate, endDate } = electionData;
+	const { electionName, startDate, endDate } = electionData;
+	const currentParticipant = getCurrentParticipant();
+	const adminId = currentParticipant.getIdentifier();
+	
+	let eStartDate = new Date(startDate).getTime();
+	let eEndDate = new Date(endDate).getTime();
+	let today = new Date().getTime();
+	
+	if (eStartDate <= today || eEndDate <= startDate) {
+		throw new Error("Invalid Election Dates");
+	}
 	
 	const electionRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
@@ -32,7 +40,7 @@ async function createElection(electionData) {
 	election.startDate = startDate;
 	election.endDate = endDate;
 	election.candidates = [];
-	election.admin = factory.newRelationship(participantNamespace, adminResId, adminId);
+	election.adminId = adminId;
 	
 	return electionRegistry.add(election);
 }

@@ -12,18 +12,16 @@ participant AstriaAdmin extends AstriaUser {
 }
 
 participant AstriaManager extends AstriaUser {
-  --> Election election
+  o String electionId
 }
 
 participant AstriaVoter extends AstriaUser {
-  --> Election election
+  o String electionId
 }
 
 transaction CreateManager {
-  o String electionId
 }
 
 transaction CreateVoter {
-  o String electionId
   o String voterId
 }
