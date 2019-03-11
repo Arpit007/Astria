@@ -12,38 +12,36 @@ async function createCandidate(candidateData) {
 	const electionResPath = 'org.astria.election.Election';
 	const namespace = 'org.astria.candidate';
 	const resourceId = 'Candidate';
-	
+
 	const { candidateName, logoURI } = candidateData;
-	
+
 	const currentParticipant = getCurrentParticipant();
-	
+
 	const electionId = currentParticipant.electionId;
 	const electionRegistry = await getAssetRegistry(electionResPath);
 	const election = await electionRegistry.get(electionId);
-	
+
 	if (new Date().getTime() >= election.startDate.getTime()) {
 		throw new Error("Can't add Candidate now.");
 	}
-	
+
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
-	
+
 	const candidateId = generateId(resourceId, election.electionId, candidateName);
-	
+
 	let result = await query('CandidateById', { candidateId });
 	if (result.length > 0) {
 		throw new Error("Candidate Already Exists");
 	}
-	
+
 	const candidate = factory.newResource(namespace, resourceId, candidateId);
-	
+
 	candidate.candidateName = candidateName;
 	candidate.logoURI = logoURI;
-	
-	await candidateRegistry.add(candidate);
-	election.candidates.push(candidate);
-	
-	return electionRegistry.update(election);
+	candidate.electionId = electionId;
+
+	return candidateRegistry.add(candidate);
 }
 
 

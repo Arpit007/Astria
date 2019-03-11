@@ -8,7 +8,7 @@ import morgan from "morgan";
 import expressValidator from "express-validator";
 
 import "./bootstrap/dbSetup";
-import indexController from "./controllers/index";
+import indexController from "./controllers";
 
 dotenv.config({path: ".env.example"});
 

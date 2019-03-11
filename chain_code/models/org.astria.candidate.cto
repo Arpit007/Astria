@@ -5,6 +5,7 @@ asset Candidate identified by candidateId {
   o String candidateId
   o String candidateName
   o String logoURI
+  o String electionId
 }
 
 transaction CreateCandidate {

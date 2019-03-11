@@ -48,7 +48,7 @@ rule NetworkAdminCanCreateAstriaAdminTransaction {
 rule NetworkAdminCanCreateElection {
     description: "Allow AstriaAdmin to create a new Election"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
-    operation: CREATE
+    operation: CREATE, READ
     resource: "org.astria.election.Election"
     action: ALLOW
 }
@@ -91,8 +91,16 @@ rule AstriaAdminCanCreateManager {
 rule AstriaAdminCanCreateManagerTransaction {
     description: "Allow AstriaAdmin to create a new CreateManager transaction"
     participant: "org.astria.participant.AstriaAdmin"
-    operation: CREATE
+    operation: CREATE, READ
     resource: "org.astria.participant.CreateManager"
+    action: ALLOW
+}
+
+rule AstriaAdminCanViewCreateVoterTransaction {
+    description: "Allow AstriaAdmin to view CreateVoter transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: READ
+    resource: "org.astria.participant.CreateVoter"
     action: ALLOW
 }
 
@@ -161,7 +169,7 @@ rule AstriaVoterCanVote {
     participant(p): "org.astria.participant.AstriaVoter"
     operation: READ, UPDATE
     resource(o): "org.astria.vote.Vote"
-    condition: (o.voterId == p.userId && o.electionId == p.electionId)
+    condition: (o.voteId == p.voteId && o.electionId == p.electionId)
     action: ALLOW
 }
 

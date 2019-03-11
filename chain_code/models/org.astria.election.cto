@@ -8,7 +8,6 @@ asset Election identified by electionId {
   o DateTime startDate
   o DateTime endDate
   o String adminId
-  --> Candidate[] candidates
 }
 
 transaction UpdateElection {
