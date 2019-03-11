@@ -4,7 +4,7 @@
   },
   "name": "chain_code",
   "version": "0.0.1",
-  "description": "Astria",
+  "description": "Astria Chain Code",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/chain_code.bna",
     "pretest": "npm run lint",
@@ -32,5 +32,6 @@
     "nyc": "latest",
     "mkdirp": "latest",
     "mocha": "latest"
-  }
+  },
+  "dependencies": {}
 }
