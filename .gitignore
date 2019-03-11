@@ -1,7 +1,4 @@
 .idea/
-chain_code/dist/
-chain_code/node_modules/
-
 
 lib-cov
 *.seed
@@ -15,16 +12,15 @@ lib-cov
 
 pids
 logs
-astria_server/results
-astria_server/tmp
-astria_server/public/css/main.css
-astria_server/coverage
-astria_server/.env
+
+# Chain Code
+chain_code/dist/
+chain_code/node_modules/
+
+# Astria Server
 astria_server/node_modules/
-astria_server/bower_components
-astria_server/.idea
-astria_server/*.iml
-astria_server/.DS_Store
-astria_server/Thumbs.db
-astria_server/dist/**/*
-astria_server/.vscode/**/*
+astria_server/dist/
+
+# Astria Auth Server
+astria_auth_server/node_modules/
+astria_auth_server/dist/

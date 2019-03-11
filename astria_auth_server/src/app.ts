@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import expressValidator from "express-validator";
 
+import "./bootstrap/dbSetup";
 import indexController from "./controllers";
 
 dotenv.config({path: ".env.example"});
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressValidator());
 app.use(lusca.xframe("SAMEORIGIN"));
+app.use(lusca.xssProtection(true));
 
 // Setup Controllers
 app.use("/", indexController);

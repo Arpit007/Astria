@@ -7,6 +7,7 @@ app.use((req: express.Request, res: express.Response, next: NextFunction) => {
     return Reply(res, 404, "Not Found");
 });
 
+
 /**
  * Start Express server.
  */
