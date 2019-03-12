@@ -1,0 +1,1 @@
+composer network install -c PeerAdmin@hlfv1 -a astria@0.0.1.bna

@@ -2,7 +2,7 @@ import express from "express";
 import compression from "compression";
 import bodyParser from "body-parser";
 import lusca from "lusca";
-import dotenv from "dotenv";
+import * as dotenv from "dotenv";
 import morgan from "morgan";
 import expressValidator from "express-validator";
 
