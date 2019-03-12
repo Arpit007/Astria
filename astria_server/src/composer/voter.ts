@@ -3,6 +3,7 @@
  */
 import { BusinessNetworkConnection } from "composer-client";
 
+
 export async function castVote(voterId: string, encCandidateId: string): Promise<boolean> {
     const namespace = "org.astria.vote";
     
@@ -22,4 +23,5 @@ export async function castVote(voterId: string, encCandidateId: string): Promise
 
 
 export async function verifyVote() {
+    // Todo: Not Implemented
 }

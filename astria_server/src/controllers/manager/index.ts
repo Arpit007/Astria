@@ -6,6 +6,12 @@ import { addVoter } from "../../composer/manager";
 const router: Router = express.Router();
 export default router;
 
+
+/**
+ * Adds a new voter to the election
+ * @param auth_token
+ * @param voterId
+ * */
 router.post("/addVoter", AuthoriseUser, async (req: Request, res: Response) => {
     try {
         // @ts-ignore

@@ -71,7 +71,7 @@ router.post("/resultSummary", async (req: Request, res: Response) => {
     try {
         await ParticipantComposer.resultSummary();
         
-        return Reply(res, 400, "Not Implemented");
+        return Reply(res, 404, "Not Implemented");
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -85,7 +85,7 @@ router.post("/detailedSummary", async (req: Request, res: Response) => {
     try {
         await ParticipantComposer.detailedResultSummary();
         
-        return Reply(res, 400, "Not Implemented");
+        return Reply(res, 404, "Not Implemented");
     } catch (err) {
         return Reply(res, 400, err.message);
     }
