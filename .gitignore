@@ -24,4 +24,3 @@ astria_server/dist/
 # Astria Auth Server
 astria_auth_server/node_modules/
 astria_auth_server/dist/
-astria_server/src/composer/sample/

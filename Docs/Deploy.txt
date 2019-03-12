@@ -1,1 +1,2 @@
 composer network install -c PeerAdmin@hlfv1 -a astria@0.0.1.bna
+composer network upgrade -c PeerAdmin@hlfv1 -n chain_code -V 0.0.4

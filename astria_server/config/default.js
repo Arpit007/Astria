@@ -15,7 +15,5 @@ const info = JSON.stringify({
 		}
 	}
 });
-console.log('Hello');
-console.log(info);
 
 process.env.NODE_CONFIG = info;

@@ -466,6 +466,7 @@
 	exports.sha224 = createMethod(true);
 	exports.sha256.hmac = createHmacMethod();
 	exports.sha224.hmac = createHmacMethod(true);
+	global.sha256 = exports;
 	
 	if (COMMON_JS) {
 		module.exports = exports;
