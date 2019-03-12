@@ -74,8 +74,8 @@ export async function viewAllElections(): Promise<Election[]> {
     return electionList;
 }
 
-export async function overallResult() {
+export async function resultSummary() {
 }
 
-export async function allVoteResult() {
+export async function detailedResultSummary() {
 }
