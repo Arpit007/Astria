@@ -12,6 +12,7 @@ export class Candidate {
     }
 }
 
+
 export class Election {
     public electionId: string;
     public electionName: string;

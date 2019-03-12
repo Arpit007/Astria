@@ -20,5 +20,6 @@ export async function castVote(voterId: string, encCandidateId: string): Promise
     return true;
 }
 
+
 export async function verifyVote() {
 }

@@ -27,7 +27,6 @@ export async function createAdmin(voteKey: string, idKey: string, email: string,
     createAdmin.startDate = startDate;
     createAdmin.endDate = endDate;
     
-    // Todo: Get ElectionId Also
     const adminId = await bnc.submitTransaction(createAdmin);
     
     const cardName = adminId;
@@ -52,6 +51,7 @@ export async function createAdmin(voteKey: string, idKey: string, email: string,
     return adminId;
 }
 
+
 export async function updateElection(adminCardId: string, startDate: Date, endDate: Date): Promise<boolean> {
     const namespace = "org.astria.election";
     
@@ -70,8 +70,11 @@ export async function updateElection(adminCardId: string, startDate: Date, endDa
     return true;
 }
 
+
 export async function publishResult(voteDecKey: string) {
+    // Todo: Not Implemented
 }
+
 
 export async function addManager(adminCardId: string, email: string): Promise<string> {
     const namespace = "org.astria.participant";
@@ -108,6 +111,7 @@ export async function addManager(adminCardId: string, email: string): Promise<st
     
     return managerId;
 }
+
 
 export async function addCandidate(adminCardId: string, candidateName: string, logoURI: string): Promise<boolean> {
     const namespace = "org.astria.candidate";

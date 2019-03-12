@@ -31,16 +31,13 @@ export async function viewCandidates(userCardId: string, resourceId: string): Pr
     return candidateList;
 }
 
-export async function viewElection(userCardId: string, resourceId: string): Promise<Election> {
+
+export async function viewElection(electionId: string): Promise<Election> {
+    const adminId = "admin@chain_code";
     const namespace = "org.astria.election";
-    const participantNamespace = "org.astria.participant";
     
     const bnc = new BusinessNetworkConnection();
-    await bnc.connect(userCardId);
-    
-    const participantRegistry = await bnc.getParticipantRegistry(`${participantNamespace}.${resourceId}`);
-    const user = await participantRegistry.get(userCardId);
-    const electionId = user.electionId;
+    await bnc.connect(adminId);
     
     const electionRegistry = await bnc.getAssetRegistry(namespace);
     const electionObj = await electionRegistry.get(electionId);
@@ -52,6 +49,7 @@ export async function viewElection(userCardId: string, resourceId: string): Prom
     
     return election;
 }
+
 
 export async function viewAllElections(): Promise<Election[]> {
     const adminId = "admin@chain_code";
@@ -74,8 +72,12 @@ export async function viewAllElections(): Promise<Election[]> {
     return electionList;
 }
 
+
 export async function resultSummary() {
+    // Todo: Not Implemented
 }
 
+
 export async function detailedResultSummary() {
+    // Todo: Not Implemented
 }
