@@ -1,9 +1,10 @@
 /**
  * Created by StarkX on 11-Mar-19.
  */
-
 import { BusinessNetworkConnection } from "composer-client";
+
 import { Candidate, Election } from "./model";
+
 
 export async function viewCandidates(userCardId: string, resourceId: string): Promise<Candidate[]> {
     const namespace = "org.astria.participant";

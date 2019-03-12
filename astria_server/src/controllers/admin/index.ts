@@ -1,18 +1,12 @@
 import express, { Request, Response, Router } from "express";
-import { AuthoriseUser, GenAdminKeys } from "../../lib/authenticate";
-import { addCandidate, addManager, createAdmin, publishResult, updateElection } from "../../composer/admin";
+
 import Reply from "../../util/Reply";
+import { parseDate } from "../../util/misc";
+import * as AdminComposer from "../../composer/admin";
+import { AuthoriseUser, GenAdminKeys } from "../../lib/authenticate";
 
 const router: Router = express.Router();
 export default router;
-
-function parseDate(date: string, tag: string): Date {
-    try {
-        return new Date(date);
-    } catch (err) {
-        throw new Error(`Invalid ${tag}`);
-    }
-}
 
 
 /**
@@ -34,7 +28,7 @@ router.post("/create", GenAdminKeys, async (req: Request, res: Response) => {
         endDate = parseDate(endDate, "endDate");
         
         // @ts-ignore
-        const adminId = await createAdmin(voteKey, idKey, email, electionName, startDate, endDate);
+        const adminId = await AdminComposer.createAdmin(voteKey, idKey, email, electionName, startDate, endDate);
         
         // @ts-ignore
         return Reply(res, 200, {adminId, voteDecKey});
@@ -53,7 +47,7 @@ router.post("/publishResult", AuthoriseUser, async (req: Request, res: Response)
     try {
         const {voteDecKey} = req.body;
         
-        await publishResult(voteDecKey);
+        await AdminComposer.publishResult(voteDecKey);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -74,7 +68,7 @@ router.post("/addManager", AuthoriseUser, async (req: Request, res: Response) =>
         const {email} = req.body;
         
         // Todo: How will manager Login
-        const managerId = await addManager(userId, email);
+        const managerId = await AdminComposer.addManager(userId, email);
         
         return Reply(res, 200, {managerId});
     } catch (err) {
@@ -94,7 +88,7 @@ router.post("/addCandidate", AuthoriseUser, async (req: Request, res: Response) 
         const {userId} = req.user;
         const {candidateName, logoURI} = req.body;
         
-        await addCandidate(userId, candidateName, logoURI);
+        await AdminComposer.addCandidate(userId, candidateName, logoURI);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -118,7 +112,7 @@ router.post("/update", AuthoriseUser, async (req: Request, res: Response) => {
         endDate = parseDate(endDate, "endDate");
         
         // @ts-ignore
-        await updateElection(userId, startDate, endDate);
+        await AdminComposer.updateElection(userId, startDate, endDate);
         
         return Reply(res, 200, {});
     } catch (err) {

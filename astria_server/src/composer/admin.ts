@@ -1,10 +1,10 @@
 /**
  * Created by StarkX on 11-Mar-19.
  */
-
-import { BusinessNetworkConnection } from "composer-client";
 import { IdCard } from "composer-common";
 import { AdminConnection } from "composer-admin";
+import { BusinessNetworkConnection } from "composer-client";
+
 import connectionProfile from "../../config/profile";
 
 

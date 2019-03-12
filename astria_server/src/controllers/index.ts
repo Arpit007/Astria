@@ -5,8 +5,6 @@ import rootIndex from "./root";
 import adminIndex from "./admin";
 import voterIndex from "./voter";
 import managerIndex from "./manager";
-import app from "../app";
-import Reply from "../util/Reply";
 
 const router: Router = express.Router();
 export default router;
