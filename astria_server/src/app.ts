@@ -22,6 +22,6 @@ app.use(expressValidator());
 app.use(lusca.xframe("SAMEORIGIN"));
 
 // Setup Controllers
-app.use("/", indexController);
+app.use(indexController);
 
 export default app;

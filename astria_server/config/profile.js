@@ -27,10 +27,6 @@ module.exports = {
 			],
 			"peers" : {
 				"peer0.org1.example.com" : {
-					/*"endorsingPeer": true,
-					"chaincodeQuery": true,
-					"ledgerQuery": true,
-					"eventSource": true*/
 				}
 			}
 		}

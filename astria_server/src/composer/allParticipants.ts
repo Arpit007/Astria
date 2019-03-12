@@ -3,7 +3,7 @@
  */
 import { BusinessNetworkConnection } from "composer-client";
 
-import { Candidate, Election } from "./model";
+import { AstriaAdmin, Candidate, Election } from "./model";
 
 
 export async function viewCandidates(userCardId: string, resourceId: string): Promise<Candidate[]> {
@@ -81,4 +81,34 @@ export async function resultSummary() {
 
 export async function detailedResultSummary() {
     // Todo: Not Implemented
+}
+
+
+export async function getAdmin(userCardId: string, resourceId: string): Promise<AstriaAdmin> {
+    const namespace = "org.astria.participant";
+    
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(userCardId);
+    
+    const participantRegistry = await bnc.getParticipantRegistry(`${namespace}.${resourceId}`);
+    const user = await participantRegistry.get(userCardId);
+    
+    let adminObj = undefined;
+    
+    if (resourceId !== "AstriaAdmin") {
+        const electionId = user.electionId;
+        const election = await viewElection(electionId);
+        
+        const adminRegistry = await bnc.getParticipantRegistry(`${namespace}.AstriaAdmin`);
+        adminObj = await adminRegistry.get(election.adminId);
+    } else {
+        adminObj = user;
+    }
+    
+    const {userId, electionId, voteKey, voteDecKey, idKey, email} = adminObj;
+    const admin = new AstriaAdmin(userId, electionId, voteKey, voteDecKey, idKey, email);
+    
+    await bnc.disconnect();
+    
+    return admin;
 }

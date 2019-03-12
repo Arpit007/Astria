@@ -8,3 +8,7 @@ export default router;
 router.get("/", (req: Request, res: Response) => {
     return Reply(res, 200, {msg: "Astria Server"});
 });
+
+router.get("/hi", (req: Request, res: Response) => {
+    return Reply(res, 200, {msg: "Astria Server yay"});
+});

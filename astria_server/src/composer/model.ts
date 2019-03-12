@@ -28,3 +28,22 @@ export class Election {
         this.adminId = adminId;
     }
 }
+
+export class AstriaAdmin {
+    public userId: string;
+    public electionId: string;
+    public voteKey: string;
+    public voteDecKey: string;
+    public idKey: string;
+    public email: string;
+    
+    
+    constructor(userId: string, electionId: string, voteKey: string, voteDecKey: string, idKey: string, email: string) {
+        this.userId = userId;
+        this.electionId = electionId;
+        this.voteKey = voteKey;
+        this.voteDecKey = voteDecKey;
+        this.idKey = idKey;
+        this.email = email;
+    }
+}
