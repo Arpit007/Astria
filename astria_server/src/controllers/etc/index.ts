@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 
-import Reply from "../../util/Reply";
+import Reply from "../../util/reply";
 import { AuthoriseUser } from "../../lib/authenticate";
 import { Candidate, Election } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
@@ -30,11 +30,10 @@ router.post("/candidates", AuthoriseUser, async (req: Request, res: Response) =>
 
 /**
  * Returns Details about an Election
- * @param auth_token
  * @param electionId
  * @returns Election
  * */
-router.post("/election", AuthoriseUser, async (req: Request, res: Response) => {
+router.post("/election", async (req: Request, res: Response) => {
     try {
         // @ts-ignore
         const {electionId} = req.body;

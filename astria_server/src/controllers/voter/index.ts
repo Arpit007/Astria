@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 
-import Reply from "../../util/Reply";
+import Reply from "../../util/reply";
 import { castVote } from "../../composer/voter";
 import { AuthoriseUser } from "../../lib/authenticate";
 

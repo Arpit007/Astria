@@ -1,7 +1,7 @@
 import express, { NextFunction } from "express";
 
 import app from "./app";
-import Reply from "./util/Reply";
+import Reply from "./util/reply";
 
 
 app.use((req: express.Request, res: express.Response, next: NextFunction) => {

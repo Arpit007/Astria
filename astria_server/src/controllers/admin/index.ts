@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 
-import Reply from "../../util/Reply";
+import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
 import * as AdminComposer from "../../composer/admin";
 import { AuthoriseUser, GenAdminKeys } from "../../lib/authenticate";
@@ -79,6 +79,7 @@ router.post("/addManager", AuthoriseUser, async (req: Request, res: Response) =>
 
 /**
  * Add a new candidate to the election
+ * @param auth_token
  * @param candidateName
  * @param logoURI
  * */
@@ -99,6 +100,7 @@ router.post("/addCandidate", AuthoriseUser, async (req: Request, res: Response) 
 
 /**
  * Update the Election Dates
+ * @param auth_token
  * @param startDate
  * @param endDate
  * */

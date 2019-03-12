@@ -35,7 +35,7 @@ export async function viewCandidates(userCardId: string, resourceId: string): Pr
 
 export async function viewElection(electionId: string): Promise<Election> {
     const adminId = "admin@chain_code";
-    const namespace = "org.astria.election";
+    const namespace = "org.astria.election.Election";
     
     const bnc = new BusinessNetworkConnection();
     await bnc.connect(adminId);

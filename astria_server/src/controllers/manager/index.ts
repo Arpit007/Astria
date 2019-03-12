@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import { AuthoriseUser } from "../../lib/authenticate";
-import Reply from "../../util/Reply";
+import Reply from "../../util/reply";
 import { addVoter } from "../../composer/manager";
 import { getAdmin } from "../../composer/allParticipants";
 
