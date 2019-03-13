@@ -36,15 +36,18 @@ export class AstriaAdmin {
     public voteDecKey: string;
     public idKey: string;
     public email: string;
+    public secret: string;
     
     
-    constructor(userId: string, electionId: string, voteKey: string, voteDecKey: string, idKey: string, email: string) {
+    constructor(userId: string, electionId: string, voteKey: string, voteDecKey: string,
+                idKey: string, email: string, secret: string) {
         this.userId = userId;
         this.electionId = electionId;
         this.voteKey = voteKey;
         this.voteDecKey = voteDecKey;
         this.idKey = idKey;
         this.email = email;
+        this.secret = secret;
     }
 }
 

@@ -84,7 +84,7 @@ export async function detailedResultSummary() {
 }
 
 
-export async function getAdmin(userCardId: string, resourceId: string): Promise<AstriaAdmin> {
+export async function getAdmin(userCardId: string, resourceId: string, getSecret = false): Promise<AstriaAdmin> {
     const namespace = "org.astria.participant";
     
     const bnc = new BusinessNetworkConnection();
@@ -105,8 +105,9 @@ export async function getAdmin(userCardId: string, resourceId: string): Promise<
         adminObj = user;
     }
     
-    const {userId, electionId, voteKey, voteDecKey, idKey, email} = adminObj;
-    const admin = new AstriaAdmin(userId, electionId, voteKey, voteDecKey, idKey, email);
+    const {userId, electionId, voteKey, voteDecKey, idKey, email, secret} = adminObj;
+    const admin = new AstriaAdmin(userId, electionId, voteKey, voteDecKey,
+        idKey, email, (getSecret ? secret : undefined));
     
     await bnc.disconnect();
     
