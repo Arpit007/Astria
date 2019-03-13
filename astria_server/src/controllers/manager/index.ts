@@ -3,6 +3,7 @@ import { AuthoriseUser } from "../../lib/authenticate";
 import Reply from "../../util/reply";
 import { addVoter } from "../../composer/manager";
 import { getAdmin } from "../../composer/allParticipants";
+import { encrypt } from "../../util/security";
 
 const router: Router = express.Router();
 export default router;
@@ -20,8 +21,7 @@ router.post("/addVoter", AuthoriseUser, async (req: Request, res: Response) => {
         const {voterId} = req.body;
         
         const admin = await getAdmin(userId, resourceId);
-        // Todo: Encrypt VoterId
-        const encVoterId = voterId;
+        const encVoterId = encrypt(voterId, admin.idKey);
         
         await addVoter(userId, encVoterId);
         

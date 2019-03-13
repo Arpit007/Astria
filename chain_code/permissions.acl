@@ -164,6 +164,15 @@ rule AstriaManagerCanCreateVote {
     action: ALLOW
 }
 
+rule AstriaManagerCanReadAdmin {
+    description: "Allow AstriaManagers to read AstriaAdmin details"
+    participant(p): "org.astria.participant.AstriaManager"
+    operation: READ
+    resource(o): "org.astria.participant.AstriaAdmin"
+    condition: (p.electionId == o.electionId)
+    action: ALLOW
+}
+
 rule AstriaVoterCanVote {
     description: "Allow AstriaVoter to cast a Vote"
     participant(p): "org.astria.participant.AstriaVoter"
@@ -186,6 +195,15 @@ rule AstriaVoterCanReadCandidate {
     participant(p): "org.astria.participant.AstriaVoter"
     operation: READ
     resource(o): "org.astria.candidate.Candidate"
+    condition: (p.electionId == o.electionId)
+    action: ALLOW
+}
+
+rule AstriaVoterCanReadAdmin {
+    description: "Allow AstriaVoters to read AstriaAdmin details"
+    participant(p): "org.astria.participant.AstriaVoter"
+    operation: READ
+    resource(o): "org.astria.participant.AstriaAdmin"
     condition: (p.electionId == o.electionId)
     action: ALLOW
 }

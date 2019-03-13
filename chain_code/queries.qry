@@ -51,3 +51,17 @@ query AllManagersOfElection {
     SELECT org.astria.election.Election
     WHERE (adminId == _$adminId)
  }
+
+ query AstriaAdminByLoginId {
+   description: "Returns AstriaAdmin of given loginId"
+   statement:
+    SELECT org.astria.participant.AstriaAdmin
+    WHERE (loginId == _$loginId)
+ }
+
+ query AstriaManagerByLoginId {
+   description: "Returns AstriaManager of given loginId"
+   statement:
+    SELECT org.astria.participant.AstriaManager
+    WHERE (loginId == _$loginId)
+ }

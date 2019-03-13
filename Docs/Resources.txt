@@ -59,3 +59,6 @@ test
 
 cto
 	https://hyperledger.github.io/composer/v0.19/reference/cto_language
+
+sample app
+	https://github.com/IBM/customer-loyalty-program/blob/master/web-app/network/network.js

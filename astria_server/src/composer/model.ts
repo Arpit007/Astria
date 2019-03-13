@@ -47,3 +47,18 @@ export class AstriaAdmin {
         this.email = email;
     }
 }
+
+export class Manager {
+    public userId: string;
+    public email: string;
+    public loginId: string;
+    public secret: string;
+    
+    
+    constructor(userId: string, email: string, loginId: string, secret: string) {
+        this.userId = userId;
+        this.email = email;
+        this.loginId = loginId;
+        this.secret = secret;
+    }
+}

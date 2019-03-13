@@ -15,15 +15,9 @@ globals:
     post: true
     emit: true
 rules:
-    indent:
-        - error
-        - 4
     linebreak-style:
         - error
         - unix
-    quotes:
-        - error
-        - single
     semi:
         - error
         - always
@@ -36,8 +30,6 @@ rules:
     no-throw-literal: error
     strict: error
     dot-notation: error
-    no-tabs: error
-    no-trailing-spaces: error
     no-useless-call: error
     no-with: error
     operator-linebreak: error

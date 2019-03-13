@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /**
  * Create AstriaAdmin
@@ -7,12 +7,12 @@
  * @transaction
  * */
 async function createAdmin(adminData) {
-	const adminNamespace = 'org.astria.participant';
-	const adminResourceId = 'AstriaAdmin';
-	const electionNamespace = 'org.astria.election';
-	const electionResourceId = 'Election';
+	const adminNamespace = "org.astria.participant";
+	const adminResourceId = "AstriaAdmin";
+	const electionNamespace = "org.astria.election";
+	const electionResourceId = "Election";
 
-	const { voteKey, idKey, email, electionName, startDate, endDate } = adminData;
+	const { voteKey, idKey, email, electionName, startDate, endDate, secret, loginId } = adminData;
 
 	let eStartDate = startDate.getTime();
 	let eEndDate = endDate.getTime();
@@ -20,6 +20,11 @@ async function createAdmin(adminData) {
 
 	if (eStartDate <= today || eEndDate <= startDate) {
 		throw new Error("Invalid Election Dates");
+	}
+
+	let idAccounts = await query("AstriaAdminByLoginId", { loginId });
+	if (idAccounts.length > 0){
+		throw new Error("Admin LoginId already exists");
 	}
 
 	const adminRegistry = await getParticipantRegistry(`${adminNamespace}.${adminResourceId}`);
@@ -34,6 +39,8 @@ async function createAdmin(adminData) {
 	admin.idKey = idKey;
 	admin.email = email;
 	admin.electionId = electionId;
+	admin.secret = secret;
+	admin.loginId = loginId;
 
 	await adminRegistry.add(admin);
 
@@ -58,11 +65,11 @@ async function createAdmin(adminData) {
  * @transaction
  * */
 async function createManager(managerData) {
-	const namespace = 'org.astria.participant';
-	const resourceId = 'AstriaManager';
-	const electionResPath = 'org.astria.election.Election';
+	const namespace = "org.astria.participant";
+	const resourceId = "AstriaManager";
+	const electionResPath = "org.astria.election.Election";
 
-	const { email } = managerData;
+	const { email, secret, loginId } = managerData;
 
 	const currentParticipant = getCurrentParticipant();
 
@@ -74,6 +81,11 @@ async function createManager(managerData) {
 		throw new Error("Can't add Manager now.");
 	}
 
+	let idAccounts = await query("AstriaManagerByLoginId", { loginId });
+	if (idAccounts.length > 0){
+		throw new Error("Manager LoginId already exists");
+	}
+
 	const managerRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 
@@ -82,6 +94,8 @@ async function createManager(managerData) {
 
 	manager.electionId = electionId;
 	manager.email = email;
+	manager.secret = secret;
+	manager.loginId = loginId;
 
 	await managerRegistry.add(manager);
 
@@ -95,11 +109,11 @@ async function createManager(managerData) {
  * @transaction
  * */
 async function createVoter(voterData) {
-	const namespace = 'org.astria.participant';
-	const resourceId = 'AstriaVoter';
-	const voteNamespace = 'org.astria.vote';
-	const voteResourceId = 'Vote';
-	const electionResPath = 'org.astria.election.Election';
+	const namespace = "org.astria.participant";
+	const resourceId = "AstriaVoter";
+	const voteNamespace = "org.astria.vote";
+	const voteResourceId = "Vote";
+	const electionResPath = "org.astria.election.Election";
 
 	const { voterId } = voterData;
 
@@ -113,9 +127,9 @@ async function createVoter(voterData) {
 		throw new Error("Can't add Voter now.");
 	}
 
-	let result = await query('VoterById', { userId : voterId });
+	let result = await query("VoterById", { userId : voterId });
 	if (result.length > 0) {
-		throw new Error('Voter Already Exists');
+		throw new Error("Voter Already Exists");
 	}
 
 	const voterRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);

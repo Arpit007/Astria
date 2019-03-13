@@ -6,10 +6,11 @@ import { AdminConnection } from "composer-admin";
 import { BusinessNetworkConnection } from "composer-client";
 
 import connectionProfile from "../../config/profile";
+import { Manager } from "./model";
 
 
-export async function createAdmin(voteKey: string, idKey: string, email: string,
-                                  electionName: string, startDate: Date, endDate: Date): Promise<string> {
+export async function createAdmin(voteKey: string, idKey: string, email: string, electionName: string,
+                                  startDate: Date, endDate: Date, loginId: string, secret: string): Promise<string> {
     const networkAdminId = "admin@chain_code";
     const namespace = "org.astria.participant";
     const networkName = "chain_code";
@@ -26,6 +27,8 @@ export async function createAdmin(voteKey: string, idKey: string, email: string,
     createAdmin.electionName = electionName;
     createAdmin.startDate = startDate;
     createAdmin.endDate = endDate;
+    createAdmin.loginId = loginId;
+    createAdmin.secret = secret;
     
     const adminId = await bnc.submitTransaction(createAdmin);
     
@@ -76,7 +79,7 @@ export async function publishResult(voteDecKey: string) {
 }
 
 
-export async function addManager(adminCardId: string, email: string): Promise<string> {
+export async function addManager(adminCardId: string, email: string, loginId: string, secret: string): Promise<string> {
     const namespace = "org.astria.participant";
     const networkName = "chain_code";
     
@@ -87,18 +90,20 @@ export async function addManager(adminCardId: string, email: string): Promise<st
     
     const createManager = factory.newTransaction(namespace, "CreateManager");
     createManager.email = email;
+    createManager.loginId = loginId;
+    createManager.secret = secret;
     
     const managerId = await bnc.submitTransaction(createManager);
     
     const cardName = managerId;
-    const options = { issuer : true };
+    const options = {issuer: true};
     const identity = await bnc.issueIdentity(`${namespace}.AstriaManager#${managerId}`, cardName, options);
     
     const metadata = {
-        userName : identity.userID,
-        version : 1,
-        enrollmentSecret : identity.userSecret,
-        businessNetwork : networkName
+        userName: identity.userID,
+        version: 1,
+        enrollmentSecret: identity.userSecret,
+        businessNetwork: networkName
     };
     
     const idCard = new IdCard(metadata, connectionProfile);
@@ -129,4 +134,29 @@ export async function addCandidate(adminCardId: string, candidateName: string, l
     await bnc.disconnect();
     
     return true;
+}
+
+export async function getManagers(userCardId: string): Promise<Manager[]> {
+    const namespace = "org.astria.participant";
+    
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(userCardId);
+    
+    const participantRegistry = await bnc.getParticipantRegistry(`${namespace}.AstriaAdmin`);
+    const user = await participantRegistry.get(userCardId);
+    
+    const electionId = user.electionId;
+    
+    const managersObj = await bnc.query("AllManagersOfElection", {electionId});
+    
+    const managersList: Manager[] = [];
+    
+    for (const managerObj of managersObj) {
+        const manager = new Manager(managerObj.userId, managerObj.email, managerObj.loginId, undefined);
+        managersList.push(manager);
+    }
+    
+    await bnc.disconnect();
+    
+    return managersList;
 }

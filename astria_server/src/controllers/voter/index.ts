@@ -3,6 +3,8 @@ import express, { Request, Response, Router } from "express";
 import Reply from "../../util/reply";
 import { castVote } from "../../composer/voter";
 import { AuthoriseUser } from "../../lib/authenticate";
+import { getAdmin } from "../../composer/allParticipants";
+import { encrypt } from "../../util/security";
 
 const router: Router = express.Router();
 export default router;
@@ -16,11 +18,11 @@ export default router;
 router.post("/castVote", AuthoriseUser, async (req: Request, res: Response) => {
     try {
         // @ts-ignore
-        const {userId} = req.user;
+        const {userId, resourceId} = req.user;
         const {candidateId} = req.body;
-        
-        // Todo: Encrypt candidateId
-        const encCandidateId = candidateId;
+    
+        const admin = await getAdmin(userId, resourceId);
+        const encCandidateId = encrypt(candidateId, admin.voteKey);
         
         await castVote(userId, encCandidateId);
         

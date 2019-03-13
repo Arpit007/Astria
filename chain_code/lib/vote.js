@@ -33,7 +33,7 @@ async function castVote(voteData) {
 	const voteRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const vote = await voteRegistry.get(voteId);
 
-	if(vote.hasVoted){
+	if (vote.hasVoted) {
 		throw new Error('Already Voted');
 	}
 

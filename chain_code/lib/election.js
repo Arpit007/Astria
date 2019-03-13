@@ -13,14 +13,14 @@ async function updateElection(electionData) {
 	const electionResPath = 'org.astria.election.Election';
 
 	const { startDate, endDate } = electionData;
-	
+
 	const currentParticipant = getCurrentParticipant();
 	const electionId = currentParticipant.electionId;
 
 	let eStartDate = startDate.getTime();
 	let eEndDate = endDate.getTime();
 	let today = new Date().getTime();
-	
+
 	if (eStartDate <= today){
 		throw new Error("Can't change time now");
 	}
@@ -31,9 +31,9 @@ async function updateElection(electionData) {
 
 	const electionRegistry = await getAssetRegistry(electionResPath);
 	const election = await electionRegistry.get(electionId);
-	
+
 	election.startDate = startDate;
 	election.endDate = endDate;
-	
+
 	return electionRegistry.update(election);
 }

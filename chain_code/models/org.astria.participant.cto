@@ -11,10 +11,14 @@ participant AstriaAdmin extends AstriaUser {
   o String voteDecKey optional
   o String idKey
   o String email regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  o String loginId
+  o String secret
 }
 
 participant AstriaManager extends AstriaUser {
   o String email regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  o String loginId
+  o String secret
 }
 
 participant AstriaVoter extends AstriaUser {
@@ -29,11 +33,15 @@ transaction CreateAdmin {
   o String electionName
   o DateTime startDate
   o DateTime endDate
+  o String secret
+  o String loginId
 }
 
 @returns(String)
 transaction CreateManager {
   o String email
+  o String secret
+  o String loginId
 }
 
 transaction CreateVoter {
