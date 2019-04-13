@@ -21,7 +21,7 @@ router.post("/addVoter", AuthoriseUser, async (req: Request, res: Response) => {
         const {voterId} = req.body;
         
         const admin = await getAdmin(userId, resourceId);
-        const encVoterId = encrypt(voterId, admin.idKey);
+        const encVoterId = encrypt(voterId, admin.idKey);//Todo: Hash it
         
         await addVoter(userId, encVoterId);
         
