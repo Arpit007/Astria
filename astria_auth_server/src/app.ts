@@ -4,9 +4,10 @@ import bodyParser from "body-parser";
 import lusca from "lusca";
 import dotenv from "dotenv";
 import morgan from "morgan";
+import passport from "passport";
 import expressValidator from "express-validator";
 
-import "./bootstrap/dbSetup";
+import "./bootstrap";
 import indexController from "./controllers";
 
 dotenv.config({path: ".env.example"});
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressValidator());
+app.use(passport.initialize());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 

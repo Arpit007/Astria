@@ -7,7 +7,7 @@ const mongoUrl = MONGODB_URI;
 
 (<any>mongoose).Promise = bluebird;
 
-mongoose.connect(mongoUrl)
+mongoose.connect(mongoUrl, {useNewUrlParser: true})
     .then(() => {
     })
     .catch((err: Error) => {
