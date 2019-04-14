@@ -1,38 +1,31 @@
-query AllManagersOfElection {
-   description: "Returns all mangers of an Election in the registry"
-   statement:
-      SELECT  org.astria.participant.AstriaManager
-      WHERE (electionId == _$electionId)
- }
-
- query AllAdmin {
-   description: "Returns all admins in the registry"
+ query AllAstriaAdmins {
+   description: "Returns all the AstriaAdmins in the registry"
    statement:
       SELECT  org.astria.participant.AstriaAdmin
  }
 
  query AllVotesOfElection {
-   description: "Returns all votes of an Election in the registry"
+   description: "Returns all the votes of an election"
    statement:
       SELECT  org.astria.vote.Vote
       WHERE (electionId == _$electionId)
  }
 
  query AllElections {
-   description: "Returns all elections in the registry"
+   description: "Returns all the elections in the registry"
    statement:
       SELECT  org.astria.election.Election
  }
 
  query CandidateById {
-   description: "Returns candidate of given ID in the registry"
+   description: "Returns the candidate of given ID in the registry"
    statement:
       SELECT  org.astria.candidate.Candidate
       WHERE (candidateId == _$candidateId)
  }
 
- query CandidateByElectionId {
-   description: "Returns candidate of given election"
+ query CandidatesByElectionId {
+   description: "Returns candidates of a given election"
    statement:
       SELECT  org.astria.candidate.Candidate
       WHERE (electionId == _$electionId)
@@ -41,27 +34,13 @@ query AllManagersOfElection {
  query VoterById {
    description: "Returns voter of given Id in the registry"
    statement:
-    SELECT org.astria.participant.AstriaVoter
-    WHERE (userId == _$userId)
+      SELECT org.astria.participant.AstriaVoter
+      WHERE (userId == _$userId)
  }
 
- query ElectionByAdminId {
-   description: "Returns election created by an AstriaAdmin"
+ query ElectionsByAdminId {
+   description: "Returns elections created by an AstriaAdmin"
    statement:
-    SELECT org.astria.election.Election
-    WHERE (adminId == _$adminId)
- }
-
- query AstriaAdminByLoginId {
-   description: "Returns AstriaAdmin of given loginId"
-   statement:
-    SELECT org.astria.participant.AstriaAdmin
-    WHERE (loginId == _$loginId)
- }
-
- query AstriaManagerByLoginId {
-   description: "Returns AstriaManager of given loginId"
-   statement:
-    SELECT org.astria.participant.AstriaManager
-    WHERE (loginId == _$loginId)
+      SELECT org.astria.election.Election
+      WHERE (adminId == _$adminId)
  }
