@@ -1,16 +1,34 @@
 namespace org.astria.election
-import org.astria.candidate.Candidate
-import org.astria.participant.AstriaAdmin
 
 asset Election identified by electionId {
   o String electionId
   o String electionName
   o DateTime startDate
   o DateTime endDate
+  o String idKey
+  o String voteEncKey
+  o String voteDecKey optional
+  o Boolean freeze default = false
   o String adminId
+  o String[] managers
 }
 
-transaction UpdateElection {
+transaction modifyDates {
+  o String electionId
   o DateTime startDate
   o DateTime endDate
+}
+
+transaction setVoteDecKey {
+  o String electionId
+  o String voteDecKey
+}
+
+transaction freezeElection {
+  o String electionId
+}
+
+transaction addManagers {
+  o String electionId
+  o String managerId
 }

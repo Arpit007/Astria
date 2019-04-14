@@ -86,4 +86,4 @@ passport.use("admin.jwt", new JWTStrategy({
     }
 }));
 
-// Todo: Add Exoiry to JWT
+// Todo: Add Expiry to JWT

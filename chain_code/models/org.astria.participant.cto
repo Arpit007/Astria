@@ -1,49 +1,21 @@
 namespace org.astria.participant
-import org.astria.election.Election
 
 abstract participant AstriaUser identified by userId {
   o String userId
-  o String electionId
 }
 
 participant AstriaAdmin extends AstriaUser {
-  o String voteKey
-  o String voteDecKey optional
-  o String idKey
-  o String email regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  o String loginId
-  o String secret
-}
-
-participant AstriaManager extends AstriaUser {
-  o String email regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  o String loginId
-  o String secret
 }
 
 participant AstriaVoter extends AstriaUser {
-  o String voteId
+  o String electionId
 }
 
-@returns(String)
-transaction CreateAdmin {
-  o String voteKey
-  o String idKey
-  o String email
-  o String electionName
-  o DateTime startDate
-  o DateTime endDate
-  o String secret
-  o String loginId
+transaction CreateAstriaAdmin {
+  o String userId
 }
 
-@returns(String)
-transaction CreateManager {
-  o String email
-  o String secret
-  o String loginId
-}
-
-transaction CreateVoter {
-  o String voterId
+transaction CreateAstriaVoter {
+  o String userId
+  o String electionId
 }

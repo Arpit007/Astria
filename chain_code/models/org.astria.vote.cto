@@ -1,6 +1,4 @@
 namespace org.astria.vote
-import org.astria.participant.AstriaVoter
-import org.astria.candidate.Candidate
 
 asset Vote identified by voteId {
   o String voteId

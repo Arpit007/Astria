@@ -1,5 +1,4 @@
 namespace org.astria.candidate
-import org.astria.participant.AstriaAdmin
 
 asset Candidate identified by candidateId {
   o String candidateId
@@ -11,4 +10,5 @@ asset Candidate identified by candidateId {
 transaction CreateCandidate {
   o String candidateName
   o String logoURI
+  o String electionId
 }

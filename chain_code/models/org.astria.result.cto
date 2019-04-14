@@ -10,3 +10,9 @@ asset Result identified by resultId {
   o String electionId
   o CandidateResult[] results
 }
+
+asset ResultVote identified by voteId {
+  o String voteId
+  o String electionId
+  o String candidateId optional
+}
