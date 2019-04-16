@@ -33,11 +33,11 @@ async function castVote(voteData) {
 	const vote = await voteRegistry.get(voteId);
 	
 	if (!vote){
-		throw new Error("Not  allowed to vote");
+		throw new Error("Not allowed to vote");
 	}
 
 	if (vote.hasVoted) {
-		throw new Error('Already Voted');
+		throw new Error('Already voted');
 	}
 
 	vote.candidateId = candidateId;

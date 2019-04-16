@@ -25,26 +25,26 @@ async function createCandidate(candidateData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
 	const adminId = currentParticipant.getIdentifier();
 	if (adminId !== election.adminId){
-		throw new Error("Not Allowed");
+		throw new Error("Unauthorised to perform the action");
 	}
 	
 	if (election.freeze) {
-		throw new Error("Can't add Candidate now.");
+		throw new Error("Election frozen, can't add candidates now");
 	}
 
 	const candidateRegistry = await getAssetRegistry(`${namespace}.${resourceId}`);
 	const factory = getFactory();
 
-	const candidateId = generateId(resourceId, electionId, `${candidateName}-${logoURI}`);
+	const candidateId = generateId(resourceId, electionId, candidateName);
 
 	let result = await query('CandidateById', { candidateId });
 	if (result.length > 0) {
-		throw new Error("Candidate Already Exists");
+		throw new Error("Candidate already exists in election");
 	}
 
 	const candidate = factory.newResource(namespace, resourceId, candidateId);

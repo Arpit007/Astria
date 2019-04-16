@@ -21,7 +21,7 @@ async function createAdmin(adminData) {
 	
 	let result = await query("AstriaAdminById", { userId });
 	if (result.length > 0) {
-		throw new Error("Account Already Exists");
+		throw new Error("Account already exists");
 	}
 	
 	const admin = factory.newResource(adminNamespace, adminResourceId, userId);
@@ -50,16 +50,16 @@ async function createVoter(voterData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
 	const adminId = currentParticipant.getIdentifier();
 	if (adminId !== election.adminId && election.managers.indexOf(adminId) === -1){
-		throw new Error("Not Allowed");
+		throw new Error("Unauthorised to perform the action");
 	}
 	
 	if (election.freeze) {
-		throw new Error("Can't add Voter now.");
+		throw new Error("Election frozen, can't add voters now");
 	}
 	
 	const voterId = generateId(resourceId, userId, electionId);
@@ -67,7 +67,7 @@ async function createVoter(voterData) {
 	
 	let result = await query("VoterById", { userId : voterId });
 	if (result.length > 0) {
-		throw new Error("Voter Already Exists");
+		throw new Error("Voter already exists");
 	}
 	
 	const voterRegistry = await getParticipantRegistry(`${namespace}.${resourceId}`);

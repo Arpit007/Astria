@@ -25,7 +25,7 @@ async function createElection(electionData) {
 	let today = new Date().getTime();
 	
 	if (startDateL <= today || endDateL <= startDateL) {
-		throw new Error("Invalid Election Dates");
+		throw new Error("Invalid election dates");
 	}
 	
 	const currentParticipant = getCurrentParticipant();
@@ -67,11 +67,15 @@ async function modifyElectionDates(electionData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
-	if (adminId !== election.adminId || election.freeze){
-		throw new Error("Not allowed");
+	if (adminId !== election.adminId){
+		throw new Error("Unauthorised to perform the action");
+	}
+	
+	if (election.freeze){
+		throw new Error("Election frozen, can't update dates now");
 	}
 	
 	let startDateL = startDate.getTime();
@@ -79,7 +83,7 @@ async function modifyElectionDates(electionData) {
 	let today = new Date().getTime();
 	
 	if (startDateL <= today || endDateL <= startDateL) {
-		throw new Error("Invalid Election Dates");
+		throw new Error("Invalid election dates");
 	}
 	
 	election.startDate = startDate;
@@ -106,14 +110,18 @@ async function setElectionVoteDecKey(electionData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
 	const endDate = election.endDate.getTime();
 	const today = new Date().getTime();
 	
-	if (adminId !== election.adminId || !election.freeze || today <= endDate) {
-		throw new Error("Not allowed");
+	if (adminId !== election.adminId) {
+		throw new Error("Unauthorised to perform the action");
+	}
+	
+	if (!election.freeze || today <= endDate){
+		throw new Error("Allowed after voting period is over");
 	}
 	
 	election.voteDecKey = voteDecKey;
@@ -139,19 +147,23 @@ async function freezeElection(electionData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
 	const startDate = election.startDate.getTime();
 	const endDate = election.endDate.getTime();
 	const today = new Date().getTime();
 	
-	if (adminId !== election.adminId || election.freeze) {
+	if (adminId !== election.adminId) {
 		throw new Error("Not allowed");
 	}
 	
+	if (election.freeze){
+		throw new Error("Election already frozen");
+	}
+	
 	if (startDate <= today || endDate <= startDate) {
-		throw new Error("Invalid Election Dates");
+		throw new Error("Invalid election dates");
 	}
 	
 	election.voteEncKey = voteEncKey;
@@ -178,16 +190,20 @@ async function addElectionManagers(electionData) {
 	const election = await electionRegistry.get(electionId);
 	
 	if (!election){
-		throw new Error("Invalid Election");
+		throw new Error("Invalid election");
 	}
 	
-	if (adminId !== election.adminId || election.freeze || managerId === adminId) {
+	if (adminId !== election.adminId || managerId === adminId) {
 		throw new Error("Not allowed");
+	}
+	
+	if (election.freeze){
+		throw new Error("Election frozen, can't add managers now");
 	}
 	
 	let result = await query("AstriaAdminById", { userId: managerId });
 	if (result.length <= 0) {
-		throw new Error("No such manager exists");
+		throw new Error("No such user exists");
 	}
 	
 	if (election.managers.indexOf(managerId) !== -1){
