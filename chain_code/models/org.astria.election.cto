@@ -6,29 +6,38 @@ asset Election identified by electionId {
   o DateTime startDate
   o DateTime endDate
   o String idKey
-  o String voteEncKey
+  o String voteEncKey optional
   o String voteDecKey optional
   o Boolean freeze default = false
   o String adminId
   o String[] managers
 }
 
-transaction modifyDates {
+@returns(String)
+transaction CreateElection {
+  o String electionName
+  o DateTime startDate
+  o DateTime endDate
+  o String idKey
+}
+
+transaction ModifyElectionDates {
   o String electionId
   o DateTime startDate
   o DateTime endDate
 }
 
-transaction setVoteDecKey {
+transaction SetElectionVoteDecKey {
   o String electionId
   o String voteDecKey
 }
 
-transaction freezeElection {
+transaction FreezeElection {
   o String electionId
+  o String voteEncKey
 }
 
-transaction addManagers {
+transaction AddElectionManagers {
   o String electionId
   o String managerId
 }

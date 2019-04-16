@@ -15,9 +15,6 @@ globals:
     post: true
     emit: true
 rules:
-    linebreak-style:
-        - error
-        - unix
     semi:
         - error
         - always
@@ -33,12 +30,6 @@ rules:
     no-useless-call: error
     no-with: error
     operator-linebreak: error
-    require-jsdoc:
-        - error
-        - require:
-            ClassDeclaration: true
-            MethodDefinition: true
-            FunctionDeclaration: true
     yoda: error
     no-confusing-arrow: 2
     no-constant-condition: 2

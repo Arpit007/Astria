@@ -16,9 +16,10 @@ rule AstriaAdminSystem {
     action: ALLOW
 }
 
+
 /**Historian Permissions**/
 
-rule historianAstriaVoterAccess{
+rule HistorianAstriaVoterAccess{
   description: "Allow AstriaVoters to only read their transactions"
   participant(p): "org.astria.participant.AstriaVoter"
   operation: READ
@@ -27,10 +28,10 @@ rule historianAstriaVoterAccess{
   action: ALLOW
 }
 
-/**Astria Permissions**/
 
+/**Astria Permissions**/
 rule NetworkAdminCanCreateAstriaAdmin {
-    description: "Grant business network administrators full access to user resources"
+    description: "Allow business network administrators to create AstriaAdmin"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: READ, CREATE
     resource: "org.astria.participant.AstriaAdmin"
@@ -38,138 +39,123 @@ rule NetworkAdminCanCreateAstriaAdmin {
 }
 
 rule NetworkAdminCanCreateAstriaAdminTransaction {
-    description: "Grant business network administrators full access to user resources"
+    description: "Allow business network administrators access to CreateAstriaAdmin transaction"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: READ, CREATE
-    resource: "org.astria.participant.CreateAdmin"
+    resource: "org.astria.participant.CreateAstriaAdmin"
     action: ALLOW
 }
 
-rule NetworkAdminCanCreateElection {
-    description: "Allow AstriaAdmin to create a new Election"
-    participant: "org.hyperledger.composer.system.NetworkAdmin"
+rule AstriaAdminCanCreateVoter {
+    description: "Allow AstriaAdmin to create a new Voter"
+    participant: "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource: "org.astria.election.Election"
+    resource: "org.astria.participant.AstriaVoter"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateVoterTransaction {
+    description: "Allow AstriaAdmin access to CreateAstriaVoter transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.participant.CreateAstriaVoter"
     action: ALLOW
 }
 
 rule AstriaParticipantsCanViewElection {
-    description: "Allow AstriaManagers to view Election"
-    participant(p): "org.astria.participant.*"
+    description: "Allow Astria participants to view Election"
+    participant: "org.astria.participant.*"
     operation: READ
-    resource(o): "org.astria.election.Election"
-    condition: (p.electionId == o.electionId)
+    resource: "org.astria.election.Election"
     action: ALLOW
 }
 
-rule AstriaAdminCanCreateCandidate {
-    description: "Allow AstriaAdmin to create new candidates"
-    participant(p): "org.astria.participant.AstriaAdmin"
-    operation: CREATE, READ
-    resource(o): "org.astria.candidate.Candidate"
-    condition: (p.electionId == o.electionId)
-    action: ALLOW
-}
-
-rule AstriaAdminCanCreateCandidateTransaction {
-    description: "Allow AstriaAdmin to create CreateCandidate transaction"
+rule AstriaAdminCanCreateElection {
+    description: "Allow AstriaAdmin to create a new Election"
     participant: "org.astria.participant.AstriaAdmin"
     operation: CREATE
-    resource: "org.astria.candidate.CreateCandidate"
-    action: ALLOW
-}
-
-rule AstriaAdminCanCreateManager {
-    description: "Allow AstriaAdmin to create new AstriaManagers"
-    participant(p): "org.astria.participant.AstriaAdmin"
-    operation: CREATE, READ
-    resource(o): "org.astria.participant.AstriaManager"
-    condition: (p.electionId == o.electionId)
-    action: ALLOW
-}
-
-rule AstriaAdminCanCreateManagerTransaction {
-    description: "Allow AstriaAdmin to create a new CreateManager transaction"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: CREATE, READ
-    resource: "org.astria.participant.CreateManager"
-    action: ALLOW
-}
-
-rule AstriaAdminCanViewCreateVoterTransaction {
-    description: "Allow AstriaAdmin to view CreateVoter transaction"
-    participant: "org.astria.participant.AstriaAdmin"
-    operation: READ
-    resource: "org.astria.participant.CreateVoter"
+    resource: "org.astria.election.Election"
     action: ALLOW
 }
 
 rule AstriaAdminCanUpdateElection {
     description: "Allow AstriaAdmin to update an Election"
     participant(p): "org.astria.participant.AstriaAdmin"
-    operation: READ, UPDATE
+    operation: UPDATE
     resource(o): "org.astria.election.Election"
-    condition: (p.electionId == o.electionId)
+    condition: (p.userId == o.adminId)
     action: ALLOW
 }
 
-rule AstriaAdminCanUpdateElectionTransaction {
-    description: "Allow AstriaAdmin to create a updateElection transaction"
+rule AstriaAdminCanCreateElectionTransaction {
+    description: "Allow AstriaAdmin to access CreateElection transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.election.CreateElection"
+    action: ALLOW
+}
+
+rule AstriaAdminCanModifyElectionDatesTransaction {
+    description: "Allow AstriaAdmin to access ModifyElectionDates transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.election.ModifyElectionDates"
+    action: ALLOW
+}
+
+rule AstriaAdminCanSetElectionVoteDecKeyTransaction {
+    description: "Allow AstriaAdmin to access SetElectionVoteDecKey transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.election.SetElectionVoteDecKey"
+    action: ALLOW
+}
+
+rule AstriaAdminCanFreezeElectionTransaction {
+    description: "Allow AstriaAdmin to access FreezeElection transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.election.FreezeElection"
+    action: ALLOW
+}
+
+rule AstriaAdminCanAddElectionManagersTransaction {
+    description: "Allow AstriaAdmin to access AddElectionManagers transaction"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.election.AddElectionManagers"
+    action: ALLOW
+}
+
+rule AstriaParticipantCanReadCandidate {
+    description: "Allow Astria participants to read Candidate"
+    participant: "org.astria.participant.*"
+    operation: READ
+    resource: "org.astria.candidate.Candidate"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateCandidate {
+    description: "Allow AstriaAdmin to create new candidates"
     participant: "org.astria.participant.AstriaAdmin"
     operation: CREATE
-    resource: "org.astria.election.UpdateElection"
+    resource: "org.astria.candidate.Candidate"
     action: ALLOW
 }
 
-rule AstriaAdminCanUpdateVotes {
-    description: "Allow AstriaAdmin to decrypt votes after election"
-    participant(p): "org.astria.participant.AstriaAdmin"
-    operation: READ, UPDATE
-    resource(o): "org.astria.vote.Vote"
-    condition: (p.electionId == o.electionId)
-    action: ALLOW
-}
-
-rule AstriaAdminCanCreateResult {
-    description: "Allow AstriaAdmin to create Result"
-    participant(p): "org.astria.participant.AstriaAdmin"
+rule AstriaAdminCanCreateCandidateTransaction {
+    description: "Allow AstriaAdmin access to CreateCandidate transaction"
+    participant: "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource(o): "org.astria.result.Result"
-    condition: (p.electionId == o.electionId)
+    resource: "org.astria.candidate.CreateCandidate"
     action: ALLOW
 }
 
-rule AstriaManagerCanCreateVoter {
-    description: "Allow AstriaManagers to create a new Voter"
-    participant(p): "org.astria.participant.AstriaManager"
+rule AstriaAdminCanCreateVote {
+    description: "Allow AstriaAdmins to create a new Vote for an AstriaVoter"
+    participant: "org.astria.participant.AstriaAdmin"
     operation: CREATE, READ
-    resource(o): "org.astria.participant.AstriaVoter"
-    condition: (p.electionId == o.electionId)
-    action: ALLOW
-}
-
-rule AstriaManagerCanCreateVoterTransaction {
-    description: "Allow AstriaManagers to create a new AstriaVoter"
-    participant: "org.astria.participant.AstriaManager"
-    operation: CREATE
-    resource: "org.astria.participant.CreateVoter"
-    action: ALLOW
-}
-
-rule AstriaManagerCanCreateVote {
-    description: "Allow AstriaManagers to create a new Vote for an AstriaVoter"
-    participant: "org.astria.participant.AstriaManager"
-    operation: CREATE
     resource: "org.astria.vote.Vote"
-    action: ALLOW
-}
-
-rule AstriaManagerCanReadAdmin {
-    description: "Allow AstriaManagers to read AstriaAdmin details"
-    participant(p): "org.astria.participant.AstriaManager"
-    operation: READ
-    resource(o): "org.astria.participant.AstriaAdmin"
-    condition: (p.electionId == o.electionId)
     action: ALLOW
 }
 
@@ -178,32 +164,46 @@ rule AstriaVoterCanVote {
     participant(p): "org.astria.participant.AstriaVoter"
     operation: READ, UPDATE
     resource(o): "org.astria.vote.Vote"
-    condition: (o.voteId == p.voteId && o.electionId == p.electionId)
+    condition: (o.electionId == p.electionId)
     action: ALLOW
 }
 
 rule AstriaVoterCanCreateVoteTransaction {
-    description: "Allow AstriaVoter to create a CastVote transaction"
+    description: "Allow AstriaVoter to access CastVote transaction"
     participant: "org.astria.participant.AstriaVoter"
     operation: CREATE
     resource: "org.astria.vote.CastVote"
     action: ALLOW
 }
 
-rule AstriaVoterCanReadCandidate {
-    description: "Allow AstriaVoter to read Candidate"
-    participant(p): "org.astria.participant.AstriaVoter"
+rule AstriaAdminCanReadVoteTransaction {
+    description: "Allow AstriaAdmin to read CastVote transaction"
+    participant: "org.astria.participant.AstriaAdmin"
     operation: READ
-    resource(o): "org.astria.candidate.Candidate"
-    condition: (p.electionId == o.electionId)
+    resource: "org.astria.vote.CastVote"
     action: ALLOW
 }
 
-rule AstriaVoterCanReadAdmin {
-    description: "Allow AstriaVoters to read AstriaAdmin details"
-    participant(p): "org.astria.participant.AstriaVoter"
+rule AstriaParticipantsCanReadAstriaAdmin {
+    description: "Allow Astria participants to read AstriaAdmin details"
+    participant: "org.astria.participant.*"
     operation: READ
-    resource(o): "org.astria.participant.AstriaAdmin"
-    condition: (p.electionId == o.electionId)
+    resource: "org.astria.participant.AstriaAdmin"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateResult {
+    description: "Allow AstriaAdmin to create Result"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.result.Result"
+    action: ALLOW
+}
+
+rule AstriaAdminCanCreateResultVote {
+    description: "Allow AstriaAdmin to create ResultVote"
+    participant: "org.astria.participant.AstriaAdmin"
+    operation: CREATE, READ
+    resource: "org.astria.result.ResultVote"
     action: ALLOW
 }
