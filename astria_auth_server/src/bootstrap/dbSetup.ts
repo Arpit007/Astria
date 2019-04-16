@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { MONGODB_URI } from "../util/secrets";
 import bluebird from "bluebird";
+
 import logger from "../util/logger";
+import { MONGODB_URI } from "../util/secrets";
 
 const mongoUrl = MONGODB_URI;
 

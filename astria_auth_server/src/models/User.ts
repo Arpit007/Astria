@@ -1,35 +1,31 @@
 import bcrypt from "bcrypt-nodejs";
-import mongoose from "mongoose";
-import MongooseHidden from "mongoose-hidden";
+import mongoose, { model, Model, Schema, Document } from "mongoose";
 
-const mongooseHidden = MongooseHidden();
 const BCRYPT_SALT_ROUNDS = 12;
 
-export type UserModel = mongoose.Document & {
-    email: string,
-    password: string,
-    
+
+export interface UserModel extends Document {
+    email: string;
+    password: string;
     profile: {
-        name: string,
-        phone: string
+        name: string;
+        phone: string;
+    };
+    
+    comparePassword: (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
+}
+
+
+const userSchema = new Schema({
+        email: {type: String, unique: true},
+        password: String,
+        profile: {
+            name: String,
+            phone: String
+        }
     },
-    
-    comparePassword: comparePasswordFunction
-};
+    {timestamps: true});
 
-type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
-
-const userSchema = new mongoose.Schema({
-    email: {type: String, unique: true},
-    password: String,
-    
-    profile: {
-        name: String,
-        phone: String
-    }
-}, {timestamps: true});
-
-userSchema.plugin(mongooseHidden, { hidden : { _id : false, password : true } });
 
 userSchema.pre("save", function (next) {
     const user = <UserModel>this;
@@ -52,14 +48,21 @@ userSchema.pre("save", function (next) {
     });
 });
 
-const comparePassword: comparePasswordFunction = function (candidatePassword, cb) {
+
+userSchema.methods.comparePassword = function (candidatePassword: string, cb: any) {
     bcrypt.compare(candidatePassword, this.password, (err: mongoose.Error, isMatch: boolean) => {
         cb(err, isMatch);
     });
 };
 
-userSchema.methods.comparePassword = comparePassword;
 
-const User = mongoose.model("User", userSchema);
+userSchema.set("toJSON", {
+    transform: (doc: any, ret: any, opt: any) => {
+        delete ret["password"];
+        return ret;
+    }
+});
+
+const User: Model<UserModel> = model<UserModel>("User", userSchema);
 
 export default User;

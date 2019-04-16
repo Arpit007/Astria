@@ -1,8 +1,8 @@
 ./createPeerAdminCard.sh
 
-composer network install -c PeerAdmin@hlfv1 -a astria@0.0.1.bna
-composer network upgrade -c PeerAdmin@hlfv1 -n chain_code -V 0.0.4
-composer network start -c PeerAdmin@hlfv1 -n chain_code -V 0.0.5 -A admin -S adminpw
+composer network install -c PeerAdmin@hlfv1 -a astria@0.0.7.bna
+composer network upgrade -c PeerAdmin@hlfv1 -n chain_code -V 0.0.7
+composer network start -c PeerAdmin@hlfv1 -n chain_code -V 0.0.7 -A admin -S adminpw
 
 go to dist directory
 composer card import -f admin@chain_code.card
