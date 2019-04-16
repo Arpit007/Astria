@@ -1,5 +1,5 @@
 import express, { Request, Response, Router } from "express";
-import { AuthoriseUser } from "../../lib/authenticate";
+import { AuthoriseAdmin } from "../../lib/authenticate";
 import Reply from "../../util/reply";
 import { addVoter } from "../../composer/manager";
 import { getAdmin } from "../../composer/allParticipants";
@@ -14,14 +14,14 @@ export default router;
  * @param auth_token
  * @param voterId
  * */
-router.post("/addVoter", AuthoriseUser, async (req: Request, res: Response) => {
+router.post("/addVoter", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
         // @ts-ignore
         const {userId, resourceId} = req.user;
         const {voterId} = req.body;
         
         const admin = await getAdmin(userId, resourceId);
-        const encVoterId = encrypt(voterId, admin.idKey);//Todo: Hash it
+        const encVoterId = encrypt(voterId, admin.idKey); // Todo: Hash it
         
         await addVoter(userId, encVoterId);
         

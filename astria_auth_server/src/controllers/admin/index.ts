@@ -39,7 +39,7 @@ router.post("/register", (req: Request, res: Response, next: NextFunction) => {
                     
                     const token = jwt.sign({id: user.email}, JWT_SECRET);
                     
-                    return Reply(res, 200, {token});
+                    return Reply(res, 200, {auth_token: token});
                 } catch (err) {
                     logger.error(err.message);
                     return Reply(res, 400, err.message);
@@ -69,7 +69,7 @@ router.post("/login", (req, res, next) => {
                 try {
                     const token = jwt.sign({id: user.email}, JWT_SECRET);
                     
-                    return Reply(res, 200, {token});
+                    return Reply(res, 200, {auth_token: token});
                 } catch (err) {
                     return Reply(res, 400, err.message);
                 }
@@ -85,8 +85,12 @@ router.post("/verify", Authenticate, (req: Request, res: Response) => {
 
 router.post("/profile", async (req: Request, res: Response) => {
     try {
-        const {id} = req.body;
-        const user = await User.findById(id);
+        const {userId} = req.body;
+        const user = await User.findById(userId);
+        
+        if (!user) {
+            return Reply(res, 400, "User not found");
+        }
         
         return Reply(res, 200, {user: user.toJSON()});
     } catch (err) {

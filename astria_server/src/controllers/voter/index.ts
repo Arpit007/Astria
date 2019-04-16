@@ -2,7 +2,7 @@ import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
 import { castVote } from "../../composer/voter";
-import { AuthoriseUser } from "../../lib/authenticate";
+import { AuthoriseVoter } from "../../lib/authenticate";
 import { getAdmin } from "../../composer/allParticipants";
 import { encrypt } from "../../util/security";
 
@@ -15,7 +15,7 @@ export default router;
  * @param auth_token
  * @param candidateId
  * */
-router.post("/castVote", AuthoriseUser, async (req: Request, res: Response) => {
+router.post("/castVote", AuthoriseVoter, async (req: Request, res: Response) => {
     try {
         // @ts-ignore
         const {userId, resourceId} = req.user;
@@ -36,6 +36,6 @@ router.post("/castVote", AuthoriseUser, async (req: Request, res: Response) => {
 /**
  * Allows a user to verify their vote
  * */
-router.post("/verifyVote", AuthoriseUser, async (req, res) => {
+router.post("/verifyVote", AuthoriseVoter, async (req, res) => {
     return Reply(res, 404, "Not Implemented");
 });

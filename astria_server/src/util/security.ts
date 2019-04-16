@@ -1,5 +1,6 @@
-import NodeRSA from "node-rsa";
 import crypto from "crypto";
+import NodeRSA from "node-rsa";
+
 
 export class KeyPair {
     public publicKey: string = undefined;

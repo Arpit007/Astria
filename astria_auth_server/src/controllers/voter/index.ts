@@ -6,6 +6,6 @@ export default router;
 
 router.post("/verify", (req: Request, res: Response) => {
     // Todo: Implement
-    const {userId} = req.body;
-    return Reply(res, 200, {userId});
+    const {auth_token} = req.body;
+    return Reply(res, 200, {user: {auth_token}});
 });

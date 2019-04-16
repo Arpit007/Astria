@@ -7,11 +7,11 @@ import { JWT_SECRET } from "../util/secrets";
 
 const InvalidAuthMsg = "Invalid Email/Password";
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(undefined, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
     done(undefined, user);
 });
 
@@ -70,7 +70,7 @@ passport.use("admin.login", new LocalStrategy({
 
 // JWT-Extract
 passport.use("admin.jwt", new JWTStrategy({
-    jwtFromRequest: ExtractJwt.fromBodyField("token"),
+    jwtFromRequest: ExtractJwt.fromBodyField("auth_token"),
     secretOrKey: JWT_SECRET
 }, async (payload: any, done: any) => {
     try {

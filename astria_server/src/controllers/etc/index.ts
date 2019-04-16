@@ -1,7 +1,7 @@
 import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
-import { AuthoriseUser } from "../../lib/authenticate";
+import { AuthoriseAdmin } from "../../lib/authenticate";
 import { Candidate, Election } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
 
@@ -14,7 +14,7 @@ export default router;
  * @param auth_token
  * @returns Candidate[]
  * */
-router.post("/candidates", AuthoriseUser, async (req: Request, res: Response) => {
+router.post("/candidates", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
         // @ts-ignore
         const {userId, resourceId} = req.user;

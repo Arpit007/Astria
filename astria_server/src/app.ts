@@ -1,12 +1,14 @@
-import express from "express";
-import compression from "compression";
-import bodyParser from "body-parser";
 import lusca from "lusca";
-import * as dotenv from "dotenv";
 import morgan from "morgan";
+import express from "express";
+import passport from "passport";
+import * as dotenv from "dotenv";
+import bodyParser from "body-parser";
+import compression from "compression";
 import expressValidator from "express-validator";
 
 import indexController from "./controllers";
+
 
 dotenv.config({path: ".env.example"});
 
@@ -19,9 +21,9 @@ app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressValidator());
+app.use(passport.initialize());
 app.use(lusca.xframe("SAMEORIGIN"));
 
-// Setup Controllers
 app.use(indexController);
 
 export default app;
