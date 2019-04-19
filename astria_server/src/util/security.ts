@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import NodeRSA from "node-rsa";
-
+import constants from "constants";
 
 export class KeyPair {
     public publicKey: string = undefined;
@@ -25,8 +25,7 @@ export function encrypt(message: string, publicKey: string): string {
     const msgBytes = Buffer.from(message);
     const enc = crypto.publicEncrypt({
         key: publicKey,
-        // @ts-ignore
-        padding: crypto.RSA_PKCS1_OAEP_PADDING
+        padding: constants.RSA_PKCS1_OAEP_PADDING
     }, msgBytes);
     
     return enc.toString("base64");
@@ -37,8 +36,7 @@ export function decrypt(encMessage: string, privateKey: string) {
     const msgBytes = Buffer.from(encMessage, "base64");
     const dec = crypto.privateDecrypt({
         key: privateKey,
-        // @ts-ignore
-        padding: crypto.RSA_PKCS1_OAEP_PADDING
+        padding: constants.RSA_PKCS1_OAEP_PADDING
     }, msgBytes);
     
     return dec.toString();

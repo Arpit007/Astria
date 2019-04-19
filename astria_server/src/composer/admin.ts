@@ -88,11 +88,10 @@ export async function createAstriaVoter(adminCardId: string, encVoterId: string,
 
 
 export async function createElection(adminCardId: string, electionName: string, startDate: Date, endDate: Date, idKey: string): Promise<string> {
-    const networkAdminId = "admin@chain_code";
     const namespace = "org.astria.election";
     
     const bnc = new BusinessNetworkConnection();
-    await bnc.connect(networkAdminId);
+    await bnc.connect(adminCardId);
     
     const factory = bnc.getBusinessNetwork().getFactory();
     
@@ -192,7 +191,7 @@ export async function publishResult(voteDecKey: string) {
 }
 
 
-export async function createCandidate(adminCardId: string, candidateName: string, logoURI: string, electionId: string): Promise<boolean> {
+export async function createCandidate(adminCardId: string, candidateName: string, logoURI: string, electionId: string): Promise<string> {
     const namespace = "org.astria.candidate";
     
     const bnc = new BusinessNetworkConnection();
@@ -205,8 +204,8 @@ export async function createCandidate(adminCardId: string, candidateName: string
     createCandidate.logoURI = logoURI;
     createCandidate.electionId = electionId;
     
-    await bnc.submitTransaction(createCandidate);
+    const candidateId = await bnc.submitTransaction(createCandidate);
     await bnc.disconnect();
     
-    return true;
+    return candidateId;
 }

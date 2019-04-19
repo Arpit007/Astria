@@ -4,6 +4,7 @@ import Reply from "../../util/reply";
 import { encrypt } from "../../util/security";
 import { castVote } from "../../composer/voter";
 import { Candidate } from "../../composer/model";
+import { generateVoterId } from "../../util/generator";
 import { AuthoriseVoter } from "../../lib/authenticate";
 import { viewElection } from "../../composer/allParticipants";
 import * as ParticipantComposer from "../../composer/allParticipants";
@@ -24,9 +25,10 @@ router.post("/castVote", AuthoriseVoter, async (req: Request, res: Response) => 
         const {candidateId, electionId} = req.body;
         
         const election = await viewElection(electionId);
+        const voterId = generateVoterId(userId, election.idKey);
         const encCandidateId = encrypt(candidateId, election.voteEncKey);
         
-        await castVote(userId, encCandidateId);
+        await castVote(voterId, encCandidateId);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -39,6 +41,7 @@ router.post("/castVote", AuthoriseVoter, async (req: Request, res: Response) => 
  * Allows a user to verify their vote
  * */
 router.post("/verifyVote", AuthoriseVoter, async (req, res) => {
+    // Todo: Not Implemented
     return Reply(res, 404, "Not Implemented");
 });
 
@@ -53,8 +56,10 @@ router.post("/candidates", AuthoriseVoter, async (req: Request, res: Response) =
     try {
         const {userId} = req.user;
         const {electionId} = req.body;
-        
-        const candidates: Candidate[] = await ParticipantComposer.viewCandidates(userId, electionId);
+    
+        const election = await viewElection(electionId);
+        const voterId = generateVoterId(userId, election.idKey);
+        const candidates: Candidate[] = await ParticipantComposer.viewCandidates(voterId, electionId);
         
         return Reply(res, 200, {candidates});
     } catch (err) {

@@ -1,9 +1,9 @@
 import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
+import { GetAdminProfile } from "../../lib/authenticate";
 import { AstriaAdmin, Election } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
-import { GetAdminProfile } from "../../lib/authenticate";
 
 const router: Router = express.Router();
 export default router;
@@ -47,6 +47,7 @@ router.post("/allElections", async (req: Request, res: Response) => {
  * */
 router.post("/resultSummary", async (req: Request, res: Response) => {
     try {
+        // Todo: Not Implemented
         await ParticipantComposer.resultSummary();
         
         return Reply(res, 404, "Not Implemented");
@@ -61,6 +62,7 @@ router.post("/resultSummary", async (req: Request, res: Response) => {
  * */
 router.post("/detailedSummary", async (req: Request, res: Response) => {
     try {
+        // Todo: Not Implemented
         await ParticipantComposer.detailedResultSummary();
         
         return Reply(res, 404, "Not Implemented");
@@ -76,8 +78,21 @@ router.post("/detailedSummary", async (req: Request, res: Response) => {
  * */
 router.post("/allAdmins", async (req: Request, res: Response) => {
     try {
-        // Todo: Fetch Profile
-        const admins: AstriaAdmin[] = await ParticipantComposer.viewAllAdmins();
+        let admins: AstriaAdmin[] = await ParticipantComposer.viewAllAdmins();
+        const reqObj = [];
+        
+        for (const admin of admins) {
+            reqObj.push(GetAdminProfile(admin.userId));
+        }
+        
+        const reqObjResolved = await Promise.all(reqObj);
+        admins = [];
+        for (const adminObj of reqObjResolved) {
+            const {userId, email, password, profile} = adminObj;
+            const admin = new AstriaAdmin(userId);
+            admin.setupProfile(email, password, profile.name, profile.phone);
+            admins.push(admin);
+        }
         
         return Reply(res, 200, {admins});
     } catch (err) {
@@ -88,13 +103,14 @@ router.post("/allAdmins", async (req: Request, res: Response) => {
 
 /**
  * Get election admin
+ * @param electionId
  * @returns AstriaAdmin
  * */
 router.post("/getAdmin", async (req: Request, res: Response) => {
     try {
         const {electionId} = req.body;
         const admin: AstriaAdmin = await ParticipantComposer.getElectionAdmin(electionId);
-        const adminProfile = GetAdminProfile(admin.userId);
+        const adminProfile = await GetAdminProfile(admin.userId);
         
         return Reply(res, 200, {admin: adminProfile});
     } catch (err) {

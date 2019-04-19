@@ -2,23 +2,30 @@ import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
-import { Candidate } from "../../composer/model";
 import * as AdminComposer from "../../composer/admin";
-import { AuthoriseAdmin, CreateAdmin } from "../../lib/authenticate";
 import { viewManagers } from "../../composer/allParticipants";
+import { AstriaAdmin, Candidate } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
 import { GenerateIdKeys, GenerateVoteKeys } from "../../lib/genUserKeys";
+import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
 
 const router: Router = express.Router();
 export default router;
 
+/**
+ * Register a user as AstriaAdmin
+ * @param email
+ * @param password
+ * @param name
+ * @param phone
+ * */
 router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
     try {
-        const {userId} = req.user;
+        const {auth_token, userId} = req.user;
         
         await AdminComposer.createAstriaAdmin(userId);
         
-        return Reply(res, 200, {});
+        return Reply(res, 200, {auth_token, user: {userId}});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -33,7 +40,7 @@ router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
 router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
         const {voteDecKey} = req.body;
-        
+        // Todo: Not Implemented
         await AdminComposer.publishResult(voteDecKey);
         
         return Reply(res, 200, {});
@@ -68,16 +75,17 @@ router.post("/addManager", AuthoriseAdmin, async (req: Request, res: Response) =
  * @param auth_token
  * @param candidateName
  * @param logoURI
+ * @param electionId
+ * @returns candidateId
  * */
 router.post("/addCandidate", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
         const {userId} = req.user;
         const {candidateName, logoURI, electionId} = req.body;
         
-        await AdminComposer.createCandidate(userId, candidateName, logoURI, electionId);
+        const candidateId = await AdminComposer.createCandidate(userId, candidateName, logoURI, electionId);
         
-        return Reply(res, 200, {});
+        return Reply(res, 200, {candidateId});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -114,7 +122,7 @@ router.post("/modifyDates", AuthoriseAdmin, async (req: Request, res: Response) 
  * @param electionName
  * @param startDate
  * @param endDate
- * @param electionId
+ * @returns electionId
  * */
 router.post("/createElection", AuthoriseAdmin, GenerateIdKeys, async (req: Request, res: Response) => {
     try {
@@ -134,36 +142,16 @@ router.post("/createElection", AuthoriseAdmin, GenerateIdKeys, async (req: Reque
 
 
 /**
- * Set the Election's Vote decrypt key
- * @param auth_token
- * @param voteDecKey
- * @param electionId
- * */
-router.post("/setVoteDecKey", AuthoriseAdmin, async (req: Request, res: Response) => {
-    try {
-        const {userId} = req.user;
-        const {voteDecKey, electionId} = req.body;
-        
-        await AdminComposer.setElectionVoteDecKey(userId, voteDecKey, electionId);
-        
-        return Reply(res, 200, {});
-    } catch (err) {
-        return Reply(res, 400, err.message);
-    }
-});
-
-
-/**
  * Freeze the election
  * @param auth_token
  * @param electionId
  * */
 router.post("/freezeElection", AuthoriseAdmin, GenerateVoteKeys, async (req: Request, res: Response) => {
     try {
-        const {userId} = req.user;
-        const {voteEncKey, electionId} = req.body;
+        const {userId, voteEncKey} = req.user;
+        const {electionId} = req.body;
         
-        // Todo: Use Shamir's method
+        // Todo: Use Shamir's method, return keys
         await AdminComposer.freezeElection(userId, voteEncKey, electionId);
         
         return Reply(res, 200, {});
@@ -206,7 +194,21 @@ router.post("/getManagers", AuthoriseAdmin, async (req: Request, res: Response) 
         
         const managersList = await viewManagers(userId, electionId);
         
-        return Reply(res, 200, {managersList});
+        const reqObj = [];
+        for (const manager of managersList) {
+            reqObj.push(GetAdminProfile(manager.userId));
+        }
+    
+        const reqObjResolved = await Promise.all(reqObj);
+        const managers = [];
+        for (const managerObj of reqObjResolved) {
+            const {userId, email, password, profile} = managerObj;
+            const manager = new AstriaAdmin(userId);
+            manager.setupProfile(email, password, profile.name, profile.phone);
+            managers.push(manager);
+        }
+        
+        return Reply(res, 200, {managers});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

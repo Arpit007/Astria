@@ -10,6 +10,7 @@ function generateId(upperId, middleId, lowerId) {
 /**
  * Create Candidate
  * @param {org.astria.candidate.CreateCandidate} candidateData The candidate to be created.
+ * @returns {string} ID of the Candidate
  * @transaction
  * */
 async function createCandidate(candidateData) {
@@ -53,5 +54,7 @@ async function createCandidate(candidateData) {
 	candidate.logoURI = logoURI;
 	candidate.electionId = electionId;
 
-	return candidateRegistry.add(candidate);
+	await candidateRegistry.add(candidate);
+	
+	return candidateId;
 }

@@ -102,8 +102,9 @@ export async function getElectionAdmin(electionId: string): Promise<AstriaAdmin>
     
     const participantRegistry = await bnc.getParticipantRegistry(namespace);
     
+    // To fetch additional fields, if added in future
     const adminObj = await participantRegistry.get(adminId);
-    const admin: AstriaAdmin = new AstriaAdmin(adminObj.adminId);
+    const admin: AstriaAdmin = new AstriaAdmin(adminObj.userId);
     
     await bnc.disconnect();
     
@@ -142,6 +143,10 @@ export async function viewManagers(userCardId: string, electionId: string): Prom
     
     const electionRegistry = await bnc.getAssetRegistry(electionNamespace);
     const election = await electionRegistry.get(electionId);
+    
+    if (!election) {
+        throw new Error("Invalid electionId");
+    }
     
     const participantRegistry = await bnc.getParticipantRegistry(namespace);
     const managersObjPromise = [];

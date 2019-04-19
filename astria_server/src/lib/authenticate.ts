@@ -26,7 +26,10 @@ const Request = (endPoint: string, data: any): Promise<any> => {
 export async function GetAdminProfile(userId: string): Promise<any> {
     try {
         const data = await Request("/admin/profile", {userId});
-        return data.body.user;
+        const {user} = data.body;
+        user.userId = user._id;
+        
+        return user;
     } catch (err) {
         throw new Error(err.head ? err.head.msg : err.message);
     }
@@ -36,11 +39,12 @@ export async function GetAdminProfile(userId: string): Promise<any> {
 export async function CreateAdmin(req: Request, res: Response, next: NextFunction): Promise<any> {
     try {
         const data = await Request("/admin/register", {...req.body});
-        const {user} = data.body;
-    
-        return req.logIn(user, () => next());
+        req.user = data.body;
+        
+        next();
     } catch (err) {
-        throw new Error(err.head ? err.head.msg : err.message);
+        const msg = err.head ? err.head.msg : err.message;
+        return Reply(res, 400, msg);
     }
 }
 
@@ -55,8 +59,11 @@ export async function AuthoriseAdmin(req: Request, res: Response, next: NextFunc
         
         const data = await Request("/admin/verify", {auth_token});
         const {user} = data.body;
-        
-        return req.logIn(user, () => next());
+        user.userId = user._id;
+    
+        req.user = user;
+    
+        next();
     } catch (err) {
         const msg = err.head ? err.head.msg : err.message;
         return Reply(res, 400, msg);
@@ -74,8 +81,11 @@ export async function AuthoriseVoter(req: Request, res: Response, next: NextFunc
         
         const data = await Request("/voter/verify", {auth_token});
         const {user} = data.body;
-        
-        return req.logIn(user, () => next());
+        user.userId = user._id;
+    
+        req.user = user;
+    
+        next();
     } catch (err) {
         const msg = err.head ? err.head.msg : err.message;
         return Reply(res, 400, msg);

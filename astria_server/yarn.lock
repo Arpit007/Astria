@@ -1335,33 +1335,33 @@ component-inherit@0.0.3:
   resolved "https://registry.yarnpkg.com/component-inherit/-/component-inherit-0.0.3.tgz#645fc4adf58b72b649d5cae65135619db26ff143"
   integrity sha1-ZF/ErfWLcrZJ1crmUTVhnbJv8UM=
 
-composer-admin@^0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-admin/-/composer-admin-0.20.7.tgz#8db4de41c1e85ef8b12fc357b0d4454bb562dfe2"
-  integrity sha512-BwFbqZRTlN+OAD/O20bhJjabZPs3kBK0WeP3wHiO2hr1pbtiE+ONsAvLpO+9/9GcrVApLMMZN/UEdTp8m9i3zA==
+composer-admin@^0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-admin/-/composer-admin-0.20.8.tgz#62ae75ff575f966148972da3c2a2f5f1d2b3ec5a"
+  integrity sha512-skWus3TE26zD0LmERjPU+FKUjCsKwfdoDHoxAmQJdQhAacG+aoXW9P+6LEyktgbe5sH55e/w9KfVbp116WHK1w==
   dependencies:
-    composer-common "0.20.7"
-    composer-connector-hlfv1 "0.20.7"
-    composer-connector-proxy "0.20.7"
-    composer-wallet-filesystem "0.20.7"
-    composer-wallet-inmemory "0.20.7"
+    composer-common "0.20.8"
+    composer-connector-hlfv1 "0.20.8"
+    composer-connector-proxy "0.20.8"
+    composer-wallet-filesystem "0.20.8"
+    composer-wallet-inmemory "0.20.8"
 
-composer-client@^0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-client/-/composer-client-0.20.7.tgz#029c00c67982a67daceed67d6457564842113de1"
-  integrity sha512-eT4CxWoF9QnNj/+s4s74808U8xpCPJAuNmbuz8SqjXTXY0tynY5/EO0j3KGzI/yBQbpEjT4BbbzyfOlYUQtduQ==
+composer-client@^0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-client/-/composer-client-0.20.8.tgz#6095e2592c28152c9de14a444475c07fe8dcd236"
+  integrity sha512-yKLaDXUHkee1ZFwDKDgOKI+poei9ofgqL1iyhJ3g20FR0bkXVbzzV9AwRHBhg0dqCGzEBPUKwiKDo2A2b0mrJg==
   dependencies:
-    composer-common "0.20.7"
-    composer-connector-hlfv1 "0.20.7"
-    composer-connector-proxy "0.20.7"
-    composer-wallet-filesystem "0.20.7"
-    composer-wallet-inmemory "0.20.7"
+    composer-common "0.20.8"
+    composer-connector-hlfv1 "0.20.8"
+    composer-connector-proxy "0.20.8"
+    composer-wallet-filesystem "0.20.8"
+    composer-wallet-inmemory "0.20.8"
     uuid "3.0.1"
 
-composer-common@0.20.7, composer-common@^0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-common/-/composer-common-0.20.7.tgz#bc04f04ab0437e494ed91c8121a21cf578fdbab6"
-  integrity sha512-XSW0QlohBPUcDfNgzeTqc+/bamgpnpwoY7LjTLmGJ/5ChzXBtaXNibC1zKjVTgh7CL0NEtn6S2Eh3Bm2sd03Xw==
+composer-common@0.20.8, composer-common@^0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-common/-/composer-common-0.20.8.tgz#b30028f3a207b1410d9d4a96990b17a7e25c4180"
+  integrity sha512-7bHdKxvd+OS4Q8Fdg7OeYXS+KD3qbOGzAMnJkG1nYrAmBy4hlCZNPA6/It70GFRov/h5q66NN7uC86abd1x3NA==
   dependencies:
     acorn "5.1.2"
     axios "0.17.1"
@@ -1416,10 +1416,10 @@ composer-common@^0.19.11:
     uuid "3.0.1"
     winston "2.3.1"
 
-composer-connector-hlfv1@0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-connector-hlfv1/-/composer-connector-hlfv1-0.20.7.tgz#30511d850078102161006d0c6a1af446d5d1bac9"
-  integrity sha512-CwYhPdNjD0TwGSmYp7x04/Z9CIFWQH0OUKJ3qALogiqIU0raVYFcfsT0LFnpyNkSp7ppckcx+BImKeJb68PyUw==
+composer-connector-hlfv1@0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-connector-hlfv1/-/composer-connector-hlfv1-0.20.8.tgz#fddad03debf8ded574bfaef1c19257a62688303b"
+  integrity sha512-0W9LfkiTIu50jG3bJlItUg065/D/L+dFwUaUdth+6jSrxYO5jAsqQgxMsHvn1XVYYpEOf39wZyVx2D0L+7wWig==
   dependencies:
     fabric-ca-client "1.2.1"
     fabric-client "1.2.1"
@@ -1431,29 +1431,29 @@ composer-connector-hlfv1@0.20.7:
     thenify-all "1.6.0"
     uuid "3.0.1"
 
-composer-connector-proxy@0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-connector-proxy/-/composer-connector-proxy-0.20.7.tgz#81da6a6d21be5cc083cca2b70f5bbcc7f1195d03"
-  integrity sha512-aA9bH84ztGqIblOEyTZow8iXibm8Nmb8/GC0kImmnVNBQAfI8tGLi0CBmLYg7sNACB8cNmKLI+GNS5f9KtjlMg==
+composer-connector-proxy@0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-connector-proxy/-/composer-connector-proxy-0.20.8.tgz#f4ca26c233eedab7ace2bbbf97ba62eb4cb03fe8"
+  integrity sha512-rNnPP+hYegheCzCN/bNWIufQbPlVQqGxy4CZn8CHZtJFvLOyEHqRLLkoneOAWQQ7VbWYhXpVcRPMjV5lFtTGfA==
   dependencies:
     socket.io-client "1.7.4"
     uuid "3.0.1"
 
-composer-wallet-filesystem@0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-wallet-filesystem/-/composer-wallet-filesystem-0.20.7.tgz#802e92be7e8fe05833aaf788b8222c853a87bf1d"
-  integrity sha512-FqJwaNTUWhEtan7qwd7nZOQosDbkut/ZvJ/j+uqPFOizW0QZoE4LgcvKtsTQDBypkbxhu8McIjR7RaDuhcnGFw==
+composer-wallet-filesystem@0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-wallet-filesystem/-/composer-wallet-filesystem-0.20.8.tgz#3c42d4c400786a6a000f5885a1369fac94909b4c"
+  integrity sha512-uUI/PFdqmvnQYvpX5A3HtU8SG92m4JVxFe/PKGdXURX35ozICb8x4eYgBG1nWvaF34M/ZGKkb26Pe9lICHDmAg==
   dependencies:
-    composer-common "0.20.7"
+    composer-common "0.20.8"
     mkdirp "0.5.1"
     rimraf "2.5.4"
 
-composer-wallet-inmemory@0.20.7:
-  version "0.20.7"
-  resolved "https://registry.yarnpkg.com/composer-wallet-inmemory/-/composer-wallet-inmemory-0.20.7.tgz#83bb04690b91065ebb0ad565b4711d2ccc496b28"
-  integrity sha512-dIijKsCvsRhMpfHHvLeH2UxLaxTw8jhn+xbzplvhpJMEeTi1k2v+oJsFvGH/EbNo7IK/kwdKxSqEirU1Z6VwFg==
+composer-wallet-inmemory@0.20.8:
+  version "0.20.8"
+  resolved "https://registry.yarnpkg.com/composer-wallet-inmemory/-/composer-wallet-inmemory-0.20.8.tgz#2f35edcdf6af96b346658289c0d9efb4fe8bf09e"
+  integrity sha512-QhSFFIhj77P6kozBxJGRAdQZJV8lze2UwUrPOyr2uNq8Py/hqoM7GR/sZe+LPV26ZzXObmD/2zJN2ie9c1Y5ZQ==
   dependencies:
-    composer-common "0.20.7"
+    composer-common "0.20.8"
 
 composer-wallet-mongodb@^0.0.2:
   version "0.0.2"

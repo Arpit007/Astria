@@ -12,6 +12,7 @@ function generateId(upperId, middleId, lowerId) {
 /**
  * Create Election
  * @param {org.astria.election.CreateElection} electionData The election to be created.
+ * @returns {string} ID of the Election
  * @transaction
  **/
 async function createElection(electionData) {

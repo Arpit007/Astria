@@ -70,6 +70,14 @@ rule AstriaParticipantsCanViewElection {
     action: ALLOW
 }
 
+rule NetworkAdminCanViewElection {
+    description: "Allow Astria participants to view Election"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: READ
+    resource: "org.astria.election.Election"
+    action: ALLOW
+}
+
 rule AstriaAdminCanCreateElection {
     description: "Allow AstriaAdmin to create a new Election"
     participant: "org.astria.participant.AstriaAdmin"

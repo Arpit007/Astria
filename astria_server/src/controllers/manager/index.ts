@@ -1,8 +1,7 @@
-import crypto from "crypto";
 import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
-import { encrypt } from "../../util/security";
+import { generateVoterId } from "../../util/generator";
 import { AuthoriseAdmin } from "../../lib/authenticate";
 import { createAstriaVoter } from "../../composer/admin";
 import { viewElection } from "../../composer/allParticipants";
@@ -17,16 +16,15 @@ export default router;
  * @param voterId
  * @param electionId
  * */
-router.post("/createAstriaVoter", AuthoriseAdmin, async (req: Request, res: Response) => {
+router.post("/addVoter", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
         const {userId} = req.user;
         const {voterId, electionId} = req.body;
         
         const election = await viewElection(electionId);
-        const encVoterId = encrypt(voterId, election.idKey);
-        const voterHashId = crypto.createHash("sha256").update(encVoterId).digest("base64");
+        const encVoterId = generateVoterId(voterId, election.idKey);
         
-        await createAstriaVoter(userId, voterHashId, electionId);
+        await createAstriaVoter(userId, encVoterId, electionId);
         
         return Reply(res, 200, {});
     } catch (err) {

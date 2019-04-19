@@ -45,13 +45,16 @@ export class AstriaAdmin {
     public userId: string;
     public email: string;
     public password: string;
-    profile: {
-        name: string;
-        phone: string;
+    public profile: any = {
+        name: undefined,
+        phone: undefined
     };
     
-    constructor(userId: string, email?: string, password?: string, name?: string, phone?: string) {
+    constructor(userId: string) {
         this.userId = userId;
+    }
+    
+    setupProfile(email: string, password: string, name: string, phone: string) {
         this.email = email;
         this.password = password;
         this.profile.name = name;
