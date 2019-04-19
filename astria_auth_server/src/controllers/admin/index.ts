@@ -39,7 +39,7 @@ router.post("/register", (req: Request, res: Response, next: NextFunction) => {
                     
                     const token = jwt.sign({id: user.email}, JWT_SECRET);
                     
-                    return Reply(res, 200, {auth_token: token});
+                    return Reply(res, 200, {auth_token: token, userId: user._id});
                 } catch (err) {
                     logger.error(err.message);
                     return Reply(res, 400, err.message);

@@ -62,7 +62,7 @@ async function createVoter(voterData) {
 		throw new Error("Election frozen, can't add voters now");
 	}
 	
-	const voterId = generateId(resourceId, userId, electionId);
+	const voterId = userId;
 	const voteId = voterId;
 	
 	let result = await query("VoterById", { userId : voterId });

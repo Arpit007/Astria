@@ -5,6 +5,11 @@ import Reply from "../util/reply";
 import { AUTH_SERVER } from "../util/secrets";
 
 
+const AuthServer: AxiosInstance = axios.create({
+    baseURL: AUTH_SERVER
+});
+
+
 const Request = (endPoint: string, data: any): Promise<any> => {
     return AuthServer.post(endPoint, data)
         .then((response: AxiosResponse) => {
@@ -18,15 +23,22 @@ const Request = (endPoint: string, data: any): Promise<any> => {
 };
 
 
-const AuthServer: AxiosInstance = axios.create({
-    baseURL: AUTH_SERVER
-});
-
-
 export async function GetAdminProfile(userId: string): Promise<any> {
     try {
         const data = await Request("/admin/profile", {userId});
         return data.body.user;
+    } catch (err) {
+        throw new Error(err.head ? err.head.msg : err.message);
+    }
+}
+
+
+export async function CreateAdmin(req: Request, res: Response, next: NextFunction): Promise<any> {
+    try {
+        const data = await Request("/admin/register", {...req.body});
+        const {user} = data.body;
+    
+        return req.logIn(user, () => next());
     } catch (err) {
         throw new Error(err.head ? err.head.msg : err.message);
     }

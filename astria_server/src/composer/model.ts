@@ -23,6 +23,7 @@ export class Election {
     public voteDecKey: string;
     public freeze: boolean;
     public adminId: string;
+    public admin: AstriaAdmin;
     public managers: string[];
     
     constructor(electionId: string, electionName: string, startDate: Date, endDate: Date, idKey: string, voteEncKey: string, voteDecKey: string, freeze: boolean, adminId: string, managers: string[]) {
@@ -42,9 +43,19 @@ export class Election {
 
 export class AstriaAdmin {
     public userId: string;
+    public email: string;
+    public password: string;
+    profile: {
+        name: string;
+        phone: string;
+    };
     
-    constructor(userId: string) {
+    constructor(userId: string, email?: string, password?: string, name?: string, phone?: string) {
         this.userId = userId;
+        this.email = email;
+        this.password = password;
+        this.profile.name = name;
+        this.profile.phone = phone;
     }
 }
 

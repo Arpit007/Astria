@@ -2,41 +2,23 @@ import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
+import { Candidate } from "../../composer/model";
 import * as AdminComposer from "../../composer/admin";
-import { AuthoriseAdmin } from "../../lib/authenticate";
-import { GenAdminKeys, GenManagerKeys } from "../../lib/genUserKeys";
-import { getManagers } from "../../composer/admin";
+import { AuthoriseAdmin, CreateAdmin } from "../../lib/authenticate";
+import { viewManagers } from "../../composer/allParticipants";
+import * as ParticipantComposer from "../../composer/allParticipants";
+import { GenerateIdKeys, GenerateVoteKeys } from "../../lib/genUserKeys";
 
 const router: Router = express.Router();
 export default router;
 
-
-/**
- * Creates a new admin and generates a corresponding new election
- * @param email
- * @param electionName
- * @param startDate
- * @param endDate
- * @param loginId
- * @returns {adminId, loginId, voteDecKey, loginKey}
- * */
-router.post("/create", GenAdminKeys, async (req: Request, res: Response) => {
+router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
-        const {voteKey, idKey, voteDecKey, secret, loginKey} = req.user;
-        const {email, electionName, loginId} = req.body;
-        let {startDate, endDate} = req.body;
+        const {userId} = req.user;
         
-        startDate = parseDate(startDate, "startDate");
-        endDate = parseDate(endDate, "endDate");
+        await AdminComposer.createAstriaAdmin(userId);
         
-        // @ts-ignore
-        const adminId = await AdminComposer.createAdmin(voteKey, idKey,
-            email, electionName, startDate, endDate, loginId, secret);
-        
-        // Todo: Remove adminId after auth is implemented
-        // @ts-ignore
-        return Reply(res, 200, {adminId, loginId, voteDecKey, loginKey});
+        return Reply(res, 200, {});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -64,20 +46,17 @@ router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response
 /**
  * Add a manager to the election
  * @param auth_token
- * @param email
- * @param loginId
- * @returns {adminId, loginId, voteDecKey, loginKey}
+ * @param managerId
+ * @param electionId
  * */
-router.post("/addManager", AuthoriseAdmin, GenManagerKeys, async (req: Request, res: Response) => {
+router.post("/addManager", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
-        const {userId, secret, loginKey} = req.user;
-        const {email, loginId} = req.body;
+        const {userId} = req.user;
+        const {managerId, electionId} = req.body;
         
-        const managerId = await AdminComposer.addManager(userId, email, loginId, secret);
+        await AdminComposer.addElectionManagers(userId, managerId, electionId);
         
-        // Todo: Remove managerId after auth is implemented
-        return Reply(res, 200, {managerId, loginId, loginKey});
+        return Reply(res, 200, {});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -94,9 +73,9 @@ router.post("/addCandidate", AuthoriseAdmin, async (req: Request, res: Response)
     try {
         // @ts-ignore
         const {userId} = req.user;
-        const {candidateName, logoURI} = req.body;
+        const {candidateName, logoURI, electionId} = req.body;
         
-        await AdminComposer.addCandidate(userId, candidateName, logoURI);
+        await AdminComposer.createCandidate(userId, candidateName, logoURI, electionId);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -106,22 +85,106 @@ router.post("/addCandidate", AuthoriseAdmin, async (req: Request, res: Response)
 
 
 /**
- * Update the Election Dates
+ * Modify the Election Dates
  * @param auth_token
  * @param startDate
  * @param endDate
+ * @param electionId
  * */
-router.post("/update", AuthoriseAdmin, async (req: Request, res: Response) => {
+router.post("/modifyDates", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
         const {userId} = req.user;
-        let {startDate, endDate} = req.body;
+        const {startDate, endDate, electionId} = req.body;
         
-        startDate = parseDate(startDate, "startDate");
-        endDate = parseDate(endDate, "endDate");
+        const startDateParsed = parseDate(startDate, "startDate");
+        const endDateParsed = parseDate(endDate, "endDate");
         
-        // @ts-ignore
-        await AdminComposer.updateElection(userId, startDate, endDate);
+        await AdminComposer.modifyElectionDates(userId, startDateParsed, endDateParsed, electionId);
+        
+        return Reply(res, 200, {});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Create an Election
+ * @param auth_token
+ * @param electionName
+ * @param startDate
+ * @param endDate
+ * @param electionId
+ * */
+router.post("/createElection", AuthoriseAdmin, GenerateIdKeys, async (req: Request, res: Response) => {
+    try {
+        const {userId, idKey} = req.user;
+        const {electionName, startDate, endDate} = req.body;
+        
+        const startDateParsed = parseDate(startDate, "startDate");
+        const endDateParsed = parseDate(endDate, "endDate");
+        
+        const electionId = await AdminComposer.createElection(userId, electionName, startDateParsed, endDateParsed, idKey);
+        
+        return Reply(res, 200, {electionId});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Set the Election's Vote decrypt key
+ * @param auth_token
+ * @param voteDecKey
+ * @param electionId
+ * */
+router.post("/setVoteDecKey", AuthoriseAdmin, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        const {voteDecKey, electionId} = req.body;
+        
+        await AdminComposer.setElectionVoteDecKey(userId, voteDecKey, electionId);
+        
+        return Reply(res, 200, {});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Freeze the election
+ * @param auth_token
+ * @param electionId
+ * */
+router.post("/freezeElection", AuthoriseAdmin, GenerateVoteKeys, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        const {voteEncKey, electionId} = req.body;
+        
+        // Todo: Use Shamir's method
+        await AdminComposer.freezeElection(userId, voteEncKey, electionId);
+        
+        return Reply(res, 200, {});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Add managers to the election
+ * @param auth_token
+ * @param managerId
+ * @param electionId
+ * */
+router.post("/addManagers", AuthoriseAdmin, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        const {managerId, electionId} = req.body;
+        
+        await AdminComposer.addElectionManagers(userId, managerId, electionId);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -133,16 +196,37 @@ router.post("/update", AuthoriseAdmin, async (req: Request, res: Response) => {
 /**
  * Get list of all the managers
  * @param auth_token
+ * @param electionId
  * @returns Manager[]
  * */
 router.post("/getManagers", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
         const {userId} = req.user;
+        const {electionId} = req.body;
         
-        const managersList = await getManagers(userId);
+        const managersList = await viewManagers(userId, electionId);
         
         return Reply(res, 200, {managersList});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Returns List of Candidates in an Election
+ * @param auth_token
+ * @param electionId
+ * @returns Candidate[]
+ * */
+router.post("/candidates", AuthoriseAdmin, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        const {electionId} = req.body;
+        
+        const candidates: Candidate[] = await ParticipantComposer.viewCandidates(userId, electionId);
+        
+        return Reply(res, 200, {candidates});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

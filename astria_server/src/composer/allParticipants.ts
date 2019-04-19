@@ -6,24 +6,18 @@ import { BusinessNetworkConnection } from "composer-client";
 import { AstriaAdmin, Candidate, Election } from "./model";
 
 
-export async function viewCandidates(userCardId: string, resourceId: string): Promise<Candidate[]> {
-    const namespace = "org.astria.participant";
-    
+export async function viewCandidates(userCardId: string, electionId: string): Promise<Candidate[]> {
     const bnc = new BusinessNetworkConnection();
     await bnc.connect(userCardId);
     
-    const participantRegistry = await bnc.getParticipantRegistry(`${namespace}.${resourceId}`);
-    const user = await participantRegistry.get(userCardId);
-    
-    const electionId = user.electionId;
-    
-    const candidatesObj = await bnc.query("CandidateByElectionId", {electionId});
+    const candidatesObj = await bnc.query("CandidatesByElectionId", {electionId});
     
     const candidateList: Candidate[] = [];
     
     for (const candidateObj of candidatesObj) {
-        const candidate = new Candidate(candidateObj.candidateId, candidateObj.candidateName,
-            candidateObj.logoURI, candidateObj.electionId);
+        const {candidateId, candidateName, logoURI} = candidateObj;
+        const candidate = new Candidate(candidateId, candidateName,
+            logoURI, electionId);
         candidateList.push(candidate);
     }
     
@@ -34,17 +28,22 @@ export async function viewCandidates(userCardId: string, resourceId: string): Pr
 
 
 export async function viewElection(electionId: string): Promise<Election> {
-    const adminId = "admin@chain_code";
+    const adminCardId = "admin@chain_code";
     const namespace = "org.astria.election.Election";
     
     const bnc = new BusinessNetworkConnection();
-    await bnc.connect(adminId);
+    await bnc.connect(adminCardId);
     
     const electionRegistry = await bnc.getAssetRegistry(namespace);
     const electionObj = await electionRegistry.get(electionId);
     
-    const election = new Election(electionObj.electionId, electionObj.electionName,
-        electionObj.startDate, electionObj.endDate, electionObj.adminId);
+    if (!electionObj) {
+        throw new Error("Invalid electionId");
+    }
+    
+    const {electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers} = electionObj;
+    
+    const election = new Election(electionId, electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers);
     
     await bnc.disconnect();
     
@@ -63,8 +62,8 @@ export async function viewAllElections(): Promise<Election[]> {
     const electionList: Election[] = [];
     
     for (const electionObj of electionsObj) {
-        const election = new Election(electionObj.electionId, electionObj.electionName,
-            electionObj.startDate, electionObj.endDate, electionObj.adminId);
+        const {electionId, electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers} = electionObj;
+        const election = new Election(electionId, electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers);
         electionList.push(election);
     }
     
@@ -84,32 +83,83 @@ export async function detailedResultSummary() {
 }
 
 
-export async function getAdmin(userCardId: string, resourceId: string, getSecret = false): Promise<AstriaAdmin> {
-    const namespace = "org.astria.participant";
+export async function getElectionAdmin(electionId: string): Promise<AstriaAdmin> {
+    const userCardId = "admin@chain_code";
+    const namespace = "org.astria.participant.AstriaAdmin";
+    const electionNamespace = "org.astria.election.Election";
     
     const bnc = new BusinessNetworkConnection();
     await bnc.connect(userCardId);
     
-    const participantRegistry = await bnc.getParticipantRegistry(`${namespace}.${resourceId}`);
-    const user = await participantRegistry.get(userCardId);
+    const electionRegistry = await bnc.getAssetRegistry(electionNamespace);
+    const election = await electionRegistry.get(electionId);
     
-    let adminObj = undefined;
-    
-    if (resourceId !== "AstriaAdmin") {
-        const electionId = user.electionId;
-        const election = await viewElection(electionId);
-        
-        const adminRegistry = await bnc.getParticipantRegistry(`${namespace}.AstriaAdmin`);
-        adminObj = await adminRegistry.get(election.adminId);
-    } else {
-        adminObj = user;
+    if (!election) {
+        throw new Error("Invalid electionId");
     }
     
-    const {userId, electionId, voteKey, voteDecKey, idKey, email, secret} = adminObj;
-    const admin = new AstriaAdmin(userId, electionId, voteKey, voteDecKey,
-        idKey, email, (getSecret ? secret : undefined));
+    const {adminId} = election;
+    
+    const participantRegistry = await bnc.getParticipantRegistry(namespace);
+    
+    const adminObj = await participantRegistry.get(adminId);
+    const admin: AstriaAdmin = new AstriaAdmin(adminObj.adminId);
     
     await bnc.disconnect();
     
     return admin;
+}
+
+
+export async function viewAllAdmins(): Promise<AstriaAdmin[]> {
+    const adminId = "admin@chain_code";
+    
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(adminId);
+    
+    const adminsObj = await bnc.query("AllAstriaAdmins");
+    
+    const adminList: AstriaAdmin[] = [];
+    
+    for (const adminObj of adminsObj) {
+        const {userId} = adminObj;
+        const admin: AstriaAdmin = new AstriaAdmin(userId);
+        adminList.push(admin);
+    }
+    
+    await bnc.disconnect();
+    
+    return adminList;
+}
+
+
+export async function viewManagers(userCardId: string, electionId: string): Promise<AstriaAdmin[]> {
+    const namespace = "org.astria.participant.AstriaAdmin";
+    const electionNamespace = "org.astria.election.Election";
+    
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(userCardId);
+    
+    const electionRegistry = await bnc.getAssetRegistry(electionNamespace);
+    const election = await electionRegistry.get(electionId);
+    
+    const participantRegistry = await bnc.getParticipantRegistry(namespace);
+    const managersObjPromise = [];
+    
+    for (const userId of election.managers) {
+        managersObjPromise.push(participantRegistry.get(userId));
+    }
+    
+    const managersObj = await Promise.all(managersObjPromise);
+    
+    const managersList: AstriaAdmin[] = [];
+    for (const managerObj of managersObj) {
+        const {userId} = managerObj;
+        const manager: AstriaAdmin = new AstriaAdmin(userId);
+        managersList.push(manager);
+    }
+    
+    await bnc.disconnect();
+    
+    return managersList;
 }

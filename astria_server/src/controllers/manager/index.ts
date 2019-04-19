@@ -1,9 +1,11 @@
+import crypto from "crypto";
 import express, { Request, Response, Router } from "express";
-import { AuthoriseAdmin } from "../../lib/authenticate";
+
 import Reply from "../../util/reply";
-import { addVoter } from "../../composer/manager";
-import { getAdmin } from "../../composer/allParticipants";
 import { encrypt } from "../../util/security";
+import { AuthoriseAdmin } from "../../lib/authenticate";
+import { createAstriaVoter } from "../../composer/admin";
+import { viewElection } from "../../composer/allParticipants";
 
 const router: Router = express.Router();
 export default router;
@@ -13,17 +15,18 @@ export default router;
  * Adds a new voter to the election
  * @param auth_token
  * @param voterId
+ * @param electionId
  * */
-router.post("/addVoter", AuthoriseAdmin, async (req: Request, res: Response) => {
+router.post("/createAstriaVoter", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        // @ts-ignore
-        const {userId, resourceId} = req.user;
-        const {voterId} = req.body;
+        const {userId} = req.user;
+        const {voterId, electionId} = req.body;
         
-        const admin = await getAdmin(userId, resourceId);
-        const encVoterId = encrypt(voterId, admin.idKey); // Todo: Hash it
+        const election = await viewElection(electionId);
+        const encVoterId = encrypt(voterId, election.idKey);
+        const voterHashId = crypto.createHash("sha256").update(encVoterId).digest("base64");
         
-        await addVoter(userId, encVoterId);
+        await createAstriaVoter(userId, voterHashId, electionId);
         
         return Reply(res, 200, {});
     } catch (err) {
