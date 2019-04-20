@@ -6,9 +6,11 @@ import { BusinessNetworkConnection } from "composer-client";
 import { AstriaAdmin, Candidate, CandidateResult, Election, Result } from "./model";
 
 
-export async function viewCandidates(userCardId: string, electionId: string): Promise<Candidate[]> {
+export async function viewCandidates(electionId: string): Promise<Candidate[]> {
+    const adminCardId = "admin@chain_code";
+    
     const bnc = new BusinessNetworkConnection();
-    await bnc.connect(userCardId);
+    await bnc.connect(adminCardId);
     
     const candidatesObj = await bnc.query("CandidatesByElectionId", {electionId});
     

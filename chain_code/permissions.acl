@@ -143,6 +143,14 @@ rule AstriaParticipantCanReadCandidate {
     action: ALLOW
 }
 
+rule NetworkAdminCanReadCandidate {
+    description: "Allow Network Admin to read Candidate"
+    participant: "org.hyperledger.composer.system.NetworkAdmin"
+    operation: READ
+    resource: "org.astria.candidate.Candidate"
+    action: ALLOW
+}
+
 rule AstriaAdminCanCreateCandidate {
     description: "Allow AstriaAdmin to create new candidates"
     participant: "org.astria.participant.AstriaAdmin"

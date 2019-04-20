@@ -1,13 +1,23 @@
 import crypto from "crypto";
+import * as securePin from "secure-pin";
 import secrets from "secrets.js-grempe";
+import { PIN_LENGTH } from "../util/secrets";
 
+interface VoterId {
+    voterId: string;
+    pin: string;
+}
 
-export function generateVoterId(userId: string, electionId: string, idKey: string) {
-    // Todo: Fix
-    const encVoterId = userId + electionId; // encrypt(userId, idKey);
-    const voterHashId = crypto.createHash("sha256").update(encVoterId).digest("base64");
-    
-    return voterHashId;
+export function generateVoterId(userId: string, electionId: string, pin?: string): VoterId {
+    const usePin = pin ? pin : securePin.generatePinSync(PIN_LENGTH);
+    const voterId = `${userId}${electionId}${usePin}`;
+    const encVoterId = crypto.createHash("sha256").update(voterId).digest("base64");
+    return {pin: usePin, voterId: encVoterId};
+}
+
+export function generateVoterIdFromPin(userId: string, electionId: string, pin: string): string {
+    const voterId = `${userId}${electionId}${pin}`;
+    return crypto.createHash("sha256").update(voterId).digest("base64");
 }
 
 
@@ -32,6 +42,7 @@ export function generateSplitKeys(key: string, managerCount: number): SplitKeys 
     const result: SplitKeys = {adminKey, managerKeys: []};
     
     if (threshold === 0) {
+        result.adminKey = key;
         return result;
     }
     
@@ -40,6 +51,12 @@ export function generateSplitKeys(key: string, managerCount: number): SplitKeys 
 }
 
 export function combineSplitKeys(adminKey: string, managerKeys: string[]): string {
+    if (managerKeys.length === 0) {
+        // Todo: Remove
+        // return adminKey;
+        return secrets.hex2str(adminKey);
+    }
+    
     const managersKeyPart = secrets.combine(managerKeys);
     const secretKey = adminKey + managersKeyPart;
     return secrets.hex2str(secretKey);

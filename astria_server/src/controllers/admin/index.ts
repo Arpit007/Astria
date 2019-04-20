@@ -4,9 +4,8 @@ import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
 import * as AdminComposer from "../../composer/admin";
 import { viewElection, viewManagers } from "../../composer/allParticipants";
-import { AstriaAdmin, Candidate } from "../../composer/model";
-import * as ParticipantComposer from "../../composer/allParticipants";
-import { GenerateIdKeys, GenerateVoteKeys } from "../../lib/genUserKeys";
+import { AstriaAdmin } from "../../composer/model";
+import { GenerateVoteKeys } from "../../lib/genUserKeys";
 import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
 import { combineSplitKeys, generateSplitKeys } from "../../lib/generator";
 
@@ -130,15 +129,15 @@ router.post("/modifyDates", AuthoriseAdmin, async (req: Request, res: Response) 
  * @param endDate
  * @returns electionId
  * */
-router.post("/createElection", AuthoriseAdmin, GenerateIdKeys, async (req: Request, res: Response) => {
+router.post("/createElection", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        const {userId, idKey} = req.user;
+        const {userId} = req.user;
         const {electionName, startDate, endDate} = req.body;
         
         const startDateParsed = parseDate(startDate, "startDate");
         const endDateParsed = parseDate(endDate, "endDate");
         
-        const electionId = await AdminComposer.createElection(userId, electionName, startDateParsed, endDateParsed, idKey);
+        const electionId = await AdminComposer.createElection(userId, electionName, startDateParsed, endDateParsed);
         
         return Reply(res, 200, {electionId});
     } catch (err) {
@@ -218,26 +217,6 @@ router.post("/getManagers", AuthoriseAdmin, async (req: Request, res: Response) 
         }
         
         return Reply(res, 200, {managers});
-    } catch (err) {
-        return Reply(res, 400, err.message);
-    }
-});
-
-
-/**
- * Returns List of Candidates in an Election
- * @param auth_token
- * @param electionId
- * @returns Candidate[]
- * */
-router.post("/candidates", AuthoriseAdmin, async (req: Request, res: Response) => {
-    try {
-        const {userId} = req.user;
-        const {electionId} = req.body;
-        
-        const candidates: Candidate[] = await ParticipantComposer.viewCandidates(userId, electionId);
-        
-        return Reply(res, 200, {candidates});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

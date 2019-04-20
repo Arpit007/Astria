@@ -19,3 +19,6 @@ if (!AUTH_SERVER) {
     logger.error("Astria authorisation server endpoint not set");
     process.exit(1);
 }
+
+
+export const PIN_LENGTH = parseInt(prod ? process.env["PIN_LENGTH"] : process.env["PIN_LENGTH_LOCAL"]);

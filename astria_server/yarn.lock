@@ -5575,6 +5575,11 @@ secure-keys@^1.0.0:
   resolved "https://registry.yarnpkg.com/secure-keys/-/secure-keys-1.0.0.tgz#f0c82d98a3b139a8776a8808050b824431087fca"
   integrity sha1-8MgtmKOxOah3aogIBQuCRDEIf8o=
 
+secure-pin@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/secure-pin/-/secure-pin-1.0.14.tgz#6e8bd00dc85ec7743bf53085a654b2882e3a34e2"
+  integrity sha1-bovQDchex3Q79TCFplSyiC46NOI=
+
 select-hose@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/select-hose/-/select-hose-2.0.0.tgz#625d8658f865af43ec962bfc376a37359a4994ca"

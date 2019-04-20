@@ -5,7 +5,6 @@ asset Election identified by electionId {
   o String electionName
   o DateTime startDate
   o DateTime endDate
-  o String idKey
   o String voteEncKey optional
   o String voteDecKey optional
   o Boolean freeze default = false
@@ -18,7 +17,6 @@ transaction CreateElection {
   o String electionName
   o DateTime startDate
   o DateTime endDate
-  o String idKey
 }
 
 transaction ModifyElectionDates {

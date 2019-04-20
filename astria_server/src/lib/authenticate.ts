@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 
 import Reply from "../util/reply";
-import { AUTH_SERVER } from "../util/secrets";
+import { AUTH_SERVER, PIN_LENGTH } from "../util/secrets";
 
 
 const AuthServer: AxiosInstance = axios.create({
@@ -60,9 +60,9 @@ export async function AuthoriseAdmin(req: Request, res: Response, next: NextFunc
         const data = await Request("/admin/verify", {auth_token});
         const {user} = data.body;
         user.userId = user._id;
-    
+        
         req.user = user;
-    
+        
         next();
     } catch (err) {
         const msg = err.head ? err.head.msg : err.message;
@@ -71,23 +71,18 @@ export async function AuthoriseAdmin(req: Request, res: Response, next: NextFunc
 }
 
 
-export async function AuthoriseVoter(req: Request, res: Response, next: NextFunction): Promise<any> {
-    try {
-        const {auth_token} = req.body;
-        
-        if (!auth_token) {
-            return Reply(res, 400, "Sign-In required");
-        }
-        
-        const data = await Request("/voter/verify", {auth_token});
-        const {user} = data.body;
-        user.userId = user._id;
-    
-        req.user = user;
-    
-        next();
-    } catch (err) {
-        const msg = err.head ? err.head.msg : err.message;
-        return Reply(res, 400, msg);
+export function AuthoriseVoter(req: Request, res: Response, next: NextFunction) {
+    const {userId, pin} = req.body;
+    if (!userId) {
+        return Reply(res, 400, "userId required");
     }
+    if (!pin) {
+        return Reply(res, 400, "Pin required");
+    }
+    if (pin.length !== PIN_LENGTH) {
+        return Reply(res, 400, "Invalid Pin");
+    }
+    
+    req.user = {userId, pin};
+    next();
 }

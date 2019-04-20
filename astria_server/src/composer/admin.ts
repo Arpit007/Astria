@@ -90,7 +90,7 @@ export async function createAstriaVoter(adminCardId: string, encVoterId: string,
 }
 
 
-export async function createElection(adminCardId: string, electionName: string, startDate: Date, endDate: Date, idKey: string): Promise<string> {
+export async function createElection(adminCardId: string, electionName: string, startDate: Date, endDate: Date): Promise<string> {
     const namespace = "org.astria.election";
     
     const bnc = new BusinessNetworkConnection();
@@ -102,7 +102,6 @@ export async function createElection(adminCardId: string, electionName: string, 
     createElection.electionName = electionName;
     createElection.startDate = startDate;
     createElection.endDate = endDate;
-    createElection.idKey = idKey;
     
     const electionId = await bnc.submitTransaction(createElection);
     
@@ -215,7 +214,7 @@ export async function publishResult(adminCardId: string, voteDecKey: string, ele
         throw new Error("Invalid vote decrypt keys");
     }
     
-    const candidates = await viewCandidates(adminCardId, electionId);
+    const candidates = await viewCandidates(electionId);
     const candidatesResult = {};
     for (const candidate of candidates) {
         const {candidateId} = candidate;

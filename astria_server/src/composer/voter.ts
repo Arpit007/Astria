@@ -13,6 +13,13 @@ export async function castVote(voterId: string, encCandidateId: string): Promise
     
     const factory = bnc.getBusinessNetwork().getFactory();
     
+    const voteRegistry = await bnc.getAssetRegistry(`${namespace}.Vote`);
+    const vote = await voteRegistry.get(voterId);
+    
+    if (!vote) {
+        throw new Error("Invalid Id/Pin");
+    }
+    
     const castVote = factory.newTransaction(namespace, "CastVote");
     castVote.candidateId = encCandidateId;
     

@@ -19,7 +19,7 @@ async function createElection(electionData) {
 	const electionNamespace = "org.astria.election";
 	const electionResourceId = "Election";
 	
-	const { electionName, startDate, endDate, idKey } = electionData;
+	const { electionName, startDate, endDate } = electionData;
 	
 	let startDateL = startDate.getTime();
 	let endDateL = endDate.getTime();
@@ -41,7 +41,6 @@ async function createElection(electionData) {
 	election.electionName = electionName;
 	election.startDate = startDate;
 	election.endDate = endDate;
-	election.idKey = idKey;
 	election.adminId = adminId;
 	election.managers = [];
 	

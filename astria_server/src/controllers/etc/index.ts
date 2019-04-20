@@ -2,8 +2,8 @@ import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
 import { GetAdminProfile } from "../../lib/authenticate";
-import { AstriaAdmin, Election } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
+import { AstriaAdmin, Candidate, Election } from "../../composer/model";
 
 const router: Router = express.Router();
 export default router;
@@ -99,6 +99,24 @@ router.post("/getAdmin", async (req: Request, res: Response) => {
         const adminProfile = await GetAdminProfile(admin.userId);
         
         return Reply(res, 200, {admin: adminProfile});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Returns List of Candidates in an Election
+ * @param electionId
+ * @returns Candidate[]
+ * */
+router.post("/candidates", async (req: Request, res: Response) => {
+    try {
+        const {electionId} = req.body;
+        
+        const candidates: Candidate[] = await ParticipantComposer.viewCandidates(electionId);
+        
+        return Reply(res, 200, {candidates});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
