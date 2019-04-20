@@ -3,7 +3,7 @@
  */
 import { BusinessNetworkConnection } from "composer-client";
 
-import { AstriaAdmin, Candidate, Election } from "./model";
+import { AstriaAdmin, Candidate, CandidateResult, Election, Result } from "./model";
 
 
 export async function viewCandidates(userCardId: string, electionId: string): Promise<Candidate[]> {
@@ -73,13 +73,37 @@ export async function viewAllElections(): Promise<Election[]> {
 }
 
 
-export async function resultSummary() {
-    // Todo: Not Implemented
-}
-
-
-export async function detailedResultSummary() {
-    // Todo: Not Implemented
+export async function resultSummary(electionId: string) {
+    const userCardId = "admin@chain_code";
+    const resultNamespace = "org.astria.result.Result";
+    const candidateNamespace = "org.astria.candidate.Candidate";
+    
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(userCardId);
+    
+    const resultRegistry = await bnc.getAssetRegistry(resultNamespace);
+    const result = await resultRegistry.get(electionId);
+    
+    if (!result) {
+        throw new Error("Result not available");
+    }
+    
+    const candidateRegistry = await bnc.getAssetRegistry(candidateNamespace);
+    
+    const candidateRequestObj = [];
+    const candidateResultList: CandidateResult[] = [];
+    
+    for (const candidateObj of result.results) {
+        const request = async () => {
+            const candidate = await candidateRegistry.get(candidateObj.candidateId);
+            candidateResultList.push(new CandidateResult(candidate, candidateObj.voteCount));
+        };
+        candidateRequestObj.push(request);
+    }
+    
+    await Promise.all(candidateRequestObj);
+    
+    return new Result(electionId, candidateResultList);
 }
 
 

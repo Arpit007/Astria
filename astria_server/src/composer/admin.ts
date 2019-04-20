@@ -6,6 +6,9 @@ import { AdminConnection } from "composer-admin";
 import { BusinessNetworkConnection } from "composer-client";
 
 import connectionProfile from "../../config/profile";
+import { viewCandidates, viewElection } from "./allParticipants";
+import { decrypt, encrypt } from "../util/security";
+import { CandidateResult } from "./model";
 
 
 export async function createAstriaAdmin(adminId: string): Promise<boolean> {
@@ -186,8 +189,43 @@ export async function addElectionManagers(adminCardId: string, managerId: string
 }
 
 
-export async function publishResult(voteDecKey: string) {
+export async function publishResult(adminCardId: string, voteDecKey: string, electionId: string) {
     // Todo: Not Implemented
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(adminCardId);
+    
+    const factory = bnc.getBusinessNetwork().getFactory();
+    
+    const election = await viewElection(electionId);
+    
+    const today = new Date().getTime();
+    const endDate = election.endDate.getTime();
+    
+    if (!election.freeze || today >= endDate) {
+        throw new Error("Currently not allowed");
+    }
+    
+    try {
+        const enc = encrypt(election.electionId, election.voteEncKey);
+        const dec = decrypt(enc, voteDecKey);
+        if (enc !== dec) {
+            throw new Error("Invalid vote decrypt keys");
+        }
+    } catch (err) {
+        throw new Error("Invalid vote decrypt keys");
+    }
+    
+    const candidates = await viewCandidates(adminCardId, electionId);
+    const candidatesResult = {};
+    for (const candidate of candidates) {
+        const {candidateId} = candidate;
+        // candidatesResult[candidateId] = new CandidateResult(candidateId, 0);
+    }
+    
+    const votes = await bnc.query("AllVotesOfElection", {electionId});
+    for (const vote of votes) {
+    
+    }
 }
 
 

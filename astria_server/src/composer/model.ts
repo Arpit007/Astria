@@ -79,23 +79,21 @@ export class Vote {
 
 
 export class CandidateResult {
-    public candidateId: string;
+    public candidate: Candidate;
     public voteCount: number;
     
-    constructor(candidateId: string, voteCount: number) {
-        this.candidateId = candidateId;
+    constructor(candidate: Candidate, voteCount: number) {
+        this.candidate = candidate;
         this.voteCount = voteCount;
     }
 }
 
 
 export class Result {
-    public resultId: string;
     public electionId: string;
     public results: CandidateResult[];
     
-    constructor(resultId: string, electionId: string, results: CandidateResult[]) {
-        this.resultId = resultId;
+    constructor(electionId: string, results: CandidateResult[]) {
         this.electionId = electionId;
         this.results = results;
     }

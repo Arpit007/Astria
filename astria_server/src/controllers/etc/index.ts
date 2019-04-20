@@ -47,25 +47,11 @@ router.post("/allElections", async (req: Request, res: Response) => {
  * */
 router.post("/resultSummary", async (req: Request, res: Response) => {
     try {
-        // Todo: Not Implemented
-        await ParticipantComposer.resultSummary();
+        const {electionId} = req.body;
         
-        return Reply(res, 404, "Not Implemented");
-    } catch (err) {
-        return Reply(res, 400, err.message);
-    }
-});
-
-
-/**
- * Returns detailed Summary
- * */
-router.post("/detailedSummary", async (req: Request, res: Response) => {
-    try {
-        // Todo: Not Implemented
-        await ParticipantComposer.detailedResultSummary();
+        const result = await ParticipantComposer.resultSummary(electionId);
         
-        return Reply(res, 404, "Not Implemented");
+        return Reply(res, 200, {result});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

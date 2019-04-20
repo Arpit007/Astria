@@ -3,11 +3,12 @@ import express, { Request, Response, Router } from "express";
 import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
 import * as AdminComposer from "../../composer/admin";
-import { viewManagers } from "../../composer/allParticipants";
+import { viewElection, viewManagers } from "../../composer/allParticipants";
 import { AstriaAdmin, Candidate } from "../../composer/model";
 import * as ParticipantComposer from "../../composer/allParticipants";
 import { GenerateIdKeys, GenerateVoteKeys } from "../../lib/genUserKeys";
 import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
+import { combineSplitKeys, generateSplitKeys } from "../../lib/generator";
 
 const router: Router = express.Router();
 export default router;
@@ -35,13 +36,18 @@ router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
 /**
  * Publish the Result of the Election
  * @param auth_token
- * @param voteDecKey
+ * @param electionId
+ * @param adminKey
+ * @param managerKeys[]
  * */
 router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
-        const {voteDecKey} = req.body;
+        const {userId} = req.user;
+        const {adminKey, managerKeys, electionId} = req.body;
+        const voteDecKey = combineSplitKeys(adminKey, managerKeys);
+        
         // Todo: Not Implemented
-        await AdminComposer.publishResult(voteDecKey);
+        await AdminComposer.publishResult(userId, voteDecKey, electionId);
         
         return Reply(res, 200, {});
     } catch (err) {
@@ -145,16 +151,19 @@ router.post("/createElection", AuthoriseAdmin, GenerateIdKeys, async (req: Reque
  * Freeze the election
  * @param auth_token
  * @param electionId
+ * @returns {adminKey, managerKeys[]}
  * */
 router.post("/freezeElection", AuthoriseAdmin, GenerateVoteKeys, async (req: Request, res: Response) => {
     try {
-        const {userId, voteEncKey} = req.user;
+        const {userId, voteEncKey, voteDecKey} = req.user;
         const {electionId} = req.body;
         
-        // Todo: Use Shamir's method, return keys
         await AdminComposer.freezeElection(userId, voteEncKey, electionId);
-        
-        return Reply(res, 200, {});
+    
+        const election = await viewElection(electionId);
+        const keys = generateSplitKeys(voteDecKey, election.managers.length);
+    
+        return Reply(res, 200, {...keys});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

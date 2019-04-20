@@ -5,8 +5,7 @@ concept CandidateResult {
   o Integer voteCount
 }
 
-asset Result identified by resultId {
-  o String resultId
+asset Result identified by electionId {
   o String electionId
   o CandidateResult[] results
 }
