@@ -17,6 +17,11 @@ printf "Enter Version (optional): "
 
 read -r newVersion
 
+# Update Project Version Number
+if [[ ${version} != ${newVersion} ]]; then
+	node version.js "${newVersion}"
+fi
+
 # Update file name version number, if provided by user
 if [[ ! -z "${newVersion}" ]]; then
 	targetFile=${fileName}"@"${newVersion}${extension}
@@ -36,10 +41,5 @@ composer archive create -t dir -a "${targetFile}" -n ../
 
 # Go back to script directory
 cd "${scriptDir}"
-
-# Update Project Version Number
-if [[ ${version} != ${newVersion} ]]; then
-	node version.js "${newVersion}"
-fi
 
 echo "Packaged Successfully"

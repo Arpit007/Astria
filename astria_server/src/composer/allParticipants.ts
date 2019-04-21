@@ -100,7 +100,7 @@ export async function resultSummary(electionId: string) {
             const candidate = await candidateRegistry.get(candidateObj.candidateId);
             candidateResultList.push(new CandidateResult(candidate, candidateObj.voteCount));
         };
-        candidateRequestObj.push(request);
+        candidateRequestObj.push(request());
     }
     
     await Promise.all(candidateRequestObj);

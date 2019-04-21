@@ -17,5 +17,6 @@ transaction CreateAstriaAdmin {
 
 transaction CreateAstriaVoter {
   o String userId
+  o String voteId
   o String electionId
 }

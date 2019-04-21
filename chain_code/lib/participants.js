@@ -42,7 +42,7 @@ async function createVoter(voterData) {
 	const voteResourceId = "Vote";
 	const electionResPath = "org.astria.election.Election";
 	
-	const { userId, electionId } = voterData;
+	const { userId, voteId, electionId } = voterData;
 	
 	const currentParticipant = getCurrentParticipant();
 	
@@ -63,7 +63,6 @@ async function createVoter(voterData) {
 	}
 	
 	const voterId = userId;
-	const voteId = voterId;
 	
 	let result = await query("VoterById", { userId : voterId });
 	if (result.length > 0) {

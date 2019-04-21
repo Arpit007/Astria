@@ -79,10 +79,10 @@ export class Vote {
 
 
 export class CandidateResult {
-    public candidate: Candidate;
+    public candidate: Candidate | string;
     public voteCount: number;
     
-    constructor(candidate: Candidate, voteCount: number) {
+    constructor(candidate: Candidate | string, voteCount: number) {
         this.candidate = candidate;
         this.voteCount = voteCount;
     }

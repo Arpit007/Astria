@@ -2,12 +2,12 @@ import express, { Request, Response, Router } from "express";
 
 import Reply from "../../util/reply";
 import { parseDate } from "../../util/misc";
-import * as AdminComposer from "../../composer/admin";
-import { viewElection, viewManagers } from "../../composer/allParticipants";
 import { AstriaAdmin } from "../../composer/model";
+import * as AdminComposer from "../../composer/admin";
 import { GenerateVoteKeys } from "../../lib/genUserKeys";
-import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
 import { combineSplitKeys, generateSplitKeys } from "../../lib/generator";
+import { viewElection, viewManagers } from "../../composer/allParticipants";
+import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
 
 const router: Router = express.Router();
 export default router;
@@ -45,7 +45,6 @@ router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response
         const {adminKey, managerKeys, electionId} = req.body;
         const voteDecKey = combineSplitKeys(adminKey, managerKeys);
         
-        // Todo: Not Implemented
         await AdminComposer.publishResult(userId, voteDecKey, electionId);
         
         return Reply(res, 200, {});

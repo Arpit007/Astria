@@ -8,16 +8,37 @@ interface VoterId {
     pin: string;
 }
 
-export function generateVoterId(userId: string, electionId: string, pin?: string): VoterId {
+export function generateVoterIdPair(userId: string, electionId: string, pin?: string): VoterId {
     const usePin = pin ? pin : securePin.generatePinSync(PIN_LENGTH);
     const voterId = `${userId}${electionId}${usePin}`;
-    const encVoterId = crypto.createHash("sha256").update(voterId).digest("base64");
+    
+    const encVoterId = crypto.createHash("sha256")
+        .update(voterId)
+        .digest("base64")
+        .replace(/\//g, ".")
+        .replace(/\+/g, "-");
     return {pin: usePin, voterId: encVoterId};
 }
 
-export function generateVoterIdFromPin(userId: string, electionId: string, pin: string): string {
-    const voterId = `${userId}${electionId}${pin}`;
-    return crypto.createHash("sha256").update(voterId).digest("base64");
+
+export function generateVoteId(userId: string, electionId: string, pin: string): string {
+    const voteId = `${userId}${electionId}${pin}`;
+    
+    return crypto.createHash("sha256")
+        .update(voteId)
+        .digest("base64")
+        .replace(/\//g, ".")
+        .replace(/\+/g, "-");
+}
+
+export function generateVoterId(userId: string, electionId: string): string {
+    const voterId = `${userId}${electionId}`;
+    
+    return crypto.createHash("sha256")
+        .update(voterId)
+        .digest("base64")
+        .replace(/\//g, ".")
+        .replace(/\+/g, "-");
 }
 
 
@@ -51,10 +72,8 @@ export function generateSplitKeys(key: string, managerCount: number): SplitKeys 
 }
 
 export function combineSplitKeys(adminKey: string, managerKeys: string[]): string {
-    if (managerKeys.length === 0) {
-        // Todo: Remove
-        // return adminKey;
-        return secrets.hex2str(adminKey);
+    if (!managerKeys) {
+        return adminKey;
     }
     
     const managersKeyPart = secrets.combine(managerKeys);

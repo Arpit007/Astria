@@ -8,7 +8,7 @@ import { BusinessNetworkConnection } from "composer-client";
 import connectionProfile from "../../config/profile";
 import { viewCandidates, viewElection } from "./allParticipants";
 import { decrypt, encrypt } from "../util/security";
-import { CandidateResult } from "./model";
+import { CandidateResult, Result, ResultVote, Vote } from "./model";
 
 
 export async function createAstriaAdmin(adminId: string): Promise<boolean> {
@@ -51,7 +51,7 @@ export async function createAstriaAdmin(adminId: string): Promise<boolean> {
 }
 
 
-export async function createAstriaVoter(adminCardId: string, encVoterId: string, electionId: string): Promise<boolean> {
+export async function createAstriaVoter(adminCardId: string, encVoterId: string, encVoteId: string, electionId: string): Promise<boolean> {
     const networkName = "chain_code";
     
     const resource = "AstriaVoter";
@@ -64,6 +64,7 @@ export async function createAstriaVoter(adminCardId: string, encVoterId: string,
     
     const createVoter = factory.newTransaction(namespace, "CreateAstriaVoter");
     createVoter.userId = encVoterId;
+    createVoter.voteId = encVoteId;
     createVoter.electionId = electionId;
     
     await bnc.submitTransaction(createVoter);
@@ -188,43 +189,121 @@ export async function addElectionManagers(adminCardId: string, managerId: string
 }
 
 
-export async function publishResult(adminCardId: string, voteDecKey: string, electionId: string) {
-    // Todo: Not Implemented
+export async function publishResult(adminId: string, voteDecKey: string, electionId: string) {
     const bnc = new BusinessNetworkConnection();
-    await bnc.connect(adminCardId);
+    await bnc.connect(adminId);
     
-    const factory = bnc.getBusinessNetwork().getFactory();
+    const resObj = await bnc.query("ElectionsResult", {electionId});
+    if (resObj.length > 0) {
+        throw new Error("Result already published");
+    }
     
+    // Pick Election
     const election = await viewElection(electionId);
+    const {voteEncKey} = election;
     
+    if (adminId !== election.adminId) {
+        throw new Error("Unauthorised");
+    }
+    
+    // Check if election is over
     const today = new Date().getTime();
     const endDate = election.endDate.getTime();
     
-    if (!election.freeze || today >= endDate) {
+    if (!election.freeze || today <= endDate) {
         throw new Error("Currently not allowed");
     }
     
+    // Check Key Validity
     try {
-        const enc = encrypt(election.electionId, election.voteEncKey);
+        const enc = encrypt(electionId, voteEncKey);
         const dec = decrypt(enc, voteDecKey);
-        if (enc !== dec) {
+        
+        if (electionId !== dec) {
             throw new Error("Invalid vote decrypt keys");
         }
     } catch (err) {
         throw new Error("Invalid vote decrypt keys");
     }
     
+    // Fetch Candidates
     const candidates = await viewCandidates(electionId);
-    const candidatesResult = {};
+    const candidateMap: { [key: string]: CandidateResult; } = {};
     for (const candidate of candidates) {
         const {candidateId} = candidate;
-        // candidatesResult[candidateId] = new CandidateResult(candidateId, 0);
+        candidateMap[candidateId] = new CandidateResult(candidateId, 0);
     }
+    candidates.length = 0; // Free the memory
     
-    const votes = await bnc.query("AllVotesOfElection", {electionId});
+    // Get All Votes
+    const votesObj = await bnc.query("AllVotesOfElection", {electionId});
+    const votes: Vote[] = [];
+    for (const voteObj of votesObj) {
+        const {voteId, candidateId, hasVoted} = voteObj;
+        const vote = new Vote(voteId, electionId, candidateId, hasVoted);
+        votes.push(vote);
+    }
+    votesObj.length = 0; // Free the memory
+    
+    // Decrypt each vote
+    const resultVotes: ResultVote[] = [];
     for (const vote of votes) {
-    
+        const {voteId, candidateId, hasVoted} = vote;
+        const recipient = hasVoted ? decrypt(candidateId, voteDecKey) : undefined;
+        const resultVote = new ResultVote(voteId, electionId, recipient);
+        resultVotes.push(resultVote);
     }
+    votes.length = 0; // Free the memory
+    
+    // Update Vote Map
+    for (const vote of resultVotes) {
+        const {candidateId} = vote;
+        if (candidateId in candidateMap) {
+            candidateMap[candidateId].voteCount++;
+        }
+    }
+    
+    // Create Result
+    const candidateResults: CandidateResult[] = Object.keys(candidateMap).map((v) => candidateMap[v]);
+    const result = new Result(electionId, candidateResults);
+    
+    // Add Result Vote to Chain
+    const resultNamespace = "org.astria.result";
+    const resultVoteResource = "ResultVote";
+    
+    const factory = bnc.getBusinessNetwork().getFactory();
+    const resultVoteRegistry = await bnc.getAssetRegistry(`${resultNamespace}.${resultVoteResource}`);
+    const voteReqObjs: Promise<any>[] = [];
+    
+    for (const vote of resultVotes) {
+        const {voteId, candidateId} = vote;
+        const resultVote = factory.newResource(resultNamespace, resultVoteResource, voteId);
+        resultVote.candidateId = candidateId;
+        resultVote.electionId = electionId;
+        voteReqObjs.push(resultVoteRegistry.add(resultVote));
+    }
+    await Promise.all(voteReqObjs);
+    
+    // Add Result to Chain
+    const resultResource = "Result";
+    const candidateResultResource = "CandidateResult";
+    
+    const resultObj = factory.newResource(resultNamespace, resultResource, electionId);
+    resultObj.results = [];
+    for (const candidateResult of result.results) {
+        const {candidate, voteCount} = candidateResult;
+        const candidateResultObj = factory.newConcept(resultNamespace, candidateResultResource);
+        
+        candidateResultObj.candidateId = candidate;
+        candidateResultObj.voteCount = voteCount;
+        resultObj.addArrayValue("results", candidateResultObj);
+    }
+    const resultRegistry = await bnc.getAssetRegistry(`${resultNamespace}.${resultResource}`);
+    await resultRegistry.add(resultObj);
+    
+    await setElectionVoteDecKey(adminId, voteDecKey, electionId);
+    
+    return true;
 }
 
 

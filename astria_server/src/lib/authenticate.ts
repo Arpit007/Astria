@@ -18,7 +18,7 @@ const Request = (endPoint: string, data: any): Promise<any> => {
         })
         .catch((response: AxiosError) => {
             const {data} = response.response;
-            throw data;
+            throw new Error(data.head ? data.head.msg : data);
         });
 };
 
@@ -31,7 +31,7 @@ export async function GetAdminProfile(userId: string): Promise<any> {
         
         return user;
     } catch (err) {
-        throw new Error(err.head ? err.head.msg : err.message);
+        throw new Error(err.message);
     }
 }
 
@@ -43,8 +43,7 @@ export async function CreateAdmin(req: Request, res: Response, next: NextFunctio
         
         next();
     } catch (err) {
-        const msg = err.head ? err.head.msg : err.message;
-        return Reply(res, 400, msg);
+        return Reply(res, 400, err.message);
     }
 }
 
@@ -65,8 +64,7 @@ export async function AuthoriseAdmin(req: Request, res: Response, next: NextFunc
         
         next();
     } catch (err) {
-        const msg = err.head ? err.head.msg : err.message;
-        return Reply(res, 400, msg);
+        return Reply(res, 400, err.message);
     }
 }
 

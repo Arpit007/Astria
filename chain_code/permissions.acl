@@ -4,9 +4,17 @@ rule NetworkAdminSystem {
     description: "Grant business network administrators full access to system resources"
     participant: "org.hyperledger.composer.system.NetworkAdmin"
     operation: ALL
-    resource: "org.hyperledger.composer.system.**"
+    resource: "**"
     action: ALLOW
 }
+
+/*rule GrantSysAccess {
+     description: "Grant access to all Participants to target system registries"
+     participant: "org.hyperledger.composer.system.Participant"
+     operation: ALL
+     resource: "org.hyperledger.composer.system.**"
+     action: ALLOW
+   }*/
 
 rule AstriaAdminSystem {
     description: "Grant AstriaAdmin full access to system resources"
