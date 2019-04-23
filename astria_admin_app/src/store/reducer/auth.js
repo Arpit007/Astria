@@ -1,7 +1,13 @@
 /**
  * Created by StarkX on 23-Apr-19.
  */
+import { LOGOUT } from "../action/auth";
 
 export function AuthToken(state, action) {
-	return "Hi";
+	switch (action.type) {
+		case LOGOUT:
+			return "";
+		default:
+			return "Hi";
+	}
 }

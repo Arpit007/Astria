@@ -1,11 +1,13 @@
 /**
  * Created by Home Laptop on 22-Apr-19.
  */
-import React, { Component } from 'react';
-import { Container, Dropdown, Image, Menu } from "semantic-ui-react";
-import { APP_NAME } from "../../data/config";
 import { connect } from "react-redux";
+import React, { Component } from 'react';
 import { Link, NavLink } from "react-router-dom";
+import { Container, Dropdown, Image, Menu } from "semantic-ui-react";
+
+import { APP_NAME } from "../../data/config";
+import { logoutUser } from "../../store/action/auth";
 
 class NavBar extends Component {
 	render() {
@@ -32,7 +34,7 @@ class NavBar extends Component {
 						<Dropdown floating item simple text={this.props.profile.profile.name}>
 							<Dropdown.Menu>
 								<Dropdown.Item icon="user" text="Profile" as={NavLink} to="/profile"/>
-								<Dropdown.Item icon="sign-out" text="Logout"/>
+								<Dropdown.Item icon="sign-out" text="Logout" onClick={() => this.props.logoutUser()}/>
 							</Dropdown.Menu>
 						</Dropdown>
 					</Menu.Menu>
@@ -48,5 +50,4 @@ function mapStateToProp(state) {
 	};
 }
 
-export default connect(mapStateToProp, {})(NavBar);
-//Logout Logic
+export default connect(mapStateToProp, { logoutUser })(NavBar);
