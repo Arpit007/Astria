@@ -17,7 +17,7 @@ class Home extends Component {
 				</Header>
 				
 				<Card.Group>
-					{this.props.allElections.map((election, i) => <ElectionCard key={i} election={election}/>)}
+					{this.props.allElections.map((election) => <ElectionCard key={election.electionId} election={election}/>)}
 				</Card.Group>
 			</div>
 		);

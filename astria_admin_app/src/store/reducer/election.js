@@ -64,3 +64,24 @@ export function AllElections(state, action) {
 		}
 	];
 }
+
+export function GetManagers(state, action) {
+	return [
+		{
+			"profile": {
+				"name": "Admin 2",
+				"phone": "9123456789"
+			},
+			"userId": "5cb9a624d470b02114e7ac93",
+			"email": "admin2@admin.com"
+		},
+		{
+			"profile": {
+				"name": "Admin 3",
+				"phone": "9123456732"
+			},
+			"userId": "5cb9a624d470b02114e78c93",
+			"email": "admin3@admin.com"
+		}
+	]
+}

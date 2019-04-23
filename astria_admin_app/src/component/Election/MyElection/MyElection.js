@@ -22,7 +22,7 @@ class MyElection extends Component {
 				</Header>
 				
 				<Card.Group>
-					{this.filterElections().map((election, i) => <ElectionCard key={i} election={election}/>)}
+					{this.filterElections().map((election) => <ElectionCard key={election.electionId} election={election}/>)}
 				</Card.Group>
 			</div>
 		);

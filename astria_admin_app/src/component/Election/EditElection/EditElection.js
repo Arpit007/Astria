@@ -3,9 +3,10 @@
  */
 import React, { Component } from 'react';
 import connect from "react-redux/es/connect/connect";
-import { Button, Divider, Form, Header, Icon, Input } from "semantic-ui-react";
+import { Button, Card, Divider, Form, Header, Icon } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
 import { formatDate } from "../../../util/format";
+import ManagerCard from "./ManagerCard/ManagerCard";
 
 class EditElection extends Component {
 	state = {
@@ -37,7 +38,7 @@ class EditElection extends Component {
 					<Header.Content>Edit Election</Header.Content>
 				</Header>
 				
-				<Header as="h5">Election Name</Header>
+				<Header as="h4">Election Name</Header>
 				<Icon name="balance scale"/>
 				&nbsp;{election.electionName}
 				
@@ -66,9 +67,23 @@ class EditElection extends Component {
 					</Form.Field>
 					<Button type="submit" floated="right" disabled={!this.state.isAdmin}>Update Dates</Button>
 				</Form>
-				<br/>
-				<br/>
 				
+				<br/><br/>
+				<Divider/>
+				
+				<Header as="h3">
+					<Icon name="users"/>
+					<Header.Content>Managers</Header.Content>
+				</Header>
+				
+				<Card.Group>
+					{this.props.managers.map((manager) => <ManagerCard key={manager.userId} manager={manager}/>)}
+				</Card.Group>
+				
+				<br/>
+				<Button floated="right" disabled={!this.state.isAdmin}>Add Managers</Button>
+				
+				<br/><br/>
 				<Divider/>
 			
 			</div>
@@ -79,10 +94,11 @@ class EditElection extends Component {
 function mapStateToProp(state) {
 	return {
 		election : state.election,
-		profile : state.profile
+		profile : state.profile,
+		managers : state.managers
 	};
 }
 
 export default connect(mapStateToProp, {})(EditElection);
 
-// Todo: Fetch Managers and candidates
+// Todo: Fetch Managers, voters and candidates
