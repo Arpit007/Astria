@@ -10,7 +10,7 @@ import { AuthServerRequest, AstriaServerRequest } from "../util/server";
 export async function RegisterUser(name, phone, email, password) {
 	try {
 		const data = await AstriaServerRequest("/admin/register", { name, phone, email, password });
-		const { auth_token } = data.body;
+		const { auth_token } = data;
 		
 		return auth_token;
 	} catch (err) {
@@ -25,7 +25,7 @@ export async function RegisterUser(name, phone, email, password) {
 export async function LoginUser(email, password) {
 	try {
 		const data = await AuthServerRequest("/admin/login", { email, password });
-		const { auth_token } = data.body;
+		const { auth_token } = data;
 		
 		return auth_token;
 	} catch (err) {

@@ -11,7 +11,7 @@ import { AstriaServerRequest } from "../util/server";
 export async function GetProfile(auth_token) {
 	try {
 		const data = await AstriaServerRequest("/admin/profile", { auth_token });
-		const { admin } = data.body;
+		const { admin } = data;
 		
 		return admin;
 	} catch (err) {
@@ -27,7 +27,7 @@ export async function GetProfile(auth_token) {
 export async function GetAllElections() {
 	try {
 		const data = await AstriaServerRequest("/etc/allElections", {});
-		const { elections } = data.body;
+		const { elections } = data;
 		
 		elections.forEach((election) => {
 			election.startDate = new Date(election.startDate);
@@ -48,7 +48,7 @@ export async function GetAllElections() {
 export async function GetElectionDetails(electionId) {
 	try {
 		const data = await AstriaServerRequest("/etc/election", { electionId });
-		const { election } = data.body;
+		const { election } = data;
 		
 		election.startDate = new Date(election.startDate);
 		election.endDate = new Date(election.endDate);
@@ -72,7 +72,7 @@ export async function CreateElection(auth_token, electionName, startDate, endDat
 			startDate,
 			endDate
 		});
-		const { electionId } = data.body;
+		const { electionId } = data;
 		
 		return electionId;
 	} catch (err) {
@@ -88,7 +88,7 @@ export async function CreateElection(auth_token, electionName, startDate, endDat
 export async function GetElectionManagers(auth_token, electionId) {
 	try {
 		const data = await AstriaServerRequest("/admin/getManagers", { auth_token, electionId });
-		const { managers } = data.body;
+		const { managers } = data;
 		
 		return managers;
 	} catch (err) {
@@ -104,7 +104,7 @@ export async function GetElectionManagers(auth_token, electionId) {
 export async function GetElectionCandidates(electionId) {
 	try {
 		const data = await AstriaServerRequest("/etc/candidates", { electionId });
-		const { candidates } = data.body;
+		const { candidates } = data;
 		
 		return candidates;
 	} catch (err) {
@@ -156,7 +156,7 @@ export async function AddElectionCandidate(auth_token, electionId, candidateName
 			candidateName,
 			logoURI
 		});
-		const { candidateId } = data.body;
+		const { candidateId } = data;
 		
 		return candidateId;
 	} catch (err) {
@@ -173,7 +173,7 @@ export async function AddElectionVoter(auth_token, electionId, voterId) {
 	try {
 		const data = await AstriaServerRequest("/manager/addVoter", { auth_token, electionId, voterId });
 		
-		return data.body;
+		return data;
 	} catch (err) {
 		throw new Error(err.message);
 	}
@@ -188,7 +188,7 @@ export async function FreezeElection(auth_token, electionId) {
 	try {
 		const data = await AstriaServerRequest("/admin/freezeElection", { auth_token, electionId });
 		
-		return data.body;
+		return data;
 	} catch (err) {
 		throw new Error(err.message);
 	}
@@ -217,7 +217,7 @@ export async function PublishElectionResult(auth_token, electionId, adminKey, ma
 export async function ElectionResultSummary(electionId) {
 	try {
 		const data = await AstriaServerRequest("/etc/resultSummary", { electionId });
-		const { result } = data.body;
+		const { result } = data;
 		
 		return result;
 	} catch (err) {

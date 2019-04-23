@@ -20,19 +20,22 @@ export function AuthToken(state = defaultTokenState, action) {
 		case LOGIN_INIT:
 		case SIGN_UP_INIT:
 			return { auth_token : "", isLoading : true };
-			
+		
 		case LOGIN_SUCCESS:
 		case SIGN_UP_SUCCESS:
-			return { auth_token : action.payload.auth_token, isLoading : false };
-			
+			const { auth_token } = action.payload;
+			localStorage.setItem(TOKEN_KEY, auth_token);
+			return { auth_token : auth_token, isLoading : false };
+		
 		case LOGIN_FAILURE:
 		case SIGN_UP_FAILURE:
+			console.error(action.err);
 			return { auth_token : "", err : action.err, isLoading : false };
-			
+		
 		case LOGOUT:
 			localStorage.setItem(TOKEN_KEY, "");
 			return { auth_token : "", isLoading : false };
-			
+		
 		default:
 			return state;
 	}
