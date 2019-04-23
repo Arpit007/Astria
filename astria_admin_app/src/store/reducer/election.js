@@ -85,3 +85,20 @@ export function GetManagers(state, action) {
 		}
 	]
 }
+
+export function GetCandidates(state, action) {
+	return [
+		{
+			"candidateId": "382256be2cf6b590c70be52a42579ce4e1fb8a60e2870c97b7326ee73438176c",
+			"candidateName": "Some Name 2",
+			"logoURI": "Some URI",
+			"electionId": "fa1e8cab9921354664e919a5311a1a5d50e36a5cf8fa563ede9f77da272f3224"
+		},
+		{
+			"candidateId": "c05cb32f365586c71da144d9b5897493e49fc21b2f12fc13b2c71ac1f69f7659",
+			"candidateName": "Some Name 1",
+			"logoURI": "Some URI",
+			"electionId": "fa1e8cab9921354664e919a5311a1a5d50e36a5cf8fa563ede9f77da272f3224"
+		}
+	];
+}

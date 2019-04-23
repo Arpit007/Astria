@@ -1,33 +1,59 @@
 /**
  * Created by Home Laptop on 23-Apr-19.
  */
-import React, { Component } from 'react';
-import { Button, Card, Input } from "semantic-ui-react";
-import { Form } from "semantic-ui-react";
 import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import { Form } from "semantic-ui-react";
+import connect from "react-redux/es/connect/connect";
+import { Button, Card, Input } from "semantic-ui-react";
+
+import { registerUser } from "../../../store/action/auth";
 
 class SignUp extends Component {
+	
+	state = {
+		name : "",
+		phone : "",
+		email : "",
+		password : ""
+	};
+	
+	handleChange = (event, { name, value }) => {
+		if (this.state.hasOwnProperty(name)) {
+			this.setState({ [ name ] : value });
+		}
+	};
+	
+	handleSubmit = (event) => {
+		event.preventDefault();
+		const { name, phone, email, password } = this.state;
+		this.props.registerUser(name, phone, email, password);
+	};
+	
 	render() {
 		return (
 			<Card>
 				<Card.Content>
 					<Card.Header>Sign Up</Card.Header>
 					<Card.Description>
-						<Form>
+						<Form onSubmit={this.handleSubmit}>
 							<Form.Field>
-								<Input icon="user" type="name" iconPosition="left" placeholder="Name"/>
+								<Input icon="user" type="name" iconPosition="left" placeholder="Full Name" name="name"
+								       value={this.state.name} onChange={this.handleChange}/>
 							</Form.Field>
 							<Form.Field>
-								<Input icon="phone" type="phone" iconPosition="left" placeholder="Phone"/>
+								<Input icon="phone" type="phone" iconPosition="left" placeholder="Phone Number"
+								       name="phone" value={this.state.phone} onChange={this.handleChange}/>
 							</Form.Field>
 							<Form.Field>
-								<Input icon="mail" type="email" iconPosition="left" placeholder="Email"/>
+								<Input icon="mail" type="email" iconPosition="left" placeholder="Email" name="email"
+								       value={this.state.email} onChange={this.handleChange}/>
 							</Form.Field>
 							<Form.Field>
-								<Input icon="key" type="password" iconPosition="left"
-								       placeholder="Password"/>
+								<Input icon="key" type="password" iconPosition="left" placeholder="Password"
+								       name="password" value={this.state.password} onChange={this.handleChange}/>
 							</Form.Field>
-							<Button type="submit" fluid>Submit</Button>
+							<Button type="submit" fluid loading={this.props.loading}>Submit</Button>
 						</Form>
 					</Card.Description>
 				</Card.Content>
@@ -42,6 +68,10 @@ class SignUp extends Component {
 	}
 }
 
-export default SignUp;
+function mapStateToProp(state) {
+	return {
+		loading : state.auth_token.isLoading
+	};
+}
 
-// Todo: Fill Form, and Sign Up
+export default connect(mapStateToProp, { registerUser })(SignUp);

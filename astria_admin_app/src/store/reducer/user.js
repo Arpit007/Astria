@@ -3,11 +3,12 @@ import { LOGOUT } from "../action/auth";
 /**
  * Created by StarkX on 23-Apr-19.
  */
+const defaultProfileState = { profile : null, isLoading : false };
 
-export function Profile(state, action) {
+export function Profile(state = defaultProfileState, action) {
 	switch (action.type) {
 		case LOGOUT:
-			return "";
+			return {profile: null, isLoading : false};
 		default:
 			return {
 				"profile" : {

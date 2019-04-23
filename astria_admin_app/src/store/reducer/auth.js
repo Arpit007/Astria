@@ -1,13 +1,39 @@
 /**
  * Created by StarkX on 23-Apr-19.
  */
-import { LOGOUT } from "../action/auth";
+import {
+	LOGIN_FAILURE,
+	LOGIN_INIT,
+	LOGIN_SUCCESS,
+	LOGOUT,
+	SIGN_UP_FAILURE,
+	SIGN_UP_INIT,
+	SIGN_UP_SUCCESS
+} from "../action/auth";
 
-export function AuthToken(state, action) {
+const TOKEN_KEY = "astria.auth_token";
+const defaultTokenState = { auth_token : localStorage.getItem(TOKEN_KEY) || "", isLoading : false };
+
+
+export function AuthToken(state = defaultTokenState, action) {
 	switch (action.type) {
+		case LOGIN_INIT:
+		case SIGN_UP_INIT:
+			return { auth_token : "", isLoading : true };
+			
+		case LOGIN_SUCCESS:
+		case SIGN_UP_SUCCESS:
+			return { auth_token : action.payload.auth_token, isLoading : false };
+			
+		case LOGIN_FAILURE:
+		case SIGN_UP_FAILURE:
+			return { auth_token : "", err : action.err, isLoading : false };
+			
 		case LOGOUT:
-			return "";
+			localStorage.setItem(TOKEN_KEY, "");
+			return { auth_token : "", isLoading : false };
+			
 		default:
-			return "Hi";
+			return state;
 	}
 }

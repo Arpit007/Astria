@@ -7,6 +7,7 @@ import { Button, Card, Divider, Form, Header, Icon } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
 import { formatDate } from "../../../util/format";
 import ManagerCard from "./ManagerCard/ManagerCard";
+import CandidateCard from "./CandidateCard/CandidateCard";
 
 class EditElection extends Component {
 	state = {
@@ -27,6 +28,36 @@ class EditElection extends Component {
 		this.setState({ isAdmin });
 		this.setState({ startDate : formatDate(election.startDate) });
 		this.setState({ endDate : formatDate(election.endDate) });
+	}
+	
+	freezeElectionSection() {
+		return (
+			<div>
+				<Header as="h3">
+					<Icon name="lock"/>
+					<Header.Content>Freeze Election</Header.Content>
+				</Header>
+				
+				<br/>
+				<Button fluid={true} color="red" disabled={!this.state.isAdmin}>Freeze Election</Button>
+			</div>
+		);
+	}
+	
+	publishResults() {
+		const today = new Date().getTime();
+		const endDate = this.props.election.endDate.getTime();
+		return (today < endDate) ? null : (
+			<div>
+				<Header as="h3">
+					<Icon name="users"/>
+					<Header.Content>Publish Results</Header.Content>
+				</Header>
+				
+				<br/>
+				<Button fluid={true} color="green" disabled={!this.state.isAdmin}>Publish Result</Button>
+			</div>
+		);
 	}
 	
 	render() {
@@ -72,7 +103,7 @@ class EditElection extends Component {
 				<Divider/>
 				
 				<Header as="h3">
-					<Icon name="users"/>
+					<Icon name="sitemap"/>
 					<Header.Content>Managers</Header.Content>
 				</Header>
 				
@@ -85,7 +116,37 @@ class EditElection extends Component {
 				
 				<br/><br/>
 				<Divider/>
-			
+				
+				<Header as="h3">
+					<Icon name="users"/>
+					<Header.Content>Candidates</Header.Content>
+				</Header>
+				
+				<Card.Group>
+					{this.props.candidates.map((candidate) => <CandidateCard key={candidate.candidateId}
+					                                                         candidate={candidate}/>)}
+				</Card.Group>
+				
+				<br/>
+				<Button floated="right" disabled={!this.state.isAdmin}>Add Candidate</Button>
+				
+				<br/><br/>
+				<Divider/>
+				
+				<Header as="h3">
+					<Icon name="users"/>
+					<Header.Content>Voters</Header.Content>
+				</Header>
+				
+				<br/>
+				<Button floated="right" disabled={!this.state.isAdmin}>Add Voters</Button>
+				
+				<br/><br/>
+				<Divider/>
+				
+				{election.freeze ? this.publishResults() : this.freezeElectionSection()}
+				
+				<br/><br/>
 			</div>
 		);
 	}
@@ -95,10 +156,12 @@ function mapStateToProp(state) {
 	return {
 		election : state.election,
 		profile : state.profile,
-		managers : state.managers
+		managers : state.managers,
+		candidates : state.candidates
 	};
 }
 
 export default connect(mapStateToProp, {})(EditElection);
 
-// Todo: Fetch Managers, voters and candidates
+// Todo: Fetch Managers and candidates
+// Todo: Implement editing

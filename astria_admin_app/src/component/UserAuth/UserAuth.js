@@ -36,7 +36,7 @@ class UserAuth extends Component {
 
 function mapStateToProp(state) {
 	return {
-		loggedIn : !!state.auth_token
+		loggedIn : !!state.auth_token.auth_token
 	};
 }
 
