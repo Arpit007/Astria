@@ -10,8 +10,8 @@ import Home from "../Home/Home";
 import NavBar from "../NavBar/NavBar";
 import Profile from "../Profile/Profile";
 import Election from "../Election/Election";
-import MyElection from "../MyElection/MyElection";
-import NewElection from "../NewElection/NewElection";
+import MyElection from "../Election/MyElection/MyElection";
+import NewElection from "../Election/NewElection/NewElection";
 import connect from "react-redux/es/connect/connect";
 
 class Main extends Component {
@@ -23,11 +23,11 @@ class Main extends Component {
 					<Container text style={{ marginTop : '7em' }}>
 						<Switch>
 							<Route path="/" exact={true} component={Home}/>
+							<Route path="/election/my" component={MyElection}/>
+							<Route path="/election/new" component={NewElection}/>
 							<Route path="/election/:electionId" component={Election}/>
 							<Route path="/election" component={Home}/>
 							<Route path="/home" component={Home}/>
-							<Route path="/myElection" component={MyElection}/>
-							<Route path="/newElection" component={NewElection}/>
 							<Route path="/profile" component={Profile}/>
 						</Switch>
 					</Container>
@@ -45,3 +45,5 @@ function mapStateToProp(state) {
 }
 
 export default connect(mapStateToProp, {})(Main);
+
+// Todo: Load Profile, Load all elections

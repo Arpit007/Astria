@@ -14,19 +14,18 @@ class NavBar extends Component {
 		return (
 			<Menu fixed="top" inverted>
 				<Container>
-					<Link to="/">
-						<Menu.Item as="a" header>
-							<Image size="mini" src="/logo_light.png" style={{ marginRight : '1.5em' }}/>
-							{APP_NAME}
-						</Menu.Item>
-					</Link>
+					
+					<Menu.Item as={Link} to="/" header>
+						<Image size="mini" src="/logo_light.png" style={{ marginRight : '1.5em' }}/>
+						{APP_NAME}
+					</Menu.Item>
 					
 					<Menu.Item as={Link} to="/home">Home</Menu.Item>
 					
 					<Dropdown floating item simple text="Election">
 						<Dropdown.Menu>
-							<Dropdown.Item icon="save" text="My Elections" as={NavLink} to="/myElection"/>
-							<Dropdown.Item icon="plus" text="New Elections" as={NavLink} to="/newElection"/>
+							<Dropdown.Item icon="save" text="My Elections" as={NavLink} to="/election/my"/>
+							<Dropdown.Item icon="plus" text="New Elections" as={NavLink} to="/election/new"/>
 						</Dropdown.Menu>
 					</Dropdown>
 					

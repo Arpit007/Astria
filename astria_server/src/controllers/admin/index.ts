@@ -170,26 +170,6 @@ router.post("/freezeElection", AuthoriseAdmin, GenerateVoteKeys, async (req: Req
 
 
 /**
- * Add managers to the election
- * @param auth_token
- * @param managerId
- * @param electionId
- * */
-router.post("/addManagers", AuthoriseAdmin, async (req: Request, res: Response) => {
-    try {
-        const {userId} = req.user;
-        const {managerId, electionId} = req.body;
-        
-        await AdminComposer.addElectionManagers(userId, managerId, electionId);
-        
-        return Reply(res, 200, {});
-    } catch (err) {
-        return Reply(res, 400, err.message);
-    }
-});
-
-
-/**
  * Get list of all the managers
  * @param auth_token
  * @param electionId

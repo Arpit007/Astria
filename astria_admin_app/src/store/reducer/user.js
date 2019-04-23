@@ -15,7 +15,7 @@ export function Profile(state, action) {
 					"phone" : "9711431657"
 				},
 				"email" : "arpit2011@live.com",
-				"userId" : "5cb99fdf1f82183a1c3cdd89-1"
+				"userId" : "5cb99fdf1f82183a1c3cdd89"
 			};
 	}
 }

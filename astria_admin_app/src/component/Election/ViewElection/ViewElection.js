@@ -1,15 +1,16 @@
 /**
  * Created by Home Laptop on 23-Apr-19.
  */
-import moment from "moment";
 import React, { Component } from 'react';
 import { Header, Icon } from "semantic-ui-react";
 import connect from "react-redux/es/connect/connect";
+import { formatDate } from "../../../util/format";
 
 class ViewElection extends Component {
 	render() {
 		const { election } = this.props;
 		const profile = election.admin;
+		
 		return (
 			<div>
 				<Header as="h1" dividing>
@@ -36,15 +37,9 @@ class ViewElection extends Component {
 				
 				<Header as="h4">Email</Header>
 				{profile.email}
-			
 			</div>
 		);
 	}
-}
-
-function formatDate(date) {
-	const offset = new Date().getTimezoneOffset();
-	return moment(date).utcOffset(offset).format('llll')
 }
 
 function mapStateToProp(state) {

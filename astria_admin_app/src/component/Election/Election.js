@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import connect from "react-redux/es/connect/connect";
-import EditElection from "./EditableElection/EditElection";
+import EditElection from "./EditElection/EditElection";
 import ViewElection from "./ViewElection/ViewElection";
 
 class Election extends Component {
@@ -14,7 +14,10 @@ class Election extends Component {
 	}
 	
 	render() {
-		return (this.props.election.adminId === this.props.profile.userId) ? <EditElection/> : <ViewElection/>;
+		// After Loaded
+		const { election, profile } = this.props;
+		return (election.adminId === profile.userId || election.managers.indexOf(profile.userId) !== -1) ?
+			<EditElection/> : <ViewElection/>;
 	}
 }
 
