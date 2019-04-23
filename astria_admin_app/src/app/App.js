@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import connect from "react-redux/es/connect/connect";
+import { Route, Switch } from "react-router";
 
 import 'semantic-ui-css/semantic.min.css'
 import Main from "../component/Main/Main";
 import UserAuth from "../component/UserAuth/UserAuth";
-import { Route, Switch } from "react-router";
 
 class App extends Component {
 	
@@ -23,10 +22,4 @@ class App extends Component {
 	}
 }
 
-function mapStateToProp(state) {
-	return {
-		loggedIn : !!state.auth_token
-	};
-}
-
-export default connect(mapStateToProp, {})(App);
+export default App;

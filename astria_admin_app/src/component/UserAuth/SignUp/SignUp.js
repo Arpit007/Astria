@@ -43,3 +43,5 @@ class SignUp extends Component {
 }
 
 export default SignUp;
+
+// Todo: Fill Form, and Sign Up

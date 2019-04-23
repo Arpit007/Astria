@@ -5,11 +5,11 @@ import React, { Component } from 'react';
 import { Switch } from "react-router-dom";
 import { Image } from "semantic-ui-react";
 import { Redirect, Route } from "react-router";
+import connect from "react-redux/es/connect/connect";
 
 import "./UserAuth.css";
 import SignIn from "./SignIn/SignIn";
 import SignUp from "./SignUp/SignUp";
-import connect from "react-redux/es/connect/connect";
 
 class UserAuth extends Component {
 	
@@ -21,14 +21,12 @@ class UserAuth extends Component {
 				<div className="comp-body">
 					<div className="container-login100 bg-img1">
 						<div>
-							
 							<Image src="/logo_light.png" size="small" centered/>
 							<Switch>
 								<Route path="/auth/" exact component={SignIn}/>
 								<Route path="/auth/signIn" component={SignIn}/>
 								<Route path="/auth/signUp" component={SignUp}/>
 							</Switch>
-						
 						</div>
 					</div>
 				</div>
