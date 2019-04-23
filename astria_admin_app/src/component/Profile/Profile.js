@@ -11,7 +11,7 @@ class Profile extends Component {
 		return (
 			<div>
 				<Header as="h1" dividing>
-					<Icon name="user outline"/>
+					<Icon name="user"/>
 					<Header.Content>Profile</Header.Content>
 				</Header>
 				

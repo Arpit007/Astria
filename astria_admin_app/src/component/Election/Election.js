@@ -7,14 +7,14 @@ import EditElection from "./EditableElection/EditElection";
 import ViewElection from "./ViewElection/ViewElection";
 
 class Election extends Component {
-	// Load Election
+	// Todo: Load Election
 	
 	componentDidMount() {
 		const { electionId } = this.props.match.params;
 	}
 	
 	render() {
-		return (this.props.election.adminId === this.props.userId) ? <EditElection/> : <ViewElection/>;
+		return (this.props.election.adminId === this.props.profile.userId) ? <EditElection/> : <ViewElection/>;
 	}
 }
 

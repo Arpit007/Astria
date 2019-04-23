@@ -18,6 +18,7 @@ router.post("/election", async (req: Request, res: Response) => {
         const {electionId} = req.body;
         
         const election: Election = await ParticipantComposer.viewElection(electionId);
+        election.admin = await GetAdminProfile(election.adminId);
         
         return Reply(res, 200, {election});
     } catch (err) {

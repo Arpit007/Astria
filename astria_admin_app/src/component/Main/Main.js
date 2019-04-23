@@ -23,8 +23,8 @@ class Main extends Component {
 					<Container text style={{ marginTop : '7em' }}>
 						<Switch>
 							<Route path="/" exact={true} component={Home}/>
-							<Route path="/election" component={Home}/>
 							<Route path="/election/:electionId" component={Election}/>
+							<Route path="/election" component={Home}/>
 							<Route path="/home" component={Home}/>
 							<Route path="/myElection" component={MyElection}/>
 							<Route path="/newElection" component={NewElection}/>
