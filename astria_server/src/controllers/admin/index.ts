@@ -8,6 +8,7 @@ import { GenerateVoteKeys } from "../../lib/genUserKeys";
 import { combineSplitKeys, generateSplitKeys } from "../../lib/generator";
 import { viewElection, viewManagers } from "../../composer/allParticipants";
 import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
+import { getElectionByAdmin } from "../../composer/admin";
 
 const router: Router = express.Router();
 export default router;
@@ -157,10 +158,10 @@ router.post("/freezeElection", AuthoriseAdmin, GenerateVoteKeys, async (req: Req
         const {electionId} = req.body;
         
         await AdminComposer.freezeElection(userId, voteEncKey, electionId);
-    
+        
         const election = await viewElection(electionId);
         const keys = generateSplitKeys(voteDecKey, election.managers.length);
-    
+        
         return Reply(res, 200, {...keys});
     } catch (err) {
         return Reply(res, 400, err.message);
@@ -205,7 +206,7 @@ router.post("/getManagers", AuthoriseAdmin, async (req: Request, res: Response) 
         for (const manager of managersList) {
             reqObj.push(GetAdminProfile(manager.userId));
         }
-    
+        
         const reqObjResolved = await Promise.all(reqObj);
         const managers = [];
         for (const managerObj of reqObjResolved) {
@@ -216,6 +217,42 @@ router.post("/getManagers", AuthoriseAdmin, async (req: Request, res: Response) 
         }
         
         return Reply(res, 200, {managers});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Get list of all the elections by an Admin
+ * @param auth_token
+ * @returns Election[]
+ * */
+router.post("/getElectionByAdmin", AuthoriseAdmin, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        
+        const electionList = await getElectionByAdmin(userId);
+        
+        return Reply(res, 200, {elections: electionList});
+    } catch (err) {
+        return Reply(res, 400, err.message);
+    }
+});
+
+
+/**
+ * Get Profile
+ * @param auth_token
+ * @returns AstriaAdmin
+ * */
+router.post("/profile", AuthoriseAdmin, async (req: Request, res: Response) => {
+    try {
+        const {userId} = req.user;
+        
+        const admin = await GetAdminProfile(userId);
+        
+        return Reply(res, 200, {admin});
     } catch (err) {
         return Reply(res, 400, err.message);
     }

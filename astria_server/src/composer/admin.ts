@@ -8,7 +8,7 @@ import { BusinessNetworkConnection } from "composer-client";
 import connectionProfile from "../../config/profile";
 import { viewCandidates, viewElection } from "./allParticipants";
 import { decrypt, encrypt } from "../util/security";
-import { CandidateResult, Result, ResultVote, Vote } from "./model";
+import { AstriaAdmin, CandidateResult, Election, Result, ResultVote, Vote } from "./model";
 
 
 export async function createAstriaAdmin(adminId: string): Promise<boolean> {
@@ -324,4 +324,24 @@ export async function createCandidate(adminCardId: string, candidateName: string
     await bnc.disconnect();
     
     return candidateId;
+}
+
+
+export async function getElectionByAdmin(adminCardId: string) {
+    const bnc = new BusinessNetworkConnection();
+    await bnc.connect(adminCardId);
+    
+    const electionsObj = await bnc.query("ElectionsByAdminId", {adminId: adminCardId});
+    
+    const electionList: Election[] = [];
+    
+    for (const electionObj of electionsObj) {
+        const {electionId, electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers} = electionObj;
+        const election = new Election(electionId, electionName, startDate, endDate, idKey, voteEncKey, voteDecKey, freeze, adminId, managers);
+        electionList.push(election);
+    }
+    
+    await bnc.disconnect();
+    
+    return electionList;
 }
