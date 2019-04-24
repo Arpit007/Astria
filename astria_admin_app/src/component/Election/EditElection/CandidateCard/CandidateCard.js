@@ -4,6 +4,18 @@
 import React from 'react';
 import { Card, Header, Icon } from "semantic-ui-react";
 
+const showVotesSection = (showVotes, voteCount) => {
+	return showVotes ? (
+		<div>
+			<Header as="h5">
+				<Icon name="archive"/>
+				<Header.Content>Votes</Header.Content>
+			</Header>
+			{voteCount}
+		</div>
+	) : null;
+};
+
 const CandidateCard = (props) => {
 	const { candidate } = props;
 	return (
@@ -13,6 +25,7 @@ const CandidateCard = (props) => {
 			</Card.Content>
 			<Card.Content extra={true}>
 				<Card.Description>
+					{showVotesSection(props.showVotes, props.voteCount)}
 					<Header as="h5">
 						<Icon name="globe"/>
 						<Header.Content>URI</Header.Content>

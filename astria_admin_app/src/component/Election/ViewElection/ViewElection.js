@@ -9,6 +9,30 @@ import { formatDate } from "../../../util/format";
 import CandidateCard from "../EditElection/CandidateCard/CandidateCard";
 
 class ViewElection extends Component {
+	
+	showResult = () => {
+		return this.props.election.voteDecKey ? (
+				<div>
+					<Header as="h3">
+						<Icon name="envelope open outline"/>
+						<Header.Content>Results</Header.Content>
+					</Header>
+					<Divider/>
+					
+					<Card.Group>
+						{
+							this.props.result.map((candidateResult) => (
+								<CandidateCard key={candidateResult.candidate.candidateId}
+								               candidate={candidateResult.candidate} showVotes={true}
+								               voteCount={candidateResult.voteCount}/>
+							))
+						}
+					</Card.Group>
+				</div>
+			)
+			: null;
+	};
+	
 	render() {
 		const { election } = this.props;
 		const profile = election.admin;
@@ -29,6 +53,7 @@ class ViewElection extends Component {
 				<Header as="h3">End Date</Header>
 				{formatDate(election.endDate)}
 				
+				<br/><br/>
 				<Header as="h3" dividing>Administrator</Header>
 				
 				<Header as="h4">Name</Header>
@@ -42,17 +67,31 @@ class ViewElection extends Component {
 				
 				
 				<br/><br/>
-				<Divider/>
 				
 				<Header as="h3">
 					<Icon name="users"/>
 					<Header.Content>Candidates</Header.Content>
 				</Header>
+				<Divider/>
 				
 				<Card.Group>
-					{this.props.candidates.map((candidate) => <CandidateCard key={candidate.candidateId}
-					                                                         candidate={candidate}/>)}
+					{
+						this.props.candidates.length === 0 ?
+							(
+								<p>
+									No Candidates Available<br/>
+									Add one now :-)
+								</p>
+							)
+							:
+							this.props.candidates.map((candidate) => <CandidateCard key={candidate.candidateId}
+							                                                        candidate={candidate}/>)
+					}
 				</Card.Group>
+				
+				<br/><br/>
+				
+				{this.showResult()}
 			</div>
 		);
 	}
@@ -62,7 +101,8 @@ function mapStateToProp(state) {
 	return {
 		election : state.election.election,
 		candidates : state.candidates.candidates,
+		result : state.result.result
 	};
 }
 
-export default connect(mapStateToProp, { })(ViewElection);
+export default connect(mapStateToProp, {})(ViewElection);

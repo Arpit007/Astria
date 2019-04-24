@@ -8,7 +8,7 @@ import {
 	GetManagers,
 	CreateElection,
 	CreateCandidate,
-	AddVoter, ModifyDates
+	AddVoter, ModifyDates, FetchResult
 } from "./election";
 
 const rootReducer = combineReducers({
@@ -21,7 +21,8 @@ const rootReducer = combineReducers({
 	createElection : CreateElection,
 	createCandidate : CreateCandidate,
 	addVoter : AddVoter,
-	modifyDates : ModifyDates
+	modifyDates : ModifyDates,
+	result : FetchResult
 });
 
 export default rootReducer;

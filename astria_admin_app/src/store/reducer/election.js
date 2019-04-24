@@ -3,7 +3,8 @@
  */
 import {
 	ADD_CANDIDATE,
-	ADD_ELECTION, ADD_VOTER_FAILURE,
+	ADD_ELECTION,
+	ADD_VOTER_FAILURE,
 	ADD_VOTER_INIT,
 	ADD_VOTER_SUCCESS,
 	CREATE_CANDIDATES_FAILURE,
@@ -23,7 +24,12 @@ import {
 	FETCH_ELECTIONS_SUCCESS,
 	FETCH_MANAGERS_FAILURE,
 	FETCH_MANAGERS_INIT,
-	FETCH_MANAGERS_SUCCESS, MODIFY_DATES_FAILURE, MODIFY_DATES_INIT, MODIFY_DATES_SUCCESS
+	FETCH_MANAGERS_SUCCESS, FETCH_RESULT_FAILURE,
+	FETCH_RESULT_INIT,
+	FETCH_RESULT_SUCCESS,
+	MODIFY_DATES_FAILURE,
+	MODIFY_DATES_INIT,
+	MODIFY_DATES_SUCCESS
 } from "../action/election";
 
 
@@ -47,7 +53,7 @@ const candidatesDefaultState = { candidates : [], isLoading : false };
 const createCandidateDefaultState = { isLoading : false };
 const addVoterDefaultState = { isLoading : false };
 const modifyDatesDefaultState = { isLoading : false };
-
+const resultDefaultState = { result : [], isLoading : false };
 
 export function GetElection(state = electionDefaultState, action) {
 	switch (action.type) {
@@ -189,6 +195,24 @@ export function ModifyDates(state = modifyDatesDefaultState, action) {
 		case MODIFY_DATES_FAILURE:
 			console.error(action.err);
 			return { ...modifyDatesDefaultState, err : action.err };
+		
+		default:
+			return state;
+	}
+}
+
+
+export function FetchResult(state = resultDefaultState, action) {
+	switch (action.type) {
+		case FETCH_RESULT_INIT:
+			return { ...resultDefaultState, isLoading : true };
+		
+		case FETCH_RESULT_SUCCESS:
+			return { result : action.payload.result, isLoading : false };
+		
+		case FETCH_RESULT_FAILURE:
+			console.error(action.err);
+			return { ...resultDefaultState, err : action.err };
 		
 		default:
 			return state;

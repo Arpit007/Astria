@@ -33,7 +33,7 @@ export async function GetAllElections() {
 			election.startDate = new Date(election.startDate);
 			election.endDate = new Date(election.endDate);
 		});
-		
+		console.log(elections);
 		return elections;
 	} catch (err) {
 		throw new Error(err.message);

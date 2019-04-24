@@ -18,7 +18,8 @@ class Election extends Component {
 	}
 	
 	render() {
-		const loading = this.props.isFetchingElection || this.props.isFetchingCandidates || this.props.isFetchingManagers;
+		const { isFetchingElection, isFetchingCandidates, isFetchingManagers, isFetchingResult } = this.props;
+		const loading = isFetchingElection || isFetchingCandidates || isFetchingManagers || isFetchingResult;
 		
 		if (loading) {
 			return (
@@ -40,7 +41,8 @@ function mapStateToProp(state) {
 		profile : state.profile.profile,
 		isFetchingElection : state.election.isLoading,
 		isFetchingCandidates : state.candidates.isLoading,
-		isFetchingManagers : state.managers.isLoading
+		isFetchingManagers : state.managers.isLoading,
+		isFetchingResult : state.result.isLoading
 	};
 }
 

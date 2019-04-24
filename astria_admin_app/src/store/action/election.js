@@ -3,7 +3,7 @@
  */
 import {
 	AddElectionCandidate, AddElectionVoter,
-	CreateElection,
+	CreateElection, ElectionResultSummary,
 	GetAllElections,
 	GetElectionCandidates,
 	GetElectionDetails,
@@ -45,6 +45,10 @@ export const MODIFY_DATES_INIT = "MODIFY_DATES_INIT";
 export const MODIFY_DATES_SUCCESS = "MODIFY_DATES_SUCCESS";
 export const MODIFY_DATES_FAILURE = "MODIFY_DATES_FAILURE";
 
+export const FETCH_RESULT_INIT = "FETCH_RESULT_INIT";
+export const FETCH_RESULT_SUCCESS = "FETCH_RESULT_SUCCESS";
+export const FETCH_RESULT_FAILURE = "FETCH_RESULT_FAILURE";
+
 
 export function fetchAllElections() {
 	return async (dispatch, getState) => {
@@ -66,7 +70,18 @@ export function fetchElection(electionId) {
 		
 		try {
 			const election = await GetElectionDetails(electionId);
-			return dispatch({ type : FETCH_ELECTIONS_SUCCESS, payload : { election } });
+			dispatch({ type : FETCH_ELECTIONS_SUCCESS, payload : { election } });
+			
+			if (election.voteDecKey) {
+				try {
+					dispatch({ type : FETCH_RESULT_INIT });
+					
+					const result = await ElectionResultSummary(electionId);
+					dispatch({ type : FETCH_RESULT_SUCCESS, payload : { result : result.results } });
+				} catch (err) {
+					return dispatch({ type : FETCH_RESULT_FAILURE, err : err.message });
+				}
+			}
 		} catch (err) {
 			return dispatch({ type : FETCH_ELECTIONS_FAILURE, err : err.message });
 		}
