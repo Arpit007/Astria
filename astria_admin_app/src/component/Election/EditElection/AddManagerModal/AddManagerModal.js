@@ -5,14 +5,14 @@ import { connect } from "react-redux";
 import React, { Component } from 'react';
 import { Button, Form, Header, Input, Modal } from "semantic-ui-react";
 
-import { addElectionVoter } from "../../../../store/action/election";
+import { addElectionManager } from "../../../../store/action/election";
 
-class AddVoterModal extends Component {
+class AddManagerModal extends Component {
 	
 	state = {
 		open : false,
 		closeOnSuccess : false,
-		voterId : ""
+		email : ""
 	};
 	
 	close = () => this.setState({ open : false });
@@ -25,15 +25,15 @@ class AddVoterModal extends Component {
 	
 	handleSubmit = (event) => {
 		event.preventDefault();
-		const { voterId } = this.state;
+		const { email } = this.state;
 		
-		this.props.addElectionVoter(voterId);
+		this.props.addElectionManager(email);
 		this.setState({ closeOnSuccess : true });
 	};
 	
 	componentWillReceiveProps(nextProps, nextContext) {
 		if (this.state.closeOnSuccess && !nextProps.loading) {
-			this.setState({ voterId : "" });
+			this.setState({ email : "" });
 			this.close();
 		}
 	}
@@ -49,15 +49,15 @@ class AddVoterModal extends Component {
 				closeOnEscape={true}
 				closeOnDimmerClick={false}
 				onClose={this.close}
-				trigger={<Button floated="right" onClick={this.openModal} disabled={!this.props.enable}>Add Voter</Button>} closeIcon>
-				<Header icon="add user" content="Add Voter"/>
+				trigger={<Button floated="right" onClick={this.openModal} disabled={!this.props.enable}>Add Manager</Button>} closeIcon>
+				<Header icon="sitemap" content="Add Manager"/>
 				<Modal.Content>
-					<Form id="voterForm" onSubmit={this.handleSubmit}>
+					<Form id="managerForm" onSubmit={this.handleSubmit}>
 						<Form.Field>
-							<label>Voter ID</label>
-							<Input icon="address card outline" iconPosition="left" name="voterId"
-							       placeholder="Voter ID"
-							       value={this.state.voterId} onChange={this.handleChange}/>
+							<label>Email</label>
+							<Input icon="mail" iconPosition="left" name="email"
+							       placeholder="Manager's Email"
+							       value={this.state.email} onChange={this.handleChange}/>
 						</Form.Field>
 					</Form>
 				</Modal.Content>
@@ -66,8 +66,8 @@ class AddVoterModal extends Component {
 					<Button onClick={this.close} negative={true} disabled={this.props.loading}>
 						Cancel
 					</Button>
-					<Button positive={true} form="voterForm" loading={this.props.loading} type="submit">
-						Add Voter
+					<Button positive={true} form="managerForm" loading={this.props.loading} type="submit">
+						Add Manager
 					</Button>
 				</Modal.Actions>
 			</Modal>
@@ -77,8 +77,8 @@ class AddVoterModal extends Component {
 
 function mapStateToProp(state) {
 	return {
-		loading : state.addVoter.isLoading
+		loading : state.addManager.isLoading
 	};
 }
 
-export default connect(mapStateToProp, { addElectionVoter })(AddVoterModal);
+export default connect(mapStateToProp, { addElectionManager })(AddManagerModal);

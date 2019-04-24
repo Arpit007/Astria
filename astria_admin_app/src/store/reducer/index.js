@@ -2,14 +2,10 @@ import { combineReducers } from 'redux';
 
 import { AuthToken, Profile } from "./user";
 import {
-	AllElections,
-	GetElection,
-	GetCandidates,
-	GetManagers,
-	CreateElection,
-	CreateCandidate,
-	AddVoter, ModifyDates, FetchResult
+	AllElections, GetElection, GetCandidates, GetManagers, CreateElection, CreateCandidate,
+	AddVoter, ModifyDates, FetchResult, AddManager, FreezeElection, PublishElectionResult
 } from "./election";
+import { CastVote } from "./voter";
 
 const rootReducer = combineReducers({
 	auth_token : AuthToken,
@@ -22,7 +18,11 @@ const rootReducer = combineReducers({
 	createCandidate : CreateCandidate,
 	addVoter : AddVoter,
 	modifyDates : ModifyDates,
-	result : FetchResult
+	result : FetchResult,
+	addManager : AddManager,
+	freezeElection : FreezeElection,
+	publishResult : PublishElectionResult,
+	castVote : CastVote
 });
 
 export default rootReducer;

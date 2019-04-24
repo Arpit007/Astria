@@ -50,7 +50,7 @@ class AddCandidateModal extends Component {
 				closeOnEscape={true}
 				closeOnDimmerClick={false}
 				onClose={this.close}
-				trigger={<Button floated="right" onClick={this.openModal}>Add Candidate</Button>} closeIcon>
+				trigger={<Button floated="right" onClick={this.openModal} disabled={!this.props.enable}>Add Candidate</Button>} closeIcon>
 				<Header icon="add user" content="Add Candidate"/>
 				<Modal.Content>
 					<Form id="candidateForm" onSubmit={this.handleSubmit}>

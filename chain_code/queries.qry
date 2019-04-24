@@ -65,3 +65,10 @@
        SELECT org.astria.participant.AstriaAdmin
        WHERE (userId == _$userId)
   }
+
+ query AstriaAdminByEmail {
+    description: "Returns the AstriaAdmin of given email"
+    statement:
+       SELECT org.astria.participant.AstriaAdmin
+       WHERE (email == _$email)
+  }

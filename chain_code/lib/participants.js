@@ -14,7 +14,7 @@ async function createAdmin(adminData) {
 	const adminNamespace = "org.astria.participant";
 	const adminResourceId = "AstriaAdmin";
 	
-	const { userId } = adminData;
+	const { userId, email } = adminData;
 	
 	const adminRegistry = await getParticipantRegistry(`${adminNamespace}.${adminResourceId}`);
 	const factory = getFactory();
@@ -25,6 +25,7 @@ async function createAdmin(adminData) {
 	}
 	
 	const admin = factory.newResource(adminNamespace, adminResourceId, userId);
+	admin.email = email;
 	
 	return adminRegistry.add(admin);
 }

@@ -11,12 +11,15 @@ import ManagerCard from "./ManagerCard/ManagerCard";
 import AddVoterModal from "./AddVoterModal/AddVoterModal";
 import CandidateCard from "./CandidateCard/CandidateCard";
 import AddCandidateModal from "./AddCandidateModal/AddCandidateModal";
-import { modifyElectionDates } from "../../../store/action/election";
+import { freezeElection, modifyElectionDates } from "../../../store/action/election";
+import AddManagerModal from "./AddManagerModal/AddManagerModal";
+import PublishResultModal from "./PublishResultModal/PublishResultModal";
 
 
 class EditElection extends Component {
 	state = {
 		isAdmin : false,
+		freeze : false,
 		startDate : null,
 		endDate : null
 	};
@@ -40,7 +43,12 @@ class EditElection extends Component {
 	componentDidMount() {
 		const { election } = this.props;
 		const isAdmin = election.adminId === this.props.profile.userId;
-		this.setState({ isAdmin, startDate : formatDate(election.startDate), endDate : formatDate(election.endDate) });
+		this.setState({
+			isAdmin,
+			startDate : formatDate(election.startDate),
+			endDate : formatDate(election.endDate),
+			freeze : election.freeze
+		});
 	}
 	
 	
@@ -80,7 +88,7 @@ class EditElection extends Component {
 					<Divider/>
 					
 					<br/>
-					<Button fluid={true} color="green">Publish Result</Button>
+					<PublishResultModal/>
 				</div>
 			);
 		}
@@ -94,7 +102,10 @@ class EditElection extends Component {
 				<Divider/>
 				
 				<br/>
-				<Button fluid={true} color="red" disabled={this.props.election.freeze}>Freeze Election</Button>
+				<Button fluid={true} color="red" disabled={this.state.freeze || !this.state.isAdmin}
+				        loading={this.props.freezeElectionLoading} onClick={this.props.freezeElection}>
+					Freeze Election
+				</Button>
 			</div>
 		);
 	};
@@ -151,7 +162,8 @@ class EditElection extends Component {
 							onChange={this.handleChange}
 						/>
 					</Form.Field>
-					<Button type="submit" floated="right" loading={this.props.modifyDateLoading}>Update Dates</Button>
+					<Button type="submit" floated="right" loading={this.props.modifyDateLoading}
+					        disabled={!this.state.isAdmin || this.state.freeze}>Update Dates</Button>
 				</Form>
 				
 				<br/><br/>
@@ -167,7 +179,7 @@ class EditElection extends Component {
 				</Card.Group>
 				
 				<br/>
-				<Button floated="right">Add Managers</Button>
+				<AddManagerModal enable={this.state.isAdmin && !this.state.freeze}/>
 				
 				<br/><br/>
 				
@@ -193,7 +205,7 @@ class EditElection extends Component {
 				</Card.Group>
 				
 				<br/>
-				<AddCandidateModal/>
+				<AddCandidateModal enable={this.state.isAdmin && !this.state.freeze}/>
 				
 				<br/><br/>
 				
@@ -204,7 +216,7 @@ class EditElection extends Component {
 				<Divider/>
 				
 				<br/>
-				<AddVoterModal/>
+				<AddVoterModal enable={this.state.isAdmin && !this.state.freeze}/>
 				
 				<br/><br/>
 				
@@ -223,10 +235,11 @@ function mapStateToProp(state) {
 		managers : state.managers.managers,
 		candidates : state.candidates.candidates,
 		result : state.result.result,
-		modifyDateLoading : state.modifyDates.isLoading
+		modifyDateLoading : state.modifyDates.isLoading,
+		freezeElectionLoading : state.freezeElection.isLoading
 	};
 }
 
-export default connect(mapStateToProp, { modifyElectionDates })(EditElection);
+export default connect(mapStateToProp, { modifyElectionDates, freezeElection })(EditElection);
 
 // Todo: Implement editing

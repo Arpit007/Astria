@@ -8,13 +8,14 @@ import { DateTimeInput } from "semantic-ui-calendar-react";
 import { Button, Form, Header, Icon, Input } from "semantic-ui-react";
 
 import { createElection } from "../../../store/action/election";
+import { formatDate } from "../../../util/format";
 
 
 class NewElection extends Component {
 	state = {
 		electionName : "",
-		startDate : "",
-		endDate : "",
+		startDate : formatDate(new Date()),
+		endDate : formatDate(new Date()),
 		redirectOnSuccess : false
 	};
 	

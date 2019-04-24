@@ -11,7 +11,7 @@ import { decrypt, encrypt } from "../util/security";
 import { AstriaAdmin, CandidateResult, Election, Result, ResultVote, Vote } from "./model";
 
 
-export async function createAstriaAdmin(adminId: string): Promise<boolean> {
+export async function createAstriaAdmin(adminId: string, email: string): Promise<boolean> {
     const networkName = "chain_code";
     
     const resource = "AstriaAdmin";
@@ -25,6 +25,7 @@ export async function createAstriaAdmin(adminId: string): Promise<boolean> {
     
     const createAdmin = factory.newTransaction(namespace, "CreateAstriaAdmin");
     createAdmin.userId = adminId;
+    createAdmin.email = email;
     
     await bnc.submitTransaction(createAdmin);
     
@@ -170,7 +171,7 @@ export async function freezeElection(adminCardId: string, voteEncKey: string, el
 }
 
 
-export async function addElectionManagers(adminCardId: string, managerId: string, electionId: string): Promise<boolean> {
+export async function addElectionManagers(adminCardId: string, email: string, electionId: string): Promise<string> {
     const namespace = "org.astria.election";
     
     const bnc = new BusinessNetworkConnection();
@@ -179,13 +180,13 @@ export async function addElectionManagers(adminCardId: string, managerId: string
     const factory = bnc.getBusinessNetwork().getFactory();
     
     const updateElection = factory.newTransaction(namespace, "AddElectionManagers");
-    updateElection.managerId = managerId;
+    updateElection.email = email;
     updateElection.electionId = electionId;
     
-    await bnc.submitTransaction(updateElection);
+    const managerId = await bnc.submitTransaction(updateElection);
     await bnc.disconnect();
     
-    return true;
+    return managerId;
 }
 
 

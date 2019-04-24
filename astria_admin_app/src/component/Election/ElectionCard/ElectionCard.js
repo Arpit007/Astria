@@ -8,10 +8,12 @@ import { Card, Header, Icon } from "semantic-ui-react";
 import { formatDate } from "../../../util/format";
 
 const ElectionCard = (props) => {
-	const { election } = props;
+	const { election, vote } = props;
+	
+	const path = `${vote ? "/voter/" : "/election/"}${election.electionId}`;
 	
 	return (
-		<Card as={Link} to={`/election/${election.electionId}`}>
+		<Card as={Link} to={path}>
 			<Card.Content>
 				<Card.Header>{election.electionName}</Card.Header>
 			</Card.Content>

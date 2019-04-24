@@ -176,12 +176,13 @@ async function freezeElection(electionData) {
 /**
  * Add manager to the election
  * @param {org.astria.election.AddElectionManagers} electionData The managers to be added to the election.
+ * @returns {string} ID of the Manager
  * @transaction
  **/
 async function addElectionManagers(electionData) {
 	const electionResPath = 'org.astria.election.Election';
 	
-	const { electionId, managerId } = electionData;
+	const { electionId, email } = electionData;
 	
 	const currentParticipant = getCurrentParticipant();
 	const adminId = currentParticipant.getIdentifier();
@@ -193,6 +194,13 @@ async function addElectionManagers(electionData) {
 		throw new Error("Invalid election");
 	}
 	
+	const result = await query('AstriaAdminByEmail', { email });
+	if (result.length === 0) {
+		throw new Error("No such user exists");
+	}
+	
+	const managerId = result[0].userId;
+	
 	if (adminId !== election.adminId || managerId === adminId) {
 		throw new Error("Not allowed");
 	}
@@ -201,16 +209,13 @@ async function addElectionManagers(electionData) {
 		throw new Error("Election frozen, can't add managers now");
 	}
 	
-	let result = await query("AstriaAdminById", { userId: managerId });
-	if (result.length <= 0) {
-		throw new Error("No such user exists");
-	}
-	
 	if (election.managers.indexOf(managerId) !== -1){
 		throw new Error("Already added as manager");
 	}
 	
 	election.managers.push(managerId);
 	
-	return electionRegistry.update(election);
+	await electionRegistry.update(election);
+	
+	return managerId;
 }

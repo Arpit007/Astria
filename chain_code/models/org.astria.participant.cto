@@ -5,6 +5,7 @@ abstract participant AstriaUser identified by userId {
 }
 
 participant AstriaAdmin extends AstriaUser {
+  o String email
 }
 
 participant AstriaVoter extends AstriaUser {
@@ -13,6 +14,7 @@ participant AstriaVoter extends AstriaUser {
 
 transaction CreateAstriaAdmin {
   o String userId
+  o String email
 }
 
 transaction CreateAstriaVoter {

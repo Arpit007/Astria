@@ -2,16 +2,18 @@
  * Created by StarkX on 24-Apr-19.
  */
 import {
-	AddElectionCandidate, AddElectionVoter,
-	CreateElection, ElectionResultSummary,
+	AddElectionCandidate, AddElectionManager, AddElectionVoter,
+	CreateElection, ElectionResultSummary, FreezeElection,
 	GetAllElections,
 	GetElectionCandidates,
 	GetElectionDetails,
-	GetElectionManagers, ModifyElectionDates
+	GetElectionManagers, ModifyElectionDates, PublishElectionResult
 } from "../../data/astriaRequest";
 
+export const UPDATE_ELECTION = "UPDATE_ELECTION";
 export const ADD_ELECTION = "ADD_ELECTION";
 export const ADD_CANDIDATE = "ADD_CANDIDATE";
+export const ADD_MANAGER = "ADD_MANAGER";
 
 export const FETCH_ALL_ELECTIONS_INIT = "FETCH_ALL_ELECTIONS_INIT";
 export const FETCH_ALL_ELECTIONS_SUCCESS = "FETCH_ALL_ELECTIONS_SUCCESS";
@@ -48,6 +50,18 @@ export const MODIFY_DATES_FAILURE = "MODIFY_DATES_FAILURE";
 export const FETCH_RESULT_INIT = "FETCH_RESULT_INIT";
 export const FETCH_RESULT_SUCCESS = "FETCH_RESULT_SUCCESS";
 export const FETCH_RESULT_FAILURE = "FETCH_RESULT_FAILURE";
+
+export const ADD_MANAGER_INIT = "ADD_MANAGER_INIT";
+export const ADD_MANAGER_SUCCESS = "ADD_MANAGER_SUCCESS";
+export const ADD_MANAGER_FAILURE = "ADD_MANAGER_FAILURE";
+
+export const FREEZE_ELECTION_INIT = "FREEZE_ELECTION_INIT";
+export const FREEZE_ELECTION_SUCCESS = "FREEZE_ELECTION_SUCCESS";
+export const FREEZE_ELECTION_FAILURE = "FREEZE_ELECTION_FAILURE";
+
+export const PUBLISH_RESULT_INIT = "PUBLISH_RESULT_INIT";
+export const PUBLISH_RESULT_SUCCESS = "PUBLISH_RESULT_SUCCESS";
+export const PUBLISH_RESULT_FAILURE = "PUBLISH_RESULT_FAILURE";
 
 
 export function fetchAllElections() {
@@ -203,6 +217,67 @@ export function modifyElectionDates(startDate, endDate) {
 			return dispatch({ type : MODIFY_DATES_SUCCESS, payload : {} });
 		} catch (err) {
 			return dispatch({ type : MODIFY_DATES_FAILURE, err : err.message });
+		}
+	};
+}
+
+
+export function addElectionManager(email) {
+	return async (dispatch, getState) => {
+		dispatch({ type : ADD_MANAGER_INIT });
+		
+		try {
+			const state = getState();
+			const { auth_token } = state.auth_token;
+			const { electionId } = state.election.election;
+			const { managers } = state.managers;
+			
+			const manager = await AddElectionManager(auth_token, electionId, email);
+			
+			dispatch({ type : ADD_MANAGER, payload : { managers : [ ...managers, manager ] } });
+			return dispatch({ type : ADD_MANAGER_SUCCESS, payload : {} });
+		} catch (err) {
+			return dispatch({ type : ADD_MANAGER_FAILURE, err : err.message });
+		}
+	};
+}
+
+
+export function freezeElection() {
+	return async (dispatch, getState) => {
+		dispatch({ type : FREEZE_ELECTION_INIT });
+		
+		try {
+			const state = getState();
+			const { auth_token } = state.auth_token;
+			const { election } = state.election;
+			const { electionId } = election;
+			
+			const { adminKey, managerKeys } = await FreezeElection(auth_token, electionId);
+			
+			dispatch({ type : FREEZE_ELECTION_SUCCESS, payload : { adminKey, managerKeys } });
+			return dispatch({ type : UPDATE_ELECTION, payload : { election : { ...election, freeze : true } } });
+		} catch (err) {
+			return dispatch({ type : FREEZE_ELECTION_FAILURE, err : err.message });
+		}
+	};
+}
+
+
+export function publishElectionResult(adminKey, managerKeys) {
+	return async (dispatch, getState) => {
+		dispatch({ type : PUBLISH_RESULT_INIT });
+		
+		try {
+			const state = getState();
+			const { auth_token } = state.auth_token;
+			const { electionId } = state.election.election;
+			
+			const result = await PublishElectionResult(auth_token, electionId, adminKey, managerKeys);
+			
+			return dispatch({ type : PUBLISH_RESULT_SUCCESS, payload : { result : result.results } });
+		} catch (err) {
+			return dispatch({ type : PUBLISH_RESULT_FAILURE, err : err.message });
 		}
 	};
 }

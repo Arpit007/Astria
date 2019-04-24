@@ -35,7 +35,8 @@ transaction FreezeElection {
   o String voteEncKey
 }
 
+@returns(String)
 transaction AddElectionManagers {
   o String electionId
-  o String managerId
+  o String email
 }

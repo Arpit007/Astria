@@ -33,7 +33,7 @@ export async function GetAllElections() {
 			election.startDate = new Date(election.startDate);
 			election.endDate = new Date(election.endDate);
 		});
-		console.log(elections);
+		
 		return elections;
 	} catch (err) {
 		throw new Error(err.message);
@@ -130,14 +130,14 @@ export async function ModifyElectionDates(auth_token, startDate, endDate, electi
 
 /*
 * Add Manager to Election
-* @returns true
+* @returns {profile:{name,phone}, email, userId}
 * */
-export async function AddElectionManager(auth_token, electionId, managerId) {
+export async function AddElectionManager(auth_token, electionId, email) {
 	try {
-		// Todo: Fix it, add by email
-		await AstriaServerRequest("/admin/addManagers", { auth_token, electionId, managerId });
+		const data = await AstriaServerRequest("/admin/addManager", { auth_token, electionId, email });
+		const { manager } = data;
 		
-		return true;
+		return manager;
 	} catch (err) {
 		throw new Error(err.message);
 	}
@@ -187,7 +187,7 @@ export async function AddElectionVoter(auth_token, electionId, voterId) {
 export async function FreezeElection(auth_token, electionId) {
 	try {
 		const data = await AstriaServerRequest("/admin/freezeElection", { auth_token, electionId });
-		
+		console.log(data);
 		return data;
 	} catch (err) {
 		throw new Error(err.message);
@@ -197,13 +197,20 @@ export async function FreezeElection(auth_token, electionId) {
 
 /*
 * Publish Election Result
-* @returns true
+* @returns {electionId, results:[{candidate:{candidateId, candidateName, logoURI, electionId},voteCount}]}
 * */
 export async function PublishElectionResult(auth_token, electionId, adminKey, managerKeys) {
 	try {
-		await AstriaServerRequest("/admin/publishResult", { auth_token, electionId, adminKey, managerKeys });
+		console.log("Keys Received", adminKey, managerKeys);
+		const data = await AstriaServerRequest("/admin/publishResult", {
+			auth_token,
+			electionId,
+			adminKey,
+			managerKeys
+		});
+		const { result } = data;
 		
-		return true;
+		return result;
 	} catch (err) {
 		throw new Error(err.message);
 	}
@@ -220,6 +227,21 @@ export async function ElectionResultSummary(electionId) {
 		const { result } = data;
 		
 		return result;
+	} catch (err) {
+		throw new Error(err.message);
+	}
+}
+
+
+/*
+* Cast Vote
+* @returns true
+* */
+export async function CastVote(userId, pin, candidateId, electionId) {
+	try {
+		await AstriaServerRequest("/voter/castVote", { userId, pin, candidateId, electionId });
+		
+		return true;
 	} catch (err) {
 		throw new Error(err.message);
 	}

@@ -9,6 +9,7 @@ import { combineSplitKeys, generateSplitKeys } from "../../lib/generator";
 import { viewElection, viewManagers } from "../../composer/allParticipants";
 import { AuthoriseAdmin, CreateAdmin, GetAdminProfile } from "../../lib/authenticate";
 import { getElectionByAdmin } from "../../composer/admin";
+import * as ParticipantComposer from "../../composer/allParticipants";
 
 const router: Router = express.Router();
 export default router;
@@ -23,8 +24,9 @@ export default router;
 router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
     try {
         const {auth_token, userId} = req.user;
+        const {email} = req.body;
         
-        await AdminComposer.createAstriaAdmin(userId);
+        await AdminComposer.createAstriaAdmin(userId, email);
         
         return Reply(res, 200, {auth_token, user: {userId}});
     } catch (err) {
@@ -39,6 +41,7 @@ router.post("/register", CreateAdmin, async (req: Request, res: Response) => {
  * @param electionId
  * @param adminKey
  * @param managerKeys[]
+ * @returns Result
  * */
 router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
@@ -47,8 +50,9 @@ router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response
         const voteDecKey = combineSplitKeys(adminKey, managerKeys);
         
         await AdminComposer.publishResult(userId, voteDecKey, electionId);
+        const result = await ParticipantComposer.resultSummary(electionId);
         
-        return Reply(res, 200, {});
+        return Reply(res, 200, {result});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
@@ -58,17 +62,18 @@ router.post("/publishResult", AuthoriseAdmin, async (req: Request, res: Response
 /**
  * Add a manager to the election
  * @param auth_token
- * @param managerId
+ * @param email
  * @param electionId
  * */
 router.post("/addManager", AuthoriseAdmin, async (req: Request, res: Response) => {
     try {
         const {userId} = req.user;
-        const {managerId, electionId} = req.body;
+        const {email, electionId} = req.body;
         
-        await AdminComposer.addElectionManagers(userId, managerId, electionId);
+        const managerId = await AdminComposer.addElectionManagers(userId, email, electionId);
+        const manager = await GetAdminProfile(managerId);
         
-        return Reply(res, 200, {});
+        return Reply(res, 200, {manager});
     } catch (err) {
         return Reply(res, 400, err.message);
     }
