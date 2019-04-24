@@ -187,7 +187,7 @@ export async function AddElectionVoter(auth_token, electionId, voterId) {
 export async function FreezeElection(auth_token, electionId) {
 	try {
 		const data = await AstriaServerRequest("/admin/freezeElection", { auth_token, electionId });
-		console.log(data);
+		
 		return data;
 	} catch (err) {
 		throw new Error(err.message);
@@ -201,7 +201,7 @@ export async function FreezeElection(auth_token, electionId) {
 * */
 export async function PublishElectionResult(auth_token, electionId, adminKey, managerKeys) {
 	try {
-		console.log("Keys Received", adminKey, managerKeys);
+		console.log(managerKeys);
 		const data = await AstriaServerRequest("/admin/publishResult", {
 			auth_token,
 			electionId,
@@ -242,6 +242,21 @@ export async function CastVote(userId, pin, candidateId, electionId) {
 		await AstriaServerRequest("/voter/castVote", { userId, pin, candidateId, electionId });
 		
 		return true;
+	} catch (err) {
+		throw new Error(err.message);
+	}
+}
+
+
+/*
+* Verify Vote
+* @returns true
+* */
+export async function VerifyVote(userId, pin, electionId) {
+	try {
+		const { vote } = await AstriaServerRequest("/voter/verifyVote", { userId, pin, electionId });
+		
+		return vote;
 	} catch (err) {
 		throw new Error(err.message);
 	}

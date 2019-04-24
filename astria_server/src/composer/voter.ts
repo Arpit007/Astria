@@ -22,6 +22,7 @@ export async function castVote(voterId: string, voteId: string, encCandidateId: 
     
     const castVote = factory.newTransaction(namespace, "CastVote");
     castVote.candidateId = encCandidateId;
+    castVote.voteId = voteId;
     
     await bnc.submitTransaction(castVote);
     await bnc.disconnect();

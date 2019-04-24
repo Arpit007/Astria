@@ -46,8 +46,7 @@ class EditElection extends Component {
 		this.setState({
 			isAdmin,
 			startDate : formatDate(election.startDate),
-			endDate : formatDate(election.endDate),
-			freeze : election.freeze
+			endDate : formatDate(election.endDate)
 		});
 	}
 	
@@ -88,7 +87,7 @@ class EditElection extends Component {
 					<Divider/>
 					
 					<br/>
-					<PublishResultModal/>
+					<PublishResultModal enable={true}/>
 				</div>
 			);
 		}
@@ -102,7 +101,7 @@ class EditElection extends Component {
 				<Divider/>
 				
 				<br/>
-				<Button fluid={true} color="red" disabled={this.state.freeze || !this.state.isAdmin}
+				<Button fluid={true} color="red" disabled={this.props.election.freeze || !this.state.isAdmin}
 				        loading={this.props.freezeElectionLoading} onClick={this.props.freezeElection}>
 					Freeze Election
 				</Button>
@@ -163,7 +162,7 @@ class EditElection extends Component {
 						/>
 					</Form.Field>
 					<Button type="submit" floated="right" loading={this.props.modifyDateLoading}
-					        disabled={!this.state.isAdmin || this.state.freeze}>Update Dates</Button>
+					        disabled={!this.state.isAdmin || this.props.election.freeze}>Update Dates</Button>
 				</Form>
 				
 				<br/><br/>
@@ -179,7 +178,7 @@ class EditElection extends Component {
 				</Card.Group>
 				
 				<br/>
-				<AddManagerModal enable={this.state.isAdmin && !this.state.freeze}/>
+				<AddManagerModal enable={this.state.isAdmin && !this.props.election.freeze}/>
 				
 				<br/><br/>
 				
@@ -205,7 +204,7 @@ class EditElection extends Component {
 				</Card.Group>
 				
 				<br/>
-				<AddCandidateModal enable={this.state.isAdmin && !this.state.freeze}/>
+				<AddCandidateModal enable={this.state.isAdmin && !this.props.election.freeze}/>
 				
 				<br/><br/>
 				
@@ -216,7 +215,7 @@ class EditElection extends Component {
 				<Divider/>
 				
 				<br/>
-				<AddVoterModal enable={this.state.isAdmin && !this.state.freeze}/>
+				<AddVoterModal enable={this.state.isAdmin && !this.props.election.freeze}/>
 				
 				<br/><br/>
 				
@@ -241,5 +240,3 @@ function mapStateToProp(state) {
 }
 
 export default connect(mapStateToProp, { modifyElectionDates, freezeElection })(EditElection);
-
-// Todo: Implement editing

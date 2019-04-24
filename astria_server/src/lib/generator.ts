@@ -72,7 +72,7 @@ export function generateSplitKeys(key: string, managerCount: number): SplitKeys 
 }
 
 export function combineSplitKeys(adminKey: string, managerKeys: string[]): string {
-    if (!managerKeys) {
+    if (managerKeys.length === 0) {
         return adminKey;
     }
     

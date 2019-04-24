@@ -9,4 +9,5 @@ asset Vote identified by voteId {
 
 transaction CastVote {
   o String candidateId
+  o String voteId
 }

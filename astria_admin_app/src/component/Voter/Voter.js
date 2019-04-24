@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { fetchAllElections } from "../../store/action/election";
-import { Card, Dimmer, Header, Icon, Loader } from "semantic-ui-react";
+import { Card, Container, Dimmer, Header, Icon, Loader } from "semantic-ui-react";
 import ElectionCard from "../Election/ElectionCard/ElectionCard";
 
 class Voter extends Component {
@@ -41,12 +41,14 @@ class Voter extends Component {
 			(
 				<div>
 					<br/>
-					<Header as="h1" dividing>
-						<Icon name="balance scale"/>
-						<Header.Content>All Elections</Header.Content>
-					</Header>
-					
-					{this.renderCards()}
+					<Container>
+						<Header as="h1" dividing>
+							<Icon name="balance scale"/>
+							<Header.Content>All Elections</Header.Content>
+						</Header>
+						
+						{this.renderCards()}
+					</Container>
 				</div>
 			);
 	}

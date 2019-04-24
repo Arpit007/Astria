@@ -14,7 +14,6 @@ async function castVote(voteData) {
 
 	const currentParticipant = getCurrentParticipant();
 	const electionId = currentParticipant.electionId;
-	const voteId = currentParticipant.getIdentifier();
 
 	const electionRegistry = await getAssetRegistry(electionResPath);
 	const election = await electionRegistry.get(electionId);
@@ -27,7 +26,7 @@ async function castVote(voteData) {
 		throw new Error("Can't cast vote now");
 	}
 
-	const { candidateId } = voteData;
+	const { candidateId, voteId } = voteData;
 
 	const voteRegistry = await getAssetRegistry(voteResPath);
 	const vote = await voteRegistry.get(voteId);

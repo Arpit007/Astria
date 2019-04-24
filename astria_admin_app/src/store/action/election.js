@@ -118,7 +118,7 @@ export function createElection(electionName, startDate, endDate) {
 				electionId, electionName, startDate, endDate, freeze : false, adminId : profile.userId, managers : []
 			};
 			
-			dispatch({ type : ADD_ELECTION, payload : { elections : [ ...elections, election ] } });
+			dispatch({ type : ADD_ELECTION, payload : { elections : [ election, ...elections ] } });
 			return dispatch({ type : CREATE_ELECTION_SUCCESS, payload : { election } });
 		} catch (err) {
 			return dispatch({ type : CREATE_ELECTION_FAILURE, err : err.message });

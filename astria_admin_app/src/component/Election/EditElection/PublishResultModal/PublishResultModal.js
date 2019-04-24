@@ -28,7 +28,9 @@ class PublishResultModal extends Component {
 		event.preventDefault();
 		const { adminKey, managerKeys } = this.state;
 		
-		this.props.publishElectionResult(adminKey, managerKeys.split("\n"));
+		const managerKeyVals = managerKeys.length > 0 ? managerKeys.split("\n") : [];
+		
+		this.props.publishElectionResult(adminKey, managerKeyVals);
 		this.setState({ closeOnSuccess : true });
 	};
 	
