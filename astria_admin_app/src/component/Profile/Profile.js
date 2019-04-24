@@ -30,7 +30,7 @@ class Profile extends Component {
 
 function mapStateToProp(state) {
 	return {
-		profile : state.profile
+		profile : state.profile.profile
 	};
 }
 

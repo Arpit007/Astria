@@ -2,12 +2,14 @@
  * Created by Home Laptop on 23-Apr-19.
  */
 import React from 'react';
-import { Card, Header, Icon } from "semantic-ui-react";
-import { formatDate } from "../../../util/format";
 import { Link } from "react-router-dom";
+import { Card, Header, Icon } from "semantic-ui-react";
+
+import { formatDate } from "../../../util/format";
 
 const ElectionCard = (props) => {
 	const { election } = props;
+	
 	return (
 		<Card as={Link} to={`/election/${election.electionId}`}>
 			<Card.Content>

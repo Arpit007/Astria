@@ -15,7 +15,7 @@ const CandidateCard = (props) => {
 				<Card.Description>
 					<Header as="h5">
 						<Icon name="globe"/>
-						<Header.Content>URL</Header.Content>
+						<Header.Content>URI</Header.Content>
 					</Header>
 					{candidate.logoURI}
 				</Card.Description>

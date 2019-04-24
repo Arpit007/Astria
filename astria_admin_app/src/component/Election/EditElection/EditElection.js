@@ -1,13 +1,18 @@
 /**
  * Created by Home Laptop on 23-Apr-19.
  */
+import { connect } from "react-redux";
 import React, { Component } from 'react';
-import connect from "react-redux/es/connect/connect";
-import { Button, Card, Divider, Form, Header, Icon } from "semantic-ui-react";
 import { DateTimeInput } from "semantic-ui-calendar-react";
+import { Button, Card, Divider, Form, Header, Icon } from "semantic-ui-react";
+
 import { formatDate } from "../../../util/format";
 import ManagerCard from "./ManagerCard/ManagerCard";
+import AddVoterModal from "./AddVoterModal/AddVoterModal";
 import CandidateCard from "./CandidateCard/CandidateCard";
+import AddCandidateModal from "./AddCandidateModal/AddCandidateModal";
+import { modifyElectionDates } from "../../../store/action/election";
+
 
 class EditElection extends Component {
 	state = {
@@ -22,12 +27,17 @@ class EditElection extends Component {
 		}
 	};
 	
+	handleSubmit = (event) => {
+		event.preventDefault();
+		const { startDate, endDate } = this.state;
+		
+		this.props.modifyElectionDates(new Date(startDate), new Date(endDate));
+	};
+	
 	componentDidMount() {
 		const { election } = this.props;
 		const isAdmin = election.adminId === this.props.profile.userId;
-		this.setState({ isAdmin });
-		this.setState({ startDate : formatDate(election.startDate) });
-		this.setState({ endDate : formatDate(election.endDate) });
+		this.setState({ isAdmin, startDate : formatDate(election.startDate), endDate : formatDate(election.endDate) });
 	}
 	
 	freezeElectionSection() {
@@ -75,7 +85,7 @@ class EditElection extends Component {
 				
 				<Divider/>
 				
-				<Form>
+				<Form onSubmit={this.handleSubmit}>
 					<Form.Field>
 						<label>Start Date</label>
 						<DateTimeInput
@@ -83,6 +93,9 @@ class EditElection extends Component {
 							placeholder="Start Date"
 							value={this.state.startDate}
 							iconPosition="left"
+							dateTimeFormat="llll"
+							minDate={new Date()}
+							closable={true}
 							onChange={this.handleChange}
 						/>
 					</Form.Field>
@@ -93,10 +106,13 @@ class EditElection extends Component {
 							placeholder="End Date"
 							value={this.state.endDate}
 							iconPosition="left"
+							dateTimeFormat="llll"
+							minDate={new Date()}
+							closable={true}
 							onChange={this.handleChange}
 						/>
 					</Form.Field>
-					<Button type="submit" floated="right" disabled={!this.state.isAdmin}>Update Dates</Button>
+					<Button type="submit" floated="right" loading={this.props.modifyDateLoading}>Update Dates</Button>
 				</Form>
 				
 				<br/><br/>
@@ -128,7 +144,7 @@ class EditElection extends Component {
 				</Card.Group>
 				
 				<br/>
-				<Button floated="right" disabled={!this.state.isAdmin}>Add Candidate</Button>
+				<AddCandidateModal/>
 				
 				<br/><br/>
 				<Divider/>
@@ -139,7 +155,7 @@ class EditElection extends Component {
 				</Header>
 				
 				<br/>
-				<Button floated="right" disabled={!this.state.isAdmin}>Add Voters</Button>
+				<AddVoterModal/>
 				
 				<br/><br/>
 				<Divider/>
@@ -154,14 +170,14 @@ class EditElection extends Component {
 
 function mapStateToProp(state) {
 	return {
-		election : state.election,
-		profile : state.profile,
-		managers : state.managers,
-		candidates : state.candidates
+		election : state.election.election,
+		profile : state.profile.profile,
+		managers : state.managers.managers,
+		candidates : state.candidates.candidates,
+		modifyDateLoading : state.modifyDates.isLoading
 	};
 }
 
-export default connect(mapStateToProp, {})(EditElection);
+export default connect(mapStateToProp, { modifyElectionDates })(EditElection);
 
-// Todo: Fetch Managers and candidates
 // Todo: Implement editing

@@ -43,7 +43,7 @@ export async function GetAllElections() {
 
 /*
 * Get Election Details
-* @returns [{electionId, electionName, startDate, endDate, freeze, adminId, managers[], admin:{profile:{name,phone}, email, userId}}]
+* @returns {electionId, electionName, startDate, endDate, freeze, adminId, managers[], admin:{profile:{name,phone}, email, userId}}
 * */
 export async function GetElectionDetails(electionId) {
 	try {
@@ -89,7 +89,7 @@ export async function GetElectionManagers(auth_token, electionId) {
 	try {
 		const data = await AstriaServerRequest("/admin/getManagers", { auth_token, electionId });
 		const { managers } = data;
-		
+		console.log(managers);
 		return managers;
 	} catch (err) {
 		throw new Error(err.message);
@@ -105,7 +105,7 @@ export async function GetElectionCandidates(electionId) {
 	try {
 		const data = await AstriaServerRequest("/etc/candidates", { electionId });
 		const { candidates } = data;
-		
+		console.log(candidates);
 		return candidates;
 	} catch (err) {
 		throw new Error(err.message);

@@ -16,18 +16,34 @@ class Home extends Component {
 					<Header.Content>All Elections</Header.Content>
 				</Header>
 				
-				<Card.Group>
-					{this.props.allElections.map((election) => <ElectionCard key={election.electionId} election={election}/>)}
-				</Card.Group>
+				{this.renderCards()}
 			</div>
 		);
+	}
+	
+	renderCards = () => {
+		return this.props.allElections.length === 0 ?
+			(
+				<p>
+					No Elections Available.<br/>
+					Create One Now :-)
+				</p>
+			)
+			:
+			(
+				<Card.Group>
+					{this.props.allElections.map((election) => (
+						<ElectionCard key={election.electionId} election={election}/>
+					))}
+				</Card.Group>
+			);
 	}
 }
 
 function mapStateToProp(state) {
 	return {
-		allElections : state.allElections
+		allElections : state.allElections.elections
 	};
 }
 
-export default connect(mapStateToProp, {})(Home);
+export default connect(mapStateToProp, { })(Home);

@@ -1,17 +1,18 @@
 /**
  * Created by Home Laptop on 23-Apr-19.
  */
+import { connect } from "react-redux";
 import React, { Component } from 'react';
-import connect from "react-redux/es/connect/connect";
 import { Card, Header, Icon } from "semantic-ui-react";
+
 import ElectionCard from "../ElectionCard/ElectionCard";
 
 class MyElection extends Component {
-	filterElections() {
+	filterElections = () => {
 		const { userId } = this.props.profile;
 		return this.props.allElections
 			.filter((election) => (election.adminId === userId || election.managers.indexOf(userId) !== -1));
-	}
+	};
 	
 	render() {
 		return (
@@ -21,18 +22,34 @@ class MyElection extends Component {
 					<Header.Content>My Elections</Header.Content>
 				</Header>
 				
-				<Card.Group>
-					{this.filterElections().map((election) => <ElectionCard key={election.electionId} election={election}/>)}
-				</Card.Group>
+				{this.renderCards()}
 			</div>
 		);
+	}
+	
+	renderCards = () => {
+		const elections = this.filterElections();
+		return elections.length === 0 ?
+			(
+				<p>
+					No election is currently managed by you.<br/>
+					Create One Now :-)
+				</p>
+			)
+			:
+			(
+				<Card.Group>
+					{elections.map((election) => <ElectionCard key={election.electionId}
+					                                           election={election}/>)}
+				</Card.Group>
+			);
 	}
 }
 
 function mapStateToProp(state) {
 	return {
-		allElections : state.allElections,
-		profile : state.profile
+		allElections : state.allElections.elections,
+		profile : state.profile.profile
 	};
 }
 

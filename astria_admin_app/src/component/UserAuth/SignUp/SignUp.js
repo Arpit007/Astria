@@ -7,7 +7,7 @@ import { Form } from "semantic-ui-react";
 import connect from "react-redux/es/connect/connect";
 import { Button, Card, Input } from "semantic-ui-react";
 
-import { registerUser } from "../../../store/action/auth";
+import { registerUser } from "../../../store/action/user";
 
 class SignUp extends Component {
 	

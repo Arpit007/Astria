@@ -1,10 +1,12 @@
 /**
  * Created by Home Laptop on 23-Apr-19.
  */
+import { connect } from "react-redux";
 import React, { Component } from 'react';
-import { Header, Icon } from "semantic-ui-react";
-import connect from "react-redux/es/connect/connect";
+import { Card, Divider, Header, Icon } from "semantic-ui-react";
+
 import { formatDate } from "../../../util/format";
+import CandidateCard from "../EditElection/CandidateCard/CandidateCard";
 
 class ViewElection extends Component {
 	render() {
@@ -37,6 +39,20 @@ class ViewElection extends Component {
 				
 				<Header as="h4">Email</Header>
 				{profile.email}
+				
+				
+				<br/><br/>
+				<Divider/>
+				
+				<Header as="h3">
+					<Icon name="users"/>
+					<Header.Content>Candidates</Header.Content>
+				</Header>
+				
+				<Card.Group>
+					{this.props.candidates.map((candidate) => <CandidateCard key={candidate.candidateId}
+					                                                         candidate={candidate}/>)}
+				</Card.Group>
 			</div>
 		);
 	}
@@ -44,8 +60,9 @@ class ViewElection extends Component {
 
 function mapStateToProp(state) {
 	return {
-		election : state.election
+		election : state.election.election,
+		candidates : state.candidates.candidates,
 	};
 }
 
-export default connect(mapStateToProp, {})(ViewElection);
+export default connect(mapStateToProp, { })(ViewElection);

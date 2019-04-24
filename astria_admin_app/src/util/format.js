@@ -1,9 +1,8 @@
-import moment from "moment";
-
 /**
  * Created by StarkX on 23-Apr-19.
  */
+import moment from "moment";
+
 export function formatDate(date) {
-	const offset = new Date().getTimezoneOffset();
-	return moment(date).utcOffset(offset).format("llll")
+	return moment(date).format("llll")
 }

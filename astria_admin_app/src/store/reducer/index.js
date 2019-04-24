@@ -1,16 +1,27 @@
 import { combineReducers } from 'redux';
 
-import { Profile } from "./user";
-import { AuthToken } from "./auth";
-import { AllElections, Election, GetCandidates, GetManagers } from "./election";
+import { AuthToken, Profile } from "./user";
+import {
+	AllElections,
+	GetElection,
+	GetCandidates,
+	GetManagers,
+	CreateElection,
+	CreateCandidate,
+	AddVoter, ModifyDates
+} from "./election";
 
 const rootReducer = combineReducers({
 	auth_token : AuthToken,
 	profile : Profile,
-	election : Election,
+	election : GetElection,
 	allElections : AllElections,
 	managers : GetManagers,
-	candidates : GetCandidates
+	candidates : GetCandidates,
+	createElection : CreateElection,
+	createCandidate : CreateCandidate,
+	addVoter : AddVoter,
+	modifyDates : ModifyDates
 });
 
 export default rootReducer;

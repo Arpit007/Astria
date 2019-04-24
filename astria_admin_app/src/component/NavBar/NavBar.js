@@ -7,7 +7,7 @@ import { Link, NavLink } from "react-router-dom";
 import { Container, Dropdown, Image, Menu } from "semantic-ui-react";
 
 import { APP_NAME } from "../../data/config";
-import { logoutUser } from "../../store/action/auth";
+import { logoutUser } from "../../store/action/user";
 
 class NavBar extends Component {
 	render() {
@@ -45,7 +45,7 @@ class NavBar extends Component {
 
 function mapStateToProp(state) {
 	return {
-		profile : state.profile
+		profile : state.profile.profile
 	};
 }
 
