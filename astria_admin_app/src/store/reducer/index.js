@@ -5,7 +5,7 @@ import {
 	AllElections, GetElection, GetCandidates, GetManagers, CreateElection, CreateCandidate,
 	AddVoter, ModifyDates, FetchResult, AddManager, FreezeElection, PublishElectionResult
 } from "./election";
-import { CastVote } from "./voter";
+import { CastVote, VerifyVote } from "./voter";
 
 const rootReducer = combineReducers({
 	auth_token : AuthToken,
@@ -22,7 +22,8 @@ const rootReducer = combineReducers({
 	addManager : AddManager,
 	freezeElection : FreezeElection,
 	publishResult : PublishElectionResult,
-	castVote : CastVote
+	castVote : CastVote,
+	verifyVote: VerifyVote
 });
 
 export default rootReducer;

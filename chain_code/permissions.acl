@@ -231,3 +231,11 @@ rule AstriaAdminCanCreateResultVote {
     resource: "org.astria.result.ResultVote"
     action: ALLOW
 }
+
+rule AstriaVoterCanReadResultVote {
+    description: "Allow AstriaVoter to read ResultVote"
+    participant: "org.astria.participant.AstriaVoter"
+    operation: READ
+    resource: "org.astria.result.ResultVote"
+    action: ALLOW
+}

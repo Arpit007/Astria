@@ -55,13 +55,12 @@ router.post("/castVote", AuthoriseVoter, async (req: Request, res: Response) => 
  * */
 router.post("/verifyVote", AuthoriseVoter, async (req, res) => {
     try {
-        // Todo: Verify
         const {userId, pin} = req.user;
         const {electionId} = req.body;
-        
-        // const voterId = generateVoterId(userId, electionId);
+    
+        const voterId = generateVoterId(userId, electionId);
         const voteId = generateVoteId(userId, electionId, pin);
-        const voterId = voteId;
+        
         const vote = await verifyVote(voterId, voteId, electionId);
         
         return Reply(res, 200, {vote});
