@@ -54,7 +54,7 @@ class VerifyVote extends Component {
 	
 	
 	render() {
-		const loading = this.props.isFetchingElection;
+		const loading = this.props.isFetchingElection || this.props.isCandidateElection;
 		
 		if (loading) {
 			return (
