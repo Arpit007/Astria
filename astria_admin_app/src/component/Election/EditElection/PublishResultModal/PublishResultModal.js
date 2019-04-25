@@ -66,7 +66,7 @@ class PublishResultModal extends Component {
 						</Form.Field>
 						<Form.Field>
 							<label>Manager Keys</label>
-							<TextArea rows={2} placeholder="Manager Keys" name="manageKeys"
+							<TextArea rows={2} placeholder="Manager Keys" name="managerKeys"
 							          value={this.state.managerKeys} onChange={this.handleChange}/>
 						</Form.Field>
 					</Form>

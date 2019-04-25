@@ -7,6 +7,7 @@ import UserAuth from "../component/UserAuth/UserAuth";
 import Voter from "../component/Voter/Voter";
 import CastVote from "../component/Voter/CastVote/CastVote";
 import VerifyVote from "../component/Voter/VerifyVote/VerifyVote";
+import ErrorModal from "../component/ErrorModal/ErrorModal";
 
 class App extends Component {
 	
@@ -23,6 +24,7 @@ class App extends Component {
 					<Route path="/voter" component={Voter}/>
 					<Route path="/" component={Main}/>
 				</Switch>
+				<ErrorModal/>
 			</div>
 		);
 	}

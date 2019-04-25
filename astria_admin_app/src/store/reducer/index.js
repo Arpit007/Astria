@@ -6,6 +6,7 @@ import {
 	AddVoter, ModifyDates, FetchResult, AddManager, FreezeElection, PublishElectionResult
 } from "./election";
 import { CastVote, VerifyVote } from "./voter";
+import { ShowError } from "./error";
 
 const rootReducer = combineReducers({
 	auth_token : AuthToken,
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
 	freezeElection : FreezeElection,
 	publishResult : PublishElectionResult,
 	castVote : CastVote,
-	verifyVote: VerifyVote
+	verifyVote: VerifyVote,
+	error: ShowError
 });
 
 export default rootReducer;
