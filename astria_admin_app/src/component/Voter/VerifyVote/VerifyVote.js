@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { fetchElection } from "../../../store/action/election";
+import { fetchElection, getElectionCandidates } from "../../../store/action/election";
 import { Button, Container, Dimmer, Form, Header, Icon, Input, Loader } from "semantic-ui-react";
 import { verifyVote } from "../../../store/action/voter";
 
@@ -102,8 +102,9 @@ function mapStateToProp(state) {
 	return {
 		election : state.election.election,
 		isFetchingElection : state.election.isLoading,
+		isCandidateElection : state.candidates.isLoading,
 		isLoading : state.verifyVote.isLoading
 	};
 }
 
-export default connect(mapStateToProp, { fetchElection, verifyVote })(VerifyVote);
+export default connect(mapStateToProp, { fetchElection, verifyVote, getElectionCandidates })(VerifyVote);

@@ -37,9 +37,24 @@ export function verifyVote(userId, pin) {
 		try {
 			const state = getState();
 			const { electionId } = state.election.election;
+			const { candidates } = state.candidates;
 			
 			const vote = await VerifyVote(userId, pin, electionId);
 			console.log(vote);
+			
+			try {
+				const { candidateId } = vote;
+				let votedCandidate = null;
+				for (let candidate of candidates) {
+					if (candidate.candidateId === candidateId) {
+						votedCandidate = candidate;
+						break;
+					}
+				}
+				console.log(votedCandidate);
+			} catch (err) {
+			
+			}
 			
 			return dispatch({ type : VERIFY_VOTE_SUCCESS, payload : { vote } });
 		} catch (err) {
