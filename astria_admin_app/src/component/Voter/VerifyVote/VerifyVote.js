@@ -30,6 +30,7 @@ class VerifyVote extends Component {
 	componentDidMount() {
 		const { electionId } = this.props.match.params;
 		this.props.fetchElection(electionId);
+		this.props.getElectionCandidates(electionId);
 	}
 	
 	verifyVoteForm = () => {
