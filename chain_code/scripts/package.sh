@@ -13,7 +13,7 @@ version=`node version.js -v`
 targetFile=${fileName}"@"${version}${extension}
 
 echo "Package Name: " ${targetFile}
-printf "Enter Version (optional): "
+printf "Enter Version: "
 
 read -r newVersion
 
@@ -28,7 +28,8 @@ if [[ ! -z "${newVersion}" ]]; then
 fi
 
 # Clean the dist directory
-./clean.sh
+cd "$(dirname "$0")"
+rm -rf ../dist
 
 # Create new dist directory
 mkdir "${distDir}"
