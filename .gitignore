@@ -13,9 +13,12 @@ lib-cov
 pids
 logs
 
+# Astria App
+astria_app/node_modules/
+
 # Chain Code
-chain_code/dist/
-chain_code/node_modules/
+astria_chain/dist/
+astria_chain/chain_code/node_modules/
 
 # Astria Server
 astria_server/node_modules/
@@ -24,3 +27,7 @@ astria_server/dist/
 # Astria Auth Server
 astria_auth_server/node_modules/
 astria_auth_server/dist/
+
+# Fabric Dev Dervers
+fabric-dev-servers/
+

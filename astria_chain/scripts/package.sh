@@ -32,10 +32,8 @@ fi
 cd "$(dirname "$0")"
 rm -rf ../dist
 
-# Create new dist directory
+# Create and switch to dist directory
 mkdir "${distDir}"
-
-# Change pwd to dist directory
 cd "${distDir}"
 
 # Create Package

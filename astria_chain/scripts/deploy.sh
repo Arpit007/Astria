@@ -18,9 +18,11 @@ targetFile=${fileName}"@"${version}${extension}
 cd "${distDir}"
 
 # Install chain-code on blockchain network
-echo "Installing chain-code"
-#composer network install -c "${adminCard}" -a "${targetFile}"
+echo "**********Installing chain-code**********"
+composer network install -c "${adminCard}" -a "${targetFile}"
 
 # Start the pushed code
-echo "Starting network"
+echo "*********Starting network**********"
 composer network start -c "${adminCard}" -n chain_code -V "${version}" -A admin -S adminpw
+
+composer card import -f admin@chain_code.card
