@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const packageFileName = 'package.json';
-const filePath = path.resolve(__dirname, `../${packageFileName}`);
+const filePath = path.resolve(__dirname, `../chain_code/${packageFileName}`);
 
 let packageFile = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 

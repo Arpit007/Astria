@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 
 distDir="../dist"
 scriptDir="../scripts"
+codeDir="../chain_code"
 
 fileName="astria"
 extension=".bna"
@@ -38,7 +39,7 @@ mkdir "${distDir}"
 cd "${distDir}"
 
 # Create Package
-composer archive create -t dir -a "${targetFile}" -n ../
+composer archive create -t dir -a "${targetFile}" -n "${codeDir}"
 
 # Go back to script directory
 cd "${scriptDir}"

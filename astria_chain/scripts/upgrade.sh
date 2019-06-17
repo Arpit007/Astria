@@ -14,6 +14,9 @@ version=`node version.js -v`
 
 targetFile=${fileName}"@"${version}${extension}
 
+# Change pwd to dist directory
+cd "${distDir}"
+
 # Install chain-code on blockchain network
 composer network install -c "${adminCard}" -a "${targetFile}"
 
