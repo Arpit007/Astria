@@ -5,4 +5,4 @@ Astria is Hyperledger fabric based e-voting system, utilising private blockchain
 For installation instructions, see [install.md][install]
 
 
-[install]: <https://github.com/Arpit007/Astria/blob/master/docs/install.md>
+[install]: <https://github.com/Arpit007/Astria/blob/master/install.md>
