@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+./package.sh
+
 # Change pwd of script to its default Folder
 cd "$(dirname "$0")"
 
